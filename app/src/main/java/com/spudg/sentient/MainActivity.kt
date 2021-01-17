@@ -13,49 +13,65 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.spudg.sentient.databinding.ActivityMainBinding
+import com.spudg.sentient.databinding.DayMonthYearPickerBinding
+import com.spudg.sentient.databinding.DialogAddRecordBinding
+import com.spudg.sentient.databinding.HourMinutePickerBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var bindingMain: ActivityMainBinding
+    private lateinit var bindingAddRecord: DialogAddRecordBinding
+    private lateinit var bindingDMYP: DayMonthYearPickerBinding
+    private lateinit var bindingHMP: HourMinutePickerBinding
+
+    private var selectedMood = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        val view = binding.root
+        bindingMain = ActivityMainBinding.inflate(layoutInflater)
+        val view = bindingMain.root
         setContentView(view)
 
-        binding.recordsBtn.setOnClickListener {
+        bindingMain.recordsBtn.setOnClickListener {
 
         }
 
-        binding.moodsBtn.setOnClickListener {
+        bindingMain.moodsBtn.setOnClickListener {
 
         }
 
-        binding.visualiserBtn.setOnClickListener {
+        bindingMain.visualiserBtn.setOnClickListener {
 
         }
+
+        bindingMain.addRecord.setOnClickListener {
+            addRecord()
+        }
+
+        setUpRecordList()
 
 
     }
 
     private fun setUpRecordList() {
         if (getRecordList().size > 0) {
-            binding.rvRecords.visibility = View.VISIBLE
-            binding.tvNoRecords.visibility = View.GONE
+            bindingMain.rvRecords.visibility = View.VISIBLE
+            bindingMain.tvNoRecords.visibility = View.GONE
             val manager = LinearLayoutManager(this)
-            binding.rvRecords.layoutManager = manager
+            bindingMain.rvRecords.layoutManager = manager
             val policyAdapter = RecordAdapter(this, getRecordList())
-            binding.rvRecords.adapter = policyAdapter
+            bindingMain.rvRecords.adapter = policyAdapter
         } else {
-            binding.rvRecords.visibility = View.GONE
-            binding.tvNoRecords.visibility = View.VISIBLE
+            bindingMain.rvRecords.visibility = View.GONE
+            bindingMain.tvNoRecords.visibility = View.VISIBLE
         }
     }
 
@@ -66,101 +82,105 @@ class MainActivity : AppCompatActivity() {
         return result
     }
 
-    private fun addPolicy() {
+    private fun addRecord() {
         val addDialog = Dialog(this, R.style.Theme_Dialog)
         addDialog.setCancelable(false)
-        addDialog.setContentView(R.layout.dialog_add_policy)
+        bindingAddRecord = DialogAddRecordBinding.inflate(layoutInflater)
+        val view = bindingAddRecord.root
+        addDialog.setContentView(view)
         addDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         var dayPicked = Calendar.getInstance()[Calendar.DAY_OF_MONTH]
         var monthPicked = Calendar.getInstance()[Calendar.MONTH] + 1
         var yearPicked = Calendar.getInstance()[Calendar.YEAR]
 
-        addDialog.change_date_add_policy.text =
-                "$dayPicked ${Constants.getShortMonth(monthPicked)} $yearPicked"
+        bindingAddRecord.dateRecordPost.text =
+                "$dayPicked ${getShortMonth(monthPicked)} $yearPicked"
 
-        addDialog.change_date_add_policy.setOnClickListener {
+        bindingAddRecord.dateRecordPost.setOnClickListener {
             val changeDateDialog = Dialog(this, R.style.Theme_Dialog)
             changeDateDialog.setCancelable(false)
-            changeDateDialog.setContentView(R.layout.day_month_year_picker)
+            bindingDMYP = DayMonthYearPickerBinding.inflate(layoutInflater)
+            val view = bindingDMYP.root
+            changeDateDialog.setContentView(view)
             changeDateDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
             if (Calendar.getInstance()[Calendar.DAY_OF_MONTH] == 4 || Calendar.getInstance()[Calendar.DAY_OF_MONTH] == 6 || Calendar.getInstance()[Calendar.DAY_OF_MONTH] == 9 || Calendar.getInstance()[Calendar.DAY_OF_MONTH] == 11) {
-                changeDateDialog.dmyp_day.maxValue = 30
-                changeDateDialog.dmyp_day.minValue = 1
+                bindingDMYP.dmypDay.maxValue = 30
+                bindingDMYP.dmypDay.minValue = 1
             } else if (Calendar.getInstance()[Calendar.DAY_OF_MONTH] == 2 && (Calendar.getInstance()[Calendar.DAY_OF_MONTH] % 4 == 0)) {
-                changeDateDialog.dmyp_day.maxValue = 29
-                changeDateDialog.dmyp_day.minValue = 1
+                bindingDMYP.dmypDay.maxValue = 29
+                bindingDMYP.dmypDay.minValue = 1
             } else if (Calendar.getInstance()[Calendar.DAY_OF_MONTH] == 2 && (Calendar.getInstance()[Calendar.DAY_OF_MONTH] % 4 != 0)) {
-                changeDateDialog.dmyp_day.maxValue = 28
-                changeDateDialog.dmyp_day.minValue = 1
+                bindingDMYP.dmypDay.maxValue = 28
+                bindingDMYP.dmypDay.minValue = 1
             } else {
-                changeDateDialog.dmyp_day.maxValue = 31
-                changeDateDialog.dmyp_day.minValue = 1
+                bindingDMYP.dmypDay.maxValue = 31
+                bindingDMYP.dmypDay.minValue = 1
             }
 
-            changeDateDialog.dmyp_month.maxValue = 12
-            changeDateDialog.dmyp_month.minValue = 1
-            changeDateDialog.dmyp_year.maxValue = 2999
-            changeDateDialog.dmyp_year.minValue = 1000
+            bindingDMYP.dmypMonth.maxValue = 12
+            bindingDMYP.dmypMonth.minValue = 1
+            bindingDMYP.dmypYear.maxValue = 2999
+            bindingDMYP.dmypYear.minValue = 1000
 
-            changeDateDialog.dmyp_day.value = Calendar.getInstance()[Calendar.DAY_OF_MONTH]
-            changeDateDialog.dmyp_month.value = Calendar.getInstance()[Calendar.MONTH] + 1
-            changeDateDialog.dmyp_year.value = Calendar.getInstance()[Calendar.YEAR]
+            bindingDMYP.dmypDay.value = Calendar.getInstance()[Calendar.DAY_OF_MONTH]
+            bindingDMYP.dmypMonth.value = Calendar.getInstance()[Calendar.MONTH] + 1
+            bindingDMYP.dmypYear.value = Calendar.getInstance()[Calendar.YEAR]
             dayPicked = Calendar.getInstance()[Calendar.DAY_OF_MONTH]
             monthPicked = Calendar.getInstance()[Calendar.MONTH] + 1
             yearPicked = Calendar.getInstance()[Calendar.YEAR]
 
-            changeDateDialog.dmyp_month.displayedValues = Constants.MONTHS_SHORT_ARRAY
+            bindingDMYP.dmypMonth.displayedValues = MONTHS_SHORT_ARRAY
 
-            changeDateDialog.dmyp_day.setOnValueChangedListener { _, _, newVal ->
+            bindingDMYP.dmypDay.setOnValueChangedListener { _, _, newVal ->
                 dayPicked = newVal
             }
 
-            changeDateDialog.dmyp_month.setOnValueChangedListener { _, _, newVal ->
+            bindingDMYP.dmypMonth.setOnValueChangedListener { _, _, newVal ->
                 if (newVal == 4 || newVal == 6 || newVal == 9 || newVal == 11) {
-                    changeDateDialog.dmyp_day.maxValue = 30
-                    changeDateDialog.dmyp_day.minValue = 1
-                } else if (newVal == 2 && (changeDateDialog.dmyp_year.value % 4 == 0)) {
-                    changeDateDialog.dmyp_day.maxValue = 29
-                    changeDateDialog.dmyp_day.minValue = 1
-                } else if (newVal == 2 && (changeDateDialog.dmyp_year.value % 4 != 0)) {
-                    changeDateDialog.dmyp_day.maxValue = 28
-                    changeDateDialog.dmyp_day.minValue = 1
+                    bindingDMYP.dmypDay.maxValue = 30
+                    bindingDMYP.dmypDay.minValue = 1
+                } else if (newVal == 2 && (bindingDMYP.dmypYear.value % 4 == 0)) {
+                    bindingDMYP.dmypDay.maxValue = 29
+                    bindingDMYP.dmypDay.minValue = 1
+                } else if (newVal == 2 && (bindingDMYP.dmypYear.value % 4 != 0)) {
+                    bindingDMYP.dmypDay.maxValue = 28
+                    bindingDMYP.dmypDay.minValue = 1
                 } else {
-                    changeDateDialog.dmyp_day.maxValue = 31
-                    changeDateDialog.dmyp_day.minValue = 1
+                    bindingDMYP.dmypDay.maxValue = 31
+                    bindingDMYP.dmypDay.minValue = 1
                 }
                 monthPicked = newVal
             }
 
-            changeDateDialog.dmyp_year.setOnValueChangedListener { _, _, newVal ->
-                if (newVal % 4 == 0 && changeDateDialog.dmyp_month.value == 2) {
-                    changeDateDialog.dmyp_day.maxValue = 29
-                    changeDateDialog.dmyp_day.minValue = 1
-                } else if (newVal % 4 != 0 && changeDateDialog.dmyp_month.value == 2) {
-                    changeDateDialog.dmyp_day.maxValue = 28
-                    changeDateDialog.dmyp_day.minValue = 1
+            bindingDMYP.dmypYear.setOnValueChangedListener { _, _, newVal ->
+                if (newVal % 4 == 0 && bindingDMYP.dmypMonth.value == 2) {
+                    bindingDMYP.dmypDay.maxValue = 29
+                    bindingDMYP.dmypDay.minValue = 1
+                } else if (newVal % 4 != 0 && bindingDMYP.dmypMonth.value == 2) {
+                    bindingDMYP.dmypDay.maxValue = 28
+                    bindingDMYP.dmypDay.minValue = 1
                 }
                 yearPicked = newVal
             }
 
-            changeDateDialog.submit_dmy.setOnClickListener {
-                addDialog.change_date_add_policy.text =
-                        "$dayPicked ${Constants.getShortMonth(monthPicked)} $yearPicked"
+            bindingDMYP.submitDmy.setOnClickListener {
+                bindingAddRecord.dateRecordPost.text =
+                        "$dayPicked ${getShortMonth(monthPicked)} $yearPicked"
                 changeDateDialog.dismiss()
             }
 
-            changeDateDialog.dmyp_day.wrapSelectorWheel = true
-            changeDateDialog.dmyp_month.wrapSelectorWheel = true
-            changeDateDialog.dmyp_year.wrapSelectorWheel = true
+            bindingDMYP.dmypDay.wrapSelectorWheel = true
+            bindingDMYP.dmypMonth.wrapSelectorWheel = true
+            bindingDMYP.dmypYear.wrapSelectorWheel = true
 
-            changeDateDialog.cancel_dmy.setOnClickListener {
+            bindingDMYP.cancelDmy.setOnClickListener {
                 dayPicked = Calendar.getInstance()[Calendar.DAY_OF_MONTH]
                 monthPicked = Calendar.getInstance()[Calendar.MONTH] + 1
                 yearPicked = Calendar.getInstance()[Calendar.YEAR]
-                addDialog.change_date_add_policy.text =
-                        "$dayPicked ${Constants.getShortMonth(monthPicked)} $yearPicked"
+                bindingAddRecord.dateRecordPost.text =
+                        "$dayPicked ${getShortMonth(monthPicked)} $yearPicked"
                 changeDateDialog.dismiss()
             }
 
@@ -168,374 +188,148 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+        var hourPicked = Calendar.getInstance()[Calendar.HOUR_OF_DAY]
+        var minutePicked = Calendar.getInstance()[Calendar.MINUTE]
 
-        addDialog.policy_price_layout.policy_price_et.addTextChangedListener(object : TextWatcher {
-            override fun onTextChanged(arg0: CharSequence, arg1: Int, arg2: Int, arg3: Int) {}
-            override fun beforeTextChanged(arg0: CharSequence, arg1: Int, arg2: Int, arg3: Int) {}
-            override fun afterTextChanged(arg0: Editable) {
-                val str = addDialog.policy_price_layout.policy_price_et.text.toString()
-                if (str.isEmpty()) return
-                val str2: String = currencyInputFilter(str, 4, 2)
-                if (str2 != str) {
-                    addDialog.policy_price_layout.policy_price_et.setText(str2)
-                    addDialog.policy_price_layout.policy_price_et.setSelection(str2.length)
-                }
+        bindingAddRecord.timeRecordPost.text =
+                "$hourPicked:$minutePicked"
+
+        bindingAddRecord.timeRecordPost.setOnClickListener {
+            val changeTimeDialog = Dialog(this, R.style.Theme_Dialog)
+            changeTimeDialog.setCancelable(false)
+            bindingHMP = HourMinutePickerBinding.inflate(layoutInflater)
+            val view = bindingHMP.root
+            changeTimeDialog.setContentView(view)
+            changeTimeDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+            bindingHMP.dmypHour.maxValue = 23
+            bindingHMP.dmypHour.minValue = 1
+            bindingHMP.dmypMinute.maxValue = 59
+            bindingHMP.dmypMinute.minValue = 1
+
+            bindingHMP.dmypHour.value = Calendar.getInstance()[Calendar.HOUR_OF_DAY]
+            bindingHMP.dmypMinute.value = Calendar.getInstance()[Calendar.MINUTE]
+            hourPicked = Calendar.getInstance()[Calendar.HOUR_OF_DAY]
+            minutePicked = Calendar.getInstance()[Calendar.MINUTE]
+
+            bindingHMP.dmypHour.setOnValueChangedListener { _, _, newVal ->
+                hourPicked = newVal
             }
-        })
 
-        val frequencyNames = Constants.RECURRING_FREQUENCIES
-        val frequencyAdapter = ArrayAdapter(this, R.layout.custom_spinner, frequencyNames)
-        addDialog.policy_frequency_spinner_add.adapter = frequencyAdapter
-        addDialog.policy_frequency_spinner_add.onItemSelectedListener = this
+            bindingHMP.dmypMinute.setOnValueChangedListener { _, _, newVal ->
+                minutePicked = newVal
+            }
 
-        val tagListHandler = TagHandler(this, null)
-        val items = tagListHandler.getAllTagTitles()
-        tagListHandler.close()
-        val tagAdapter = ArrayAdapter(this, R.layout.custom_spinner, items)
-        addDialog.policy_tag_spinner_add.adapter = tagAdapter
-        addDialog.policy_tag_spinner_add.onItemSelectedListener = this
+            bindingHMP.submitHm.setOnClickListener {
+                bindingAddRecord.timeRecordPost.text =
+                        "$hourPicked:$minutePicked"
+                changeTimeDialog.dismiss()
+            }
 
-        addDialog.tvAddPolicy.setOnClickListener {
+            bindingHMP.dmypHour.wrapSelectorWheel = true
+            bindingHMP.dmypMinute.wrapSelectorWheel = true
 
-            val dbHandlerPolicies = PolicyHandler(this, null)
-            val dbHandlerTags = TagHandler(this, null)
+            bindingHMP.cancelHm.setOnClickListener {
+                hourPicked = Calendar.getInstance()[Calendar.HOUR_OF_DAY]
+                minutePicked = Calendar.getInstance()[Calendar.MINUTE]
+                bindingAddRecord.timeRecordPost.text =
+                        "$hourPicked:$minutePicked"
+                changeTimeDialog.dismiss()
+            }
 
-            // For request code
-            val minuteForRC = Calendar.getInstance()[Calendar.MINUTE]
-            val hourForRC = Calendar.getInstance()[Calendar.HOUR]
-            val dayForRC = Calendar.getInstance()[Calendar.DAY_OF_YEAR]
-            val yearForRC = Calendar.getInstance()[Calendar.YEAR].toString().takeLast(2)
+            changeTimeDialog.show()
 
-            val tag = dbHandlerTags.getTagId(selectedTag)
-            val price = addDialog.policy_price_layout.policy_price_et.text.toString()
-            val note = addDialog.etNoteLayoutAddPolicy.etNoteAddPolicy.text.toString()
-            val nextMonth = monthPicked
-            val notifRC = "$minuteForRC$hourForRC$dayForRC$yearForRC".toInt()
-            val nextDay = dayPicked
-            val nextYear = yearPicked
-            val frequency = selectedFrequency
+        }
 
-            if (selectedFrequency.isNotEmpty() && price.isNotEmpty() && note.isNotEmpty()) {
-                dbHandlerPolicies.addPolicy(
-                        PolicyModel(
+        val items = arrayListOf(1, 2, 3)
+        val moodAdapter = ArrayAdapter(this, R.layout.custom_spinner, items)
+        bindingAddRecord.recordMoodPost.adapter = moodAdapter
+        bindingAddRecord.recordMoodPost.onItemSelectedListener = this
+
+        bindingAddRecord.tvPostRecord.setOnClickListener {
+
+            val dbHandlerRecord = RecordHandler(this, null)
+
+            val calendar = Calendar.getInstance()
+            calendar.set(yearPicked,monthPicked,dayPicked,hourPicked,minutePicked)
+
+            val mood = selectedMood.toInt()
+            val time = calendar.timeInMillis.toString()
+            val note = bindingAddRecord.etNotePostRecord.text.toString()
+
+            if (selectedMood.isNotEmpty() && time.isNotEmpty()) {
+                dbHandlerRecord.addRecord(
+                        RecordModel(
                                 0,
+                                mood,
+                                time,
                                 note,
-                                tag,
-                                price,
-                                nextMonth,
-                                notifRC,
-                                nextDay,
-                                nextYear,
-                                "",
-                                frequency
                         )
                 )
 
-                // Notification setting
-                val strDate = "${nextDay}-${nextMonth}-${nextYear}"
-                val sdf = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
-                val nextDateMillis = sdf.parse(strDate)?.time
-
-                val intent = Intent(this, PolicyCheckReminder::class.java)
-                val pendingIntent = PendingIntent.getBroadcast(this, notifRC, intent, 0)
-                val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
-                alarmManager.set(
-                        AlarmManager.RTC_WAKEUP,
-                        nextDateMillis!! - 86400000,
-                        pendingIntent
-                )
-
-                Toast.makeText(this, "Policy added.", Toast.LENGTH_LONG).show()
-                setUpPolicyList()
+                Toast.makeText(this, "Record posted.", Toast.LENGTH_LONG).show()
+                setUpRecordList()
                 addDialog.dismiss()
 
             } else {
-                Toast.makeText(this, "Price or note can't be blank.", Toast.LENGTH_LONG)
+                Toast.makeText(this, "Mood can't be blank.", Toast.LENGTH_LONG)
                         .show()
             }
 
-            dbHandlerPolicies.close()
+            dbHandlerRecord.close()
 
         }
         addDialog.show()
 
-        addDialog.tvCancelAddPolicy.setOnClickListener {
+        bindingAddRecord.tvCancelPostRecord.setOnClickListener {
             addDialog.dismiss()
         }
     }
 
-    fun updatePolicy(policy: PolicyModel) {
-        val updateDialog = Dialog(this, R.style.Theme_Dialog)
-        updateDialog.setCancelable(false)
-        updateDialog.setContentView(R.layout.dialog_update_policy)
-        updateDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-        var dayPicked = policy.nextDay
-        var monthPicked = policy.nextMonth
-        var yearPicked = policy.nextYear
-
-        updateDialog.change_date_update_policy.text =
-                "$dayPicked ${Constants.getShortMonth(monthPicked)} $yearPicked"
-
-        updateDialog.change_date_update_policy.setOnClickListener {
-            val changeDateDialog = Dialog(this, R.style.Theme_Dialog)
-            changeDateDialog.setCancelable(false)
-            changeDateDialog.setContentView(R.layout.day_month_year_picker)
-            changeDateDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-            if (policy.nextMonth == 4 || policy.nextMonth == 6 || policy.nextMonth == 9 || policy.nextMonth == 11) {
-                changeDateDialog.dmyp_day.maxValue = 30
-                changeDateDialog.dmyp_day.minValue = 1
-            } else if (policy.nextMonth == 2 && policy.nextMonth % 4 == 0) {
-                changeDateDialog.dmyp_day.maxValue = 29
-                changeDateDialog.dmyp_day.minValue = 1
-            } else if (policy.nextMonth == 2 && policy.nextMonth % 4 != 0) {
-                changeDateDialog.dmyp_day.maxValue = 28
-                changeDateDialog.dmyp_day.minValue = 1
-            } else {
-                changeDateDialog.dmyp_day.maxValue = 31
-                changeDateDialog.dmyp_day.minValue = 1
-            }
-
-            changeDateDialog.dmyp_month.maxValue = 12
-            changeDateDialog.dmyp_month.minValue = 1
-            changeDateDialog.dmyp_year.maxValue = 2999
-            changeDateDialog.dmyp_year.minValue = 1000
-
-            changeDateDialog.dmyp_day.value = policy.nextDay
-            changeDateDialog.dmyp_month.value = policy.nextMonth
-            changeDateDialog.dmyp_year.value = policy.nextYear
-            dayPicked = policy.nextDay
-            monthPicked = policy.nextMonth
-            yearPicked = policy.nextYear
-
-            changeDateDialog.dmyp_month.displayedValues = Constants.MONTHS_SHORT_ARRAY
-
-            changeDateDialog.dmyp_day.setOnValueChangedListener { _, _, newVal ->
-                dayPicked = newVal
-            }
-
-            changeDateDialog.dmyp_month.setOnValueChangedListener { _, _, newVal ->
-                if (newVal == 4 || newVal == 6 || newVal == 9 || newVal == 11) {
-                    changeDateDialog.dmyp_day.maxValue = 30
-                    changeDateDialog.dmyp_day.minValue = 1
-                } else if (newVal == 2 && (changeDateDialog.dmyp_year.value % 4 == 0)) {
-                    changeDateDialog.dmyp_day.maxValue = 29
-                    changeDateDialog.dmyp_day.minValue = 1
-                } else if (newVal == 2 && (changeDateDialog.dmyp_year.value % 4 != 0)) {
-                    changeDateDialog.dmyp_day.maxValue = 28
-                    changeDateDialog.dmyp_day.minValue = 1
-                } else {
-                    changeDateDialog.dmyp_day.maxValue = 31
-                    changeDateDialog.dmyp_day.minValue = 1
-                }
-                monthPicked = newVal
-            }
-
-            changeDateDialog.dmyp_year.setOnValueChangedListener { _, _, newVal ->
-                if (newVal % 4 == 0 && changeDateDialog.dmyp_month.value == 2) {
-                    changeDateDialog.dmyp_day.maxValue = 29
-                    changeDateDialog.dmyp_day.minValue = 1
-                } else if (newVal % 4 != 0 && changeDateDialog.dmyp_month.value == 2) {
-                    changeDateDialog.dmyp_day.maxValue = 28
-                    changeDateDialog.dmyp_day.minValue = 1
-                }
-                yearPicked = newVal
-            }
-
-            changeDateDialog.submit_dmy.setOnClickListener {
-                updateDialog.change_date_update_policy.text =
-                        "$dayPicked ${Constants.getShortMonth(monthPicked)} $yearPicked"
-                changeDateDialog.dismiss()
-            }
-
-
-
-            changeDateDialog.dmyp_day.wrapSelectorWheel = true
-            changeDateDialog.dmyp_month.wrapSelectorWheel = true
-            changeDateDialog.dmyp_year.wrapSelectorWheel = true
-
-            changeDateDialog.cancel_dmy.setOnClickListener {
-                dayPicked = policy.nextDay
-                monthPicked = policy.nextMonth
-                yearPicked = policy.nextYear
-                updateDialog.change_date_update_policy.text =
-                        "$dayPicked ${Constants.getShortMonth(monthPicked)} $yearPicked"
-                changeDateDialog.dismiss()
-            }
-
-            changeDateDialog.show()
-
+    private fun getShortMonth(month: Int): String {
+        return when (month) {
+            1 -> "Jan"
+            2 -> "Feb"
+            3 -> "Mar"
+            4 -> "Apr"
+            5 -> "May"
+            6 -> "Jun"
+            7 -> "Jul"
+            8 -> "Aug"
+            9 -> "Sep"
+            10 -> "Oct"
+            11 -> "Nov"
+            12 -> "Dec"
+            else -> "Error"
         }
-
-        updateDialog.policy_price_layout_update.policy_price_et_update.addTextChangedListener(object :
-                TextWatcher {
-            override fun onTextChanged(arg0: CharSequence, arg1: Int, arg2: Int, arg3: Int) {}
-            override fun beforeTextChanged(arg0: CharSequence, arg1: Int, arg2: Int, arg3: Int) {}
-            override fun afterTextChanged(arg0: Editable) {
-                val str =
-                        updateDialog.policy_price_layout_update.policy_price_et_update.text.toString()
-                if (str.isEmpty()) return
-                val str2: String = currencyInputFilter(str, 4, 2)
-                if (str2 != str) {
-                    updateDialog.policy_price_layout_update.policy_price_et_update.setText(str2)
-                    updateDialog.policy_price_layout_update.policy_price_et_update.setSelection(str2.length)
-                }
-            }
-        })
-
-        val frequencies = Constants.RECURRING_FREQUENCIES
-        val frequencyAdapter = ArrayAdapter(this, R.layout.custom_spinner, frequencies)
-        updateDialog.policy_frequency_spinner_update.adapter = frequencyAdapter
-        updateDialog.policy_frequency_spinner_update.onItemSelectedListener = this
-        val freqId = when (policy.frequency) {
-            "Weekly" -> 1
-            "Bi-weekly" -> 2
-            "Tri-weekly" -> 3
-            "Four-weekly" -> 4
-            "Monthly" -> 5
-            "Bi-monthly" -> 6
-            "Quarterly" -> 7
-            "Yearly" -> 8
-            else -> 1
-        }
-
-        updateDialog.policy_frequency_spinner_update.setSelection(freqId - 1)
-
-        val tagListHandler = TagHandler(this, null)
-        val items = tagListHandler.getAllTagTitles()
-        tagListHandler.close()
-        val tagAdapter = ArrayAdapter(this, R.layout.custom_spinner, items)
-        updateDialog.policy_tag_spinner_update.adapter = tagAdapter
-        updateDialog.policy_tag_spinner_update.onItemSelectedListener = this
-        updateDialog.policy_tag_spinner_update.setSelection(policy.tag - 1)
-
-        updateDialog.policy_price_layout_update.policy_price_et_update.setText(policy.price)
-
-        updateDialog.etNoteLayoutUpdatePolicy.etNoteUpdatePolicy.setText(policy.note)
-
-        updateDialog.tvUpdatePolicy.setOnClickListener {
-            val dbHandlerPolicies = PolicyHandler(this, null)
-            val dbHandlerTags = TagHandler(this, null)
-
-            // Remove old notification
-            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.cancel(policy.notifRC)
-
-            // For request code
-            val minuteForRC = Calendar.getInstance()[Calendar.MINUTE]
-            val hourForRC = Calendar.getInstance()[Calendar.HOUR]
-            val dayForRC = Calendar.getInstance()[Calendar.DAY_OF_YEAR]
-            val yearForRC = Calendar.getInstance()[Calendar.YEAR].toString().takeLast(2)
-
-            val tag = dbHandlerTags.getTagId(selectedTag)
-            val price =
-                    updateDialog.policy_price_layout_update.policy_price_et_update.text.toString()
-            val note = updateDialog.etNoteLayoutUpdatePolicy.etNoteUpdatePolicy.text.toString()
-            val nextMonth = monthPicked
-            val notifRC = "$minuteForRC$hourForRC$dayForRC$yearForRC".toInt()
-            val nextDay = dayPicked
-            val nextYear = yearPicked
-            val frequency = selectedFrequency
-
-            if (selectedFrequency.isNotEmpty() && price.isNotEmpty() && note.isNotEmpty()) {
-                dbHandlerPolicies.updatePolicy(
-                        PolicyModel(
-                                policy.id,
-                                note,
-                                tag,
-                                price,
-                                nextMonth,
-                                notifRC,
-                                nextDay,
-                                nextYear,
-                                "",
-                                frequency
-                        )
-                )
-
-                // New notification setting
-                val strDate = "${nextDay}-${nextMonth}-${nextYear}"
-                val sdf = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
-                val nextDateMillis = sdf.parse(strDate)?.time
-
-                val intent = Intent(this, PolicyCheckReminder::class.java)
-                val pendingIntent = PendingIntent.getBroadcast(this, notifRC, intent, 0)
-                val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
-                alarmManager.set(
-                        AlarmManager.RTC_WAKEUP,
-                        nextDateMillis!! - 86400000,
-                        pendingIntent
-                )
-
-                Toast.makeText(this, "Policy updated.", Toast.LENGTH_LONG).show()
-                setUpPolicyList()
-                updateDialog.dismiss()
-
-            } else {
-                Toast.makeText(
-                        this,
-                        "Tag, price, frequency or note can't be blank.",
-                        Toast.LENGTH_LONG
-                )
-                        .show()
-            }
-
-            dbHandlerPolicies.close()
-            dbHandlerTags.close()
-
-        }
-
-        updateDialog.tvCancelUpdatePolicy.setOnClickListener {
-            updateDialog.dismiss()
-        }
-
-        updateDialog.show()
     }
 
-    fun deletePolicy(policy: PolicyModel) {
-        val deleteDialog = Dialog(this, R.style.Theme_Dialog)
-        deleteDialog.setCancelable(false)
-        deleteDialog.setContentView(R.layout.dialog_delete_policy)
-        deleteDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    private var MONTHS_SHORT_ARRAY: Array<String> = arrayOf(
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
+    )
 
-        // Remove old notification
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.cancel(policy.notifRC)
-
-        deleteDialog.tvDeletePolicy.setOnClickListener {
-            val dbHandler = PolicyHandler(this, null)
-            dbHandler.deletePolicy(
-                    PolicyModel(
-                            policy.id,
-                            "",
-                            0,
-                            "",
-                            0,
-                            0,
-                            0,
-                            0,
-                            "",
-                            ""
-                    )
-            )
-
-            Toast.makeText(this, "Policy deleted.", Toast.LENGTH_LONG).show()
-            setUpPolicyList()
-            dbHandler.close()
-            deleteDialog.dismiss()
-        }
-
-        deleteDialog.tvCancelDeletePolicy.setOnClickListener {
-            deleteDialog.dismiss()
-        }
-
-        deleteDialog.show()
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        selectedMood = parent!!.getItemAtPosition(position).toString()
     }
 
-
-
-
+    override fun onNothingSelected(parent: AdapterView<*>?) {
+        Toast.makeText(
+                this,
+                "Nothing is selected in the mood dropdown.",
+                Toast.LENGTH_SHORT
+        ).show()
+    }
 
 
 }

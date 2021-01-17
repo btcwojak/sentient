@@ -22,10 +22,11 @@ class RecordAdapter(private val context: Context, private val items: ArrayList<R
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val recordRowLayout = view.findViewById<LinearLayout>(R.id.record_row_layout)!!
-        val recordInnerRow = view.findViewById<LinearLayout>(R.id.row_line)!!
+        val recordInnerRow = view.findViewById<LinearLayout>(R.id.record_row)!!
         val moodIconView = view.findViewById<ImageView>(R.id.mood_icon)!!
         val moodNameView = view.findViewById<TextView>(R.id.mood_name)!!
         val timeView = view.findViewById<TextView>(R.id.at_time)!!
+        val dateView = view.findViewById<TextView>(R.id.date)!!
         val noteView = view.findViewById<ImageView>(R.id.notes_btn)!!
     }
 
@@ -41,6 +42,7 @@ class RecordAdapter(private val context: Context, private val items: ArrayList<R
         holder.moodIconView.setBackgroundResource(R.drawable.ic_launcher_foreground)
         holder.moodNameView.text = record.mood.toString()
         holder.timeView.text = record.time
+        holder.dateView.text = record.time
 
         holder.noteView.setOnClickListener {}
         holder.recordInnerRow.setOnClickListener {}
