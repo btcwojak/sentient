@@ -1,0 +1,8 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:bottom="15dp"
+        android:drawable="@drawable/back_btn"
+        android:left="15dp"
+        android:right="15dp"
+        android:top="15dp" />
+</layer-list>

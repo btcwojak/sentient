@@ -41,11 +41,15 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         setContentView(view)
 
         bindingMain.recordsBtn.setOnClickListener {
-
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
         }
 
         bindingMain.moodsBtn.setOnClickListener {
-
+            val intent = Intent(this, MoodActivity::class.java)
+            startActivity(intent)
+            finish()
         }
 
         bindingMain.visualiserBtn.setOnClickListener {
@@ -57,7 +61,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         }
 
         setUpRecordList()
-
+        checkDefaultMoods()
 
     }
 
@@ -77,7 +81,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private fun getRecordList(): ArrayList<RecordModel> {
         val dbHandler = RecordHandler(this, null)
-        val result = dbHandler.filterRecords(1)
+        val result = dbHandler.filterRecords(-1)
         dbHandler.close()
         return result
     }
@@ -241,19 +245,22 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         }
 
-        val items = arrayListOf(1, 2, 3)
-        val moodAdapter = ArrayAdapter(this, R.layout.custom_spinner, items)
+        val dbMoodNames = MoodHandler(this, null)
+        val moodNames = dbMoodNames.getAllMoodNames()
+        dbMoodNames.close()
+        val moodAdapter = ArrayAdapter(this, R.layout.custom_spinner, moodNames)
         bindingAddRecord.recordMoodPost.adapter = moodAdapter
         bindingAddRecord.recordMoodPost.onItemSelectedListener = this
 
         bindingAddRecord.tvPostRecord.setOnClickListener {
 
             val dbHandlerRecord = RecordHandler(this, null)
+            val dbHandlerMood = MoodHandler(this, null)
 
             val calendar = Calendar.getInstance()
-            calendar.set(yearPicked,monthPicked,dayPicked,hourPicked,minutePicked)
+            calendar.set(yearPicked,monthPicked-1,dayPicked,hourPicked,minutePicked)
 
-            val mood = selectedMood.toInt()
+            val mood = dbHandlerMood.getMoodIdFromName(selectedMood)
             val time = calendar.timeInMillis.toString()
             val note = bindingAddRecord.etNotePostRecord.text.toString()
 
@@ -284,6 +291,29 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         bindingAddRecord.tvCancelPostRecord.setOnClickListener {
             addDialog.dismiss()
         }
+    }
+
+    private fun checkDefaultMoods() {
+        val dbHandler = MoodHandler(this, null)
+        val allMoods = dbHandler.getAllMoodNames()
+
+        if (!allMoods.contains("Awesome")) {
+            dbHandler.addMood(MoodModel(0, "Awesome", -16711861,1))
+        }
+        if (!allMoods.contains("Good")) {
+            dbHandler.addMood(MoodModel(0, "Good", -16774657,2))
+        }
+        if (!allMoods.contains("Okay")) {
+            dbHandler.addMood(MoodModel(0, "Okay", -65497,3))
+        }
+        if (!allMoods.contains("Bad")) {
+            dbHandler.addMood(MoodModel(0, "Bad", -29696,4))
+        }
+        if (!allMoods.contains("Terrible")) {
+            dbHandler.addMood(MoodModel(0, "Terrible", -65281,5))
+        }
+
+        dbHandler.close()
     }
 
     private fun getShortMonth(month: Int): String {
