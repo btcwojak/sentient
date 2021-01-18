@@ -18,8 +18,7 @@ class RecordAdapter(private val context: Context, private val items: ArrayList<R
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val recordRowLayout = view.findViewById<LinearLayout>(R.id.record_row_layout)!!
         val recordInnerRow = view.findViewById<LinearLayout>(R.id.record_row)!!
-        val moodIconView = view.findViewById<ImageView>(R.id.mood_icon)!!
-        val moodNameView = view.findViewById<TextView>(R.id.mood_name_record_row)!!
+        val scoreView = view.findViewById<TextView>(R.id.score_record_row)!!
         val timeView = view.findViewById<TextView>(R.id.at_time)!!
         val dateView = view.findViewById<TextView>(R.id.date)!!
         val noteView = view.findViewById<ImageView>(R.id.notes_btn)!!
@@ -35,19 +34,32 @@ class RecordAdapter(private val context: Context, private val items: ArrayList<R
 
         val record = items[position]
 
-        holder.moodIconView.setBackgroundResource(R.drawable.ic_launcher_foreground)
-        if (context is MainActivity) {
-            val dbMood = MoodHandler(context, null)
-            holder.moodNameView.text = dbMood.getMoodNameFromId(record.mood)
-            dbMood.close()
-        }
-
-        val sdfTime = SimpleDateFormat("HH:mm")
         val sdfDate = SimpleDateFormat("EEEE dd MMMM yyyy")
-        val time = sdfTime.format(record.time.toLong())
+        val sdfTime = SimpleDateFormat("HH:mm")
         val date = sdfDate.format(record.time.toLong())
-        holder.timeView.text = time
+        val time = sdfTime.format(record.time.toLong())
         holder.dateView.text = date
+        holder.timeView.text = "at $time"
+
+        holder.scoreView.text = record.score.toString()
+
+        when (record.score) {
+            in 0..9 -> {
+                holder.scoreView.setTextColor(-65527)
+            }
+            in 10..39 -> {
+                holder.scoreView.setTextColor(-25088)
+            }
+            in 40..69 -> {
+                holder.scoreView.setTextColor(-16728577)
+            }
+            in 70..89 -> {
+                holder.scoreView.setTextColor(-16711896)
+            }
+            in 90..100 -> {
+                holder.scoreView.setTextColor(-6881025)
+            }
+        }
 
         if (context is MainActivity) {
             try {

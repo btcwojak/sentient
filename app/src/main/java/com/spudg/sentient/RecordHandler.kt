@@ -11,12 +11,12 @@ class RecordHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         SQLiteOpenHelper(context, DATABASE_NAME, factory, DATABASE_VERSION) {
 
     companion object {
-        private const val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 2
         private const val DATABASE_NAME = "SentientRecords.db"
         private const val TABLE_RECORDS = "records"
 
         private const val KEY_ID = "_id"
-        private const val KEY_MOOD = "mood"
+        private const val KEY_SCORE = "score"
         private const val KEY_TIME = "time"
         private const val KEY_NOTE = "note"
     }
@@ -24,7 +24,7 @@ class RecordHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) :
 
     override fun onCreate(db: SQLiteDatabase?) {
         val createRecordTable =
-                ("CREATE TABLE $TABLE_RECORDS($KEY_ID INTEGER PRIMARY KEY,$KEY_MOOD INTEGER,$KEY_TIME TEXT,$KEY_NOTE TEXT)")
+                ("CREATE TABLE $TABLE_RECORDS($KEY_ID INTEGER PRIMARY KEY,$KEY_SCORE INTEGER,$KEY_TIME TEXT,$KEY_NOTE TEXT)")
         db?.execSQL(createRecordTable)
     }
 
@@ -35,7 +35,7 @@ class RecordHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) :
 
     fun addRecord(record: RecordModel): Long {
         val values = ContentValues()
-        values.put(KEY_MOOD, record.mood)
+        values.put(KEY_SCORE, record.score)
         values.put(KEY_TIME, record.time)
         values.put(KEY_NOTE, record.note)
         val db = this.writableDatabase
@@ -46,7 +46,7 @@ class RecordHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) :
 
     fun updateRecord(record: RecordModel): Int {
         val values = ContentValues()
-        values.put(KEY_MOOD, record.mood)
+        values.put(KEY_SCORE, record.score)
         values.put(KEY_TIME, record.time)
         values.put(KEY_NOTE, record.note)
         val db = this.writableDatabase
@@ -71,19 +71,19 @@ class RecordHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         )
 
         var id: Int
-        var mood: Int
+        var score: Int
         var time: String
         var note: String
 
         if (cursor.moveToFirst()) {
             do {
                 id = cursor.getInt(cursor.getColumnIndex(KEY_ID))
-                mood = cursor.getInt(cursor.getColumnIndex(KEY_MOOD))
+                score = cursor.getInt(cursor.getColumnIndex(KEY_SCORE))
                 time = cursor.getString(cursor.getColumnIndex(KEY_TIME))
                 note = cursor.getString(cursor.getColumnIndex(KEY_NOTE))
                 val record = RecordModel(
                         id = id,
-                        mood = mood,
+                        score = score,
                         time = time,
                         note = note,
                 )

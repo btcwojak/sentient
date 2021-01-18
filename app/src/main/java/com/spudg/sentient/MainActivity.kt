@@ -1,38 +1,28 @@
 package com.spudg.sentient
 
-import android.app.AlarmManager
 import android.app.Dialog
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.spudg.sentient.databinding.ActivityMainBinding
 import com.spudg.sentient.databinding.DayMonthYearPickerBinding
 import com.spudg.sentient.databinding.DialogAddRecordBinding
 import com.spudg.sentient.databinding.HourMinutePickerBinding
-import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.roundToInt
 
 
-class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var bindingMain: ActivityMainBinding
     private lateinit var bindingAddRecord: DialogAddRecordBinding
     private lateinit var bindingDMYP: DayMonthYearPickerBinding
     private lateinit var bindingHMP: HourMinutePickerBinding
-
-    private var selectedMood = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,13 +36,11 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             finish()
         }
 
-        bindingMain.moodsBtn.setOnClickListener {
-            val intent = Intent(this, MoodActivity::class.java)
-            startActivity(intent)
-            finish()
+        bindingMain.visualiserBtn.setOnClickListener {
+
         }
 
-        bindingMain.visualiserBtn.setOnClickListener {
+        bindingMain.aboutBtn.setOnClickListener {
 
         }
 
@@ -61,7 +49,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         }
 
         setUpRecordList()
-        checkDefaultMoods()
 
     }
 
@@ -135,7 +122,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             monthPicked = Calendar.getInstance()[Calendar.MONTH] + 1
             yearPicked = Calendar.getInstance()[Calendar.YEAR]
 
-            bindingDMYP.dmypMonth.displayedValues = MONTHS_SHORT_ARRAY
+            bindingDMYP.dmypMonth.displayedValues = monthsShortArray
 
             bindingDMYP.dmypDay.setOnValueChangedListener { _, _, newVal ->
                 dayPicked = newVal
@@ -245,30 +232,49 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         }
 
-        val dbMoodNames = MoodHandler(this, null)
-        val moodNames = dbMoodNames.getAllMoodNames()
-        dbMoodNames.close()
-        val moodAdapter = ArrayAdapter(this, R.layout.custom_spinner, moodNames)
-        bindingAddRecord.recordMoodPost.adapter = moodAdapter
-        bindingAddRecord.recordMoodPost.onItemSelectedListener = this
+        bindingAddRecord.scoreSlider.value = 50F
+        bindingAddRecord.currentScore.text = bindingAddRecord.scoreSlider.value.roundToInt().toString()
+        bindingAddRecord.currentScore.setTextColor(-16728577)
+
+        bindingAddRecord.scoreSlider.addOnChangeListener { slider, value, fromUser ->
+            slider.value = value.roundToInt().toFloat()
+            bindingAddRecord.currentScore.text = value.roundToInt().toString()
+            when (value) {
+                in 0F..9F -> {
+                    bindingAddRecord.currentScore.setTextColor(-65527)
+                    slider.thumbTintList
+                }
+                in 10F..39F -> {
+                    bindingAddRecord.currentScore.setTextColor(-25088)
+                }
+                in 40F..69F -> {
+                    bindingAddRecord.currentScore.setTextColor(-16728577)
+                }
+                in 70F..89F -> {
+                    bindingAddRecord.currentScore.setTextColor(-16711896)
+                }
+                in 90F..100F -> {
+                    bindingAddRecord.currentScore.setTextColor(-6881025)
+                }
+            }
+        }
 
         bindingAddRecord.tvPostRecord.setOnClickListener {
 
             val dbHandlerRecord = RecordHandler(this, null)
-            val dbHandlerMood = MoodHandler(this, null)
 
             val calendar = Calendar.getInstance()
             calendar.set(yearPicked,monthPicked-1,dayPicked,hourPicked,minutePicked)
 
-            val mood = dbHandlerMood.getMoodIdFromName(selectedMood)
+            val score = bindingAddRecord.scoreSlider.value.toInt()
             val time = calendar.timeInMillis.toString()
             val note = bindingAddRecord.etNotePostRecord.text.toString()
 
-            if (selectedMood.isNotEmpty() && time.isNotEmpty()) {
+            if (score.toString().isNotEmpty() && time.isNotEmpty()) {
                 dbHandlerRecord.addRecord(
                         RecordModel(
                                 0,
-                                mood,
+                                score,
                                 time,
                                 note,
                         )
@@ -293,29 +299,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         }
     }
 
-    private fun checkDefaultMoods() {
-        val dbHandler = MoodHandler(this, null)
-        val allMoods = dbHandler.getAllMoodNames()
-
-        if (!allMoods.contains("Awesome")) {
-            dbHandler.addMood(MoodModel(0, "Awesome", -16711861,1))
-        }
-        if (!allMoods.contains("Good")) {
-            dbHandler.addMood(MoodModel(0, "Good", -16774657,2))
-        }
-        if (!allMoods.contains("Okay")) {
-            dbHandler.addMood(MoodModel(0, "Okay", -65497,3))
-        }
-        if (!allMoods.contains("Bad")) {
-            dbHandler.addMood(MoodModel(0, "Bad", -29696,4))
-        }
-        if (!allMoods.contains("Terrible")) {
-            dbHandler.addMood(MoodModel(0, "Terrible", -65281,5))
-        }
-
-        dbHandler.close()
-    }
-
     private fun getShortMonth(month: Int): String {
         return when (month) {
             1 -> "Jan"
@@ -334,7 +317,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         }
     }
 
-    private var MONTHS_SHORT_ARRAY: Array<String> = arrayOf(
+    private var monthsShortArray: Array<String> = arrayOf(
             "Jan",
             "Feb",
             "Mar",
@@ -348,18 +331,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             "Nov",
             "Dec"
     )
-
-    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        selectedMood = parent!!.getItemAtPosition(position).toString()
-    }
-
-    override fun onNothingSelected(parent: AdapterView<*>?) {
-        Toast.makeText(
-                this,
-                "Nothing is selected in the mood dropdown.",
-                Toast.LENGTH_SHORT
-        ).show()
-    }
 
 
 }

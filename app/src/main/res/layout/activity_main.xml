@@ -34,26 +34,9 @@
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/moods_btn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_weight="1"
-            android:fontFamily="@font/open_sans_light"
-            android:foreground="?attr/selectableItemBackground"
-            android:gravity="center"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:text="Moods"
-            android:textColor="@color/colorAccent"
-            android:textSize="16sp" />
-
-        <TextView
             android:id="@+id/visualiser_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginBottom="5dp"
@@ -64,6 +47,23 @@
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:text="Visualiser"
+            android:textColor="@color/colorAccent"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/about_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/open_sans_light"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:layout_marginRight="5dp"
+            android:paddingBottom="10dp"
+            android:text="About"
             android:textColor="@color/colorAccent"
             android:textSize="16sp" />
 
