@@ -49,7 +49,41 @@ class MainActivity : AppCompatActivity() {
         }
 
         setUpRecordList()
+        setUpAverageMonthScore()
 
+    }
+
+    private fun setUpAverageMonthScore() {
+        val dbHandler = RecordHandler(this, null)
+        val allRecords = dbHandler.filterRecords()
+
+        var runningTotal = 0
+        var numberOfRatings = allRecords.size
+
+        for (record in allRecords) {
+            runningTotal += record.score
+        }
+
+        var averageScore = (runningTotal/numberOfRatings)
+        bindingMain.averageScoreMonth.text = averageScore.toString()
+
+        when (averageScore) {
+            in 0..9 -> {
+                bindingMain.averageScoreMonth.setTextColor(-65527)
+            }
+            in 10..39 -> {
+                bindingMain.averageScoreMonth.setTextColor(-25088)
+            }
+            in 40..69 -> {
+                bindingMain.averageScoreMonth.setTextColor(-16728577)
+            }
+            in 70..89 -> {
+                bindingMain.averageScoreMonth.setTextColor(-16711896)
+            }
+            in 90..100 -> {
+                bindingMain.averageScoreMonth.setTextColor(-6881025)
+            }
+        }
     }
 
     private fun setUpRecordList() {

@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:fontFamily="@font/open_sans_light"
-            android:text="How was your day?"
+            android:text="How are you feeling?"
             android:layout_gravity="center_horizontal"
             android:textColor="@android:color/black"
             android:textSize="24sp" />
