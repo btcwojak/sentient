@@ -1,19 +1,24 @@
 package com.spudg.sentient
 
+import android.app.AlarmManager
 import android.app.Dialog
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.spudg.sentient.databinding.ActivityMainBinding
-import com.spudg.sentient.databinding.DayMonthYearPickerBinding
-import com.spudg.sentient.databinding.DialogAddRecordBinding
-import com.spudg.sentient.databinding.HourMinutePickerBinding
+import com.spudg.sentient.databinding.*
+import kotlinx.android.synthetic.main.day_month_year_picker.*
+import java.text.SimpleDateFormat
 import java.time.Instant.now
 import java.time.LocalDateTime.now
 import java.time.Month
@@ -25,6 +30,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var bindingMain: ActivityMainBinding
     private lateinit var bindingAddRecord: DialogAddRecordBinding
+    private lateinit var bindingUpdateRecord: DialogUpdateRecordBinding
+    private lateinit var bindingDeleteRecord: DialogDeleteRecordBinding
     private lateinit var bindingDMYP: DayMonthYearPickerBinding
     private lateinit var bindingHMP: HourMinutePickerBinding
 
@@ -285,29 +292,29 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        bindingAddRecord.scoreSlider.value = 50F
-        bindingAddRecord.currentScore.text = bindingAddRecord.scoreSlider.value.roundToInt().toString()
-        bindingAddRecord.currentScore.setTextColor(-16728577)
+        bindingAddRecord.scoreSliderPost.value = 50F
+        bindingAddRecord.currentScorePost.text = bindingAddRecord.scoreSliderPost.value.roundToInt().toString()
+        bindingAddRecord.currentScorePost.setTextColor(-16728577)
 
-        bindingAddRecord.scoreSlider.addOnChangeListener { slider, value, fromUser ->
+        bindingAddRecord.scoreSliderPost.addOnChangeListener { slider, value, fromUser ->
             slider.value = value.roundToInt().toFloat()
-            bindingAddRecord.currentScore.text = value.roundToInt().toString()
+            bindingAddRecord.currentScorePost.text = value.roundToInt().toString()
             when (value) {
                 in 0F..9F -> {
-                    bindingAddRecord.currentScore.setTextColor(-65527)
+                    bindingAddRecord.currentScorePost.setTextColor(-65527)
                     slider.thumbTintList
                 }
                 in 10F..39F -> {
-                    bindingAddRecord.currentScore.setTextColor(-25088)
+                    bindingAddRecord.currentScorePost.setTextColor(-25088)
                 }
                 in 40F..69F -> {
-                    bindingAddRecord.currentScore.setTextColor(-16728577)
+                    bindingAddRecord.currentScorePost.setTextColor(-16728577)
                 }
                 in 70F..89F -> {
-                    bindingAddRecord.currentScore.setTextColor(-16711896)
+                    bindingAddRecord.currentScorePost.setTextColor(-16711896)
                 }
                 in 90F..100F -> {
-                    bindingAddRecord.currentScore.setTextColor(-6881025)
+                    bindingAddRecord.currentScorePost.setTextColor(-6881025)
                 }
             }
         }
@@ -319,7 +326,7 @@ class MainActivity : AppCompatActivity() {
             val calendar = Calendar.getInstance()
             calendar.set(yearPicked,monthPicked-1,dayPicked,hourPicked,minutePicked)
 
-            val score = bindingAddRecord.scoreSlider.value.toInt()
+            val score = bindingAddRecord.scoreSliderPost.value.toInt()
             val time = calendar.timeInMillis.toString()
             val note = bindingAddRecord.etNotePostRecord.text.toString()
 
@@ -352,6 +359,269 @@ class MainActivity : AppCompatActivity() {
             addDialog.dismiss()
         }
     }
+
+    fun updateRecord(record: RecordModel) {
+        val updateDialog = Dialog(this, R.style.Theme_Dialog)
+        updateDialog.setCancelable(false)
+        bindingUpdateRecord = DialogUpdateRecordBinding.inflate(layoutInflater)
+        val view = bindingUpdateRecord.root
+        updateDialog.setContentView(view)
+        updateDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        var dayPicked = Calendar.getInstance()[Calendar.DAY_OF_MONTH] // SET TO RECORD DAY
+        var monthPicked = Calendar.getInstance()[Calendar.MONTH] + 1 // SET TO RECORD MONTH
+        var yearPicked = Calendar.getInstance()[Calendar.YEAR] // SET TO RECORD YEAR
+
+        bindingUpdateRecord.dateRecordUpdate.text =
+                "$dayPicked ${getShortMonth(monthPicked)} $yearPicked"
+
+        bindingUpdateRecord.dateRecordUpdate.setOnClickListener {
+            val changeDateDialog = Dialog(this, R.style.Theme_Dialog)
+            changeDateDialog.setCancelable(false)
+            bindingDMYP = DayMonthYearPickerBinding.inflate(layoutInflater)
+            val view = bindingDMYP.root
+            changeDateDialog.setContentView(view)
+            changeDateDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+            if (Calendar.getInstance()[Calendar.DAY_OF_MONTH] == 4 || Calendar.getInstance()[Calendar.DAY_OF_MONTH] == 6 || Calendar.getInstance()[Calendar.DAY_OF_MONTH] == 9 || Calendar.getInstance()[Calendar.DAY_OF_MONTH] == 11) {
+                bindingDMYP.dmypDay.maxValue = 30
+                bindingDMYP.dmypDay.minValue = 1
+            } else if (Calendar.getInstance()[Calendar.DAY_OF_MONTH] == 2 && (Calendar.getInstance()[Calendar.DAY_OF_MONTH] % 4 == 0)) {
+                bindingDMYP.dmypDay.maxValue = 29
+                bindingDMYP.dmypDay.minValue = 1
+            } else if (Calendar.getInstance()[Calendar.DAY_OF_MONTH] == 2 && (Calendar.getInstance()[Calendar.DAY_OF_MONTH] % 4 != 0)) {
+                bindingDMYP.dmypDay.maxValue = 28
+                bindingDMYP.dmypDay.minValue = 1
+            } else {
+                bindingDMYP.dmypDay.maxValue = 31
+                bindingDMYP.dmypDay.minValue = 1
+            }
+
+            bindingDMYP.dmypMonth.maxValue = 12
+            bindingDMYP.dmypMonth.minValue = 1
+            bindingDMYP.dmypYear.maxValue = 2999
+            bindingDMYP.dmypYear.minValue = 1000
+
+            bindingDMYP.dmypDay.value = Calendar.getInstance()[Calendar.DAY_OF_MONTH]
+            bindingDMYP.dmypMonth.value = Calendar.getInstance()[Calendar.MONTH] + 1
+            bindingDMYP.dmypYear.value = Calendar.getInstance()[Calendar.YEAR]
+            dayPicked = Calendar.getInstance()[Calendar.DAY_OF_MONTH]
+            monthPicked = Calendar.getInstance()[Calendar.MONTH] + 1
+            yearPicked = Calendar.getInstance()[Calendar.YEAR]
+
+            bindingDMYP.dmypMonth.displayedValues = monthsShortArray
+
+            bindingDMYP.dmypDay.setOnValueChangedListener { _, _, newVal ->
+                dayPicked = newVal
+            }
+
+            bindingDMYP.dmypMonth.setOnValueChangedListener { _, _, newVal ->
+                if (newVal == 4 || newVal == 6 || newVal == 9 || newVal == 11) {
+                    bindingDMYP.dmypDay.maxValue = 30
+                    bindingDMYP.dmypDay.minValue = 1
+                } else if (newVal == 2 && (bindingDMYP.dmypYear.value % 4 == 0)) {
+                    bindingDMYP.dmypDay.maxValue = 29
+                    bindingDMYP.dmypDay.minValue = 1
+                } else if (newVal == 2 && (bindingDMYP.dmypYear.value % 4 != 0)) {
+                    bindingDMYP.dmypDay.maxValue = 28
+                    bindingDMYP.dmypDay.minValue = 1
+                } else {
+                    bindingDMYP.dmypDay.maxValue = 31
+                    bindingDMYP.dmypDay.minValue = 1
+                }
+                monthPicked = newVal
+            }
+
+            bindingDMYP.dmypYear.setOnValueChangedListener { _, _, newVal ->
+                if (newVal % 4 == 0 && bindingDMYP.dmypMonth.value == 2) {
+                    bindingDMYP.dmypDay.maxValue = 29
+                    bindingDMYP.dmypDay.minValue = 1
+                } else if (newVal % 4 != 0 && bindingDMYP.dmypMonth.value == 2) {
+                    bindingDMYP.dmypDay.maxValue = 28
+                    bindingDMYP.dmypDay.minValue = 1
+                }
+                yearPicked = newVal
+            }
+
+            bindingDMYP.submitDmy.setOnClickListener {
+                bindingAddRecord.dateRecordPost.text =
+                        "$dayPicked ${getShortMonth(monthPicked)} $yearPicked"
+                changeDateDialog.dismiss()
+            }
+
+            bindingDMYP.dmypDay.wrapSelectorWheel = true
+            bindingDMYP.dmypMonth.wrapSelectorWheel = true
+            bindingDMYP.dmypYear.wrapSelectorWheel = true
+
+            bindingDMYP.cancelDmy.setOnClickListener {
+                dayPicked = Calendar.getInstance()[Calendar.DAY_OF_MONTH]
+                monthPicked = Calendar.getInstance()[Calendar.MONTH] + 1
+                yearPicked = Calendar.getInstance()[Calendar.YEAR]
+                bindingAddRecord.dateRecordPost.text =
+                        "$dayPicked ${getShortMonth(monthPicked)} $yearPicked"
+                changeDateDialog.dismiss()
+            }
+
+            changeDateDialog.show()
+
+        }
+
+        var hourPicked = Calendar.getInstance()[Calendar.HOUR_OF_DAY] // SET TO RECORD HOUR
+        var minutePicked = Calendar.getInstance()[Calendar.MINUTE] // SET TO RECORD MINUTE
+
+        bindingUpdateRecord.timeRecordUpdate.text =
+                "$hourPicked:$minutePicked"
+
+        bindingUpdateRecord.timeRecordUpdate.setOnClickListener {
+            val changeTimeDialog = Dialog(this, R.style.Theme_Dialog)
+            changeTimeDialog.setCancelable(false)
+            bindingHMP = HourMinutePickerBinding.inflate(layoutInflater)
+            val view = bindingHMP.root
+            changeTimeDialog.setContentView(view)
+            changeTimeDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+            bindingHMP.dmypHour.maxValue = 23
+            bindingHMP.dmypHour.minValue = 1
+            bindingHMP.dmypMinute.maxValue = 59
+            bindingHMP.dmypMinute.minValue = 1
+
+            bindingHMP.dmypHour.value = Calendar.getInstance()[Calendar.HOUR_OF_DAY]
+            bindingHMP.dmypMinute.value = Calendar.getInstance()[Calendar.MINUTE]
+            hourPicked = Calendar.getInstance()[Calendar.HOUR_OF_DAY]
+            minutePicked = Calendar.getInstance()[Calendar.MINUTE]
+
+            bindingHMP.dmypHour.setOnValueChangedListener { _, _, newVal ->
+                hourPicked = newVal
+            }
+
+            bindingHMP.dmypMinute.setOnValueChangedListener { _, _, newVal ->
+                minutePicked = newVal
+            }
+
+            bindingHMP.submitHm.setOnClickListener {
+                bindingAddRecord.timeRecordPost.text =
+                        "$hourPicked:$minutePicked"
+                changeTimeDialog.dismiss()
+            }
+
+            bindingHMP.dmypHour.wrapSelectorWheel = true
+            bindingHMP.dmypMinute.wrapSelectorWheel = true
+
+            bindingHMP.cancelHm.setOnClickListener {
+                hourPicked = Calendar.getInstance()[Calendar.HOUR_OF_DAY]
+                minutePicked = Calendar.getInstance()[Calendar.MINUTE]
+                bindingUpdateRecord.timeRecordUpdate.text =
+                        "$hourPicked:$minutePicked"
+                changeTimeDialog.dismiss()
+            }
+
+            changeTimeDialog.show()
+
+        }
+
+
+        bindingUpdateRecord.scoreSliderUpdate.value = 50F
+        bindingUpdateRecord.currentScoreUpdate.text = bindingUpdateRecord.scoreSliderUpdate.value.roundToInt().toString()
+        bindingUpdateRecord.currentScoreUpdate.setTextColor(-16728577)
+
+        bindingUpdateRecord.scoreSliderUpdate.addOnChangeListener { slider, value, fromUser ->
+            slider.value = value.roundToInt().toFloat()
+            bindingUpdateRecord.currentScoreUpdate.text = value.roundToInt().toString()
+            when (value) {
+                in 0F..9F -> {
+                    bindingUpdateRecord.currentScoreUpdate.setTextColor(-65527)
+                    slider.thumbTintList
+                }
+                in 10F..39F -> {
+                    bindingUpdateRecord.currentScoreUpdate.setTextColor(-25088)
+                }
+                in 40F..69F -> {
+                    bindingUpdateRecord.currentScoreUpdate.setTextColor(-16728577)
+                }
+                in 70F..89F -> {
+                    bindingUpdateRecord.currentScoreUpdate.setTextColor(-16711896)
+                }
+                in 90F..100F -> {
+                    bindingUpdateRecord.currentScoreUpdate.setTextColor(-6881025)
+                }
+            }
+        }
+
+        bindingUpdateRecord.tvUpdateRecord.setOnClickListener {
+
+            val dbHandlerRecord = RecordHandler(this, null)
+
+            val calendar = Calendar.getInstance()
+            calendar.set(yearPicked, monthPicked - 1, dayPicked, hourPicked, minutePicked)
+
+            val score = bindingUpdateRecord.scoreSliderUpdate.value.toInt()
+            val time = calendar.timeInMillis.toString()
+            val note = bindingUpdateRecord.etNoteUpdateRecord.text.toString()
+
+            if (score.toString().isNotEmpty() && time.isNotEmpty()) {
+                dbHandlerRecord.updateRecord(
+                        RecordModel(
+                                record.id,
+                                score,
+                                time,
+                                note,
+                        )
+                )
+
+                Toast.makeText(this, "Record updated.", Toast.LENGTH_LONG).show()
+                setUpRecordList()
+                setUpAverageMonthScore()
+                updateDialog.dismiss()
+
+            } else {
+                Toast.makeText(this, "Mood can't be blank.", Toast.LENGTH_LONG)
+                        .show()
+            }
+
+            dbHandlerRecord.close()
+
+        }
+
+        updateDialog.show()
+
+        bindingUpdateRecord.tvCancelUpdateRecord.setOnClickListener {
+            updateDialog.dismiss()
+        }
+
+    }
+
+    fun deleteRecord(record: RecordModel) {
+        val deleteDialog = Dialog(this, R.style.Theme_Dialog)
+        deleteDialog.setCancelable(false)
+        bindingDeleteRecord = DialogDeleteRecordBinding.inflate(layoutInflater)
+        val view = bindingDeleteRecord.root
+        deleteDialog.setContentView(view)
+        deleteDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        bindingDeleteRecord.tvDeleteRecord.setOnClickListener {
+            val dbHandler = RecordHandler(this, null)
+            dbHandler.deleteRecord(
+                    RecordModel(
+                            record.id,
+                            0,
+                            "",
+                            "",
+                    )
+            )
+
+            Toast.makeText(this, "Record deleted.", Toast.LENGTH_LONG).show()
+            setUpRecordList()
+            dbHandler.close()
+            deleteDialog.dismiss()
+        }
+
+        bindingDeleteRecord.tvCancelDeleteRecord.setOnClickListener {
+            deleteDialog.dismiss()
+        }
+
+        deleteDialog.show()
+    }
+
 
     private fun getShortMonth(month: Int): String {
         return when (month) {

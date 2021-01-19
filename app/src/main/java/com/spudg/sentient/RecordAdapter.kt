@@ -72,8 +72,19 @@ class RecordAdapter(private val context: Context, private val items: ArrayList<R
         }
 
         holder.noteView.setOnClickListener {}
-        holder.recordInnerRow.setOnClickListener {}
-        holder.recordInnerRow.setOnLongClickListener {true}
+
+        holder.recordInnerRow.setOnClickListener {
+            if (context is MainActivity) {
+                context.updateRecord(record)
+            }
+        }
+
+        holder.recordInnerRow.setOnLongClickListener {
+            if (context is MainActivity) {
+                context.deleteRecord(record)
+            }
+            true
+        }
 
     }
 
