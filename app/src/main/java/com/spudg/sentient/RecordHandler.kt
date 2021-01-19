@@ -112,5 +112,4 @@ class RecordHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) :
 
 
 
-
 }

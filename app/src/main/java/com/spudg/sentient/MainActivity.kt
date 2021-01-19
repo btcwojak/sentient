@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,6 +14,9 @@ import com.spudg.sentient.databinding.ActivityMainBinding
 import com.spudg.sentient.databinding.DayMonthYearPickerBinding
 import com.spudg.sentient.databinding.DialogAddRecordBinding
 import com.spudg.sentient.databinding.HourMinutePickerBinding
+import java.time.Instant.now
+import java.time.LocalDateTime.now
+import java.time.Month
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -29,12 +33,6 @@ class MainActivity : AppCompatActivity() {
         bindingMain = ActivityMainBinding.inflate(layoutInflater)
         val view = bindingMain.root
         setContentView(view)
-
-        bindingMain.recordsBtn.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
 
         bindingMain.visualiserBtn.setOnClickListener {
 
@@ -58,32 +56,53 @@ class MainActivity : AppCompatActivity() {
         val allRecords = dbHandler.filterRecords()
 
         var runningTotal = 0
-        var numberOfRatings = allRecords.size
+        var numberOfRatings = 0
+
+        var currentMonth = Calendar.getInstance().get(Calendar.MONTH) + 1
+        var currentYear = Calendar.getInstance().get(Calendar.YEAR)
+        var currentDate = currentMonth.toString() + currentYear.toString()
+
+        val cal = Calendar.getInstance()
 
         for (record in allRecords) {
-            runningTotal += record.score
+
+            cal.timeInMillis = record.time.toLong()
+            val recordMonth = cal.get(Calendar.MONTH) + 1
+            val recordYear = cal.get(Calendar.YEAR)
+            val recordDate = recordMonth.toString() + recordYear.toString()
+
+            if (recordDate == currentDate) {
+                numberOfRatings += 1
+                runningTotal += record.score
+            }
+
         }
 
-        var averageScore = (runningTotal/numberOfRatings)
-        bindingMain.averageScoreMonth.text = averageScore.toString()
+        if (numberOfRatings > 0) {
 
-        when (averageScore) {
-            in 0..9 -> {
-                bindingMain.averageScoreMonth.setTextColor(-65527)
-            }
-            in 10..39 -> {
-                bindingMain.averageScoreMonth.setTextColor(-25088)
-            }
-            in 40..69 -> {
-                bindingMain.averageScoreMonth.setTextColor(-16728577)
-            }
-            in 70..89 -> {
-                bindingMain.averageScoreMonth.setTextColor(-16711896)
-            }
-            in 90..100 -> {
-                bindingMain.averageScoreMonth.setTextColor(-6881025)
+            var averageScore = (runningTotal/numberOfRatings)
+            bindingMain.averageScoreMonth.text = averageScore.toString()
+
+            when (averageScore) {
+                in 0..9 -> {
+                    bindingMain.averageScoreMonth.setTextColor(-65527)
+                }
+                in 10..39 -> {
+                    bindingMain.averageScoreMonth.setTextColor(-25088)
+                }
+                in 40..69 -> {
+                    bindingMain.averageScoreMonth.setTextColor(-16728577)
+                }
+                in 70..89 -> {
+                    bindingMain.averageScoreMonth.setTextColor(-16711896)
+                }
+                in 90..100 -> {
+                    bindingMain.averageScoreMonth.setTextColor(-6881025)
+                }
+
             }
         }
+
     }
 
     private fun setUpRecordList() {
@@ -316,6 +335,7 @@ class MainActivity : AppCompatActivity() {
 
                 Toast.makeText(this, "Record posted.", Toast.LENGTH_LONG).show()
                 setUpRecordList()
+                setUpAverageMonthScore()
                 addDialog.dismiss()
 
             } else {
