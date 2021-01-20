@@ -368,9 +368,17 @@ class MainActivity : AppCompatActivity() {
         updateDialog.setContentView(view)
         updateDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        var dayPicked = Calendar.getInstance()[Calendar.DAY_OF_MONTH] // SET TO RECORD DAY
-        var monthPicked = Calendar.getInstance()[Calendar.MONTH] + 1 // SET TO RECORD MONTH
-        var yearPicked = Calendar.getInstance()[Calendar.YEAR] // SET TO RECORD YEAR
+        var calForOldRecordTime = Calendar.getInstance()
+        calForOldRecordTime.timeInMillis = record.time.toLong()
+        var oldDay = calForOldRecordTime.get(Calendar.DAY_OF_MONTH)
+        var oldMonth = calForOldRecordTime.get(Calendar.MONTH) + 1
+        var oldYear = calForOldRecordTime.get(Calendar.YEAR)
+        var oldHour = calForOldRecordTime.get(Calendar.HOUR_OF_DAY)
+        var oldMinute = calForOldRecordTime.get(Calendar.MINUTE)
+
+        var dayPicked = oldDay
+        var monthPicked = oldMonth
+        var yearPicked = oldYear
 
         bindingUpdateRecord.dateRecordUpdate.text =
                 "$dayPicked ${getShortMonth(monthPicked)} $yearPicked"
@@ -466,8 +474,8 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        var hourPicked = Calendar.getInstance()[Calendar.HOUR_OF_DAY] // SET TO RECORD HOUR
-        var minutePicked = Calendar.getInstance()[Calendar.MINUTE] // SET TO RECORD MINUTE
+        var hourPicked = oldHour
+        var minutePicked = oldMinute
 
         bindingUpdateRecord.timeRecordUpdate.text =
                 "$hourPicked:$minutePicked"
@@ -520,9 +528,28 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        bindingUpdateRecord.scoreSliderUpdate.value = 50F
-        bindingUpdateRecord.currentScoreUpdate.text = bindingUpdateRecord.scoreSliderUpdate.value.roundToInt().toString()
-        bindingUpdateRecord.currentScoreUpdate.setTextColor(-16728577)
+        val notesET = bindingUpdateRecord.etNoteUpdateRecord
+        notesET.setText(record.note)
+
+        bindingUpdateRecord.scoreSliderUpdate.value = record.score.toFloat()
+        bindingUpdateRecord.currentScoreUpdate.text = record.score.toString()
+        when (record.score.toFloat()) {
+            in 0F..9F -> {
+                bindingUpdateRecord.currentScoreUpdate.setTextColor(-65527)
+            }
+            in 10F..39F -> {
+                bindingUpdateRecord.currentScoreUpdate.setTextColor(-25088)
+            }
+            in 40F..69F -> {
+                bindingUpdateRecord.currentScoreUpdate.setTextColor(-16728577)
+            }
+            in 70F..89F -> {
+                bindingUpdateRecord.currentScoreUpdate.setTextColor(-16711896)
+            }
+            in 90F..100F -> {
+                bindingUpdateRecord.currentScoreUpdate.setTextColor(-6881025)
+            }
+        }
 
         bindingUpdateRecord.scoreSliderUpdate.addOnChangeListener { slider, value, fromUser ->
             slider.value = value.roundToInt().toFloat()
