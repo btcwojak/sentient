@@ -9,86 +9,85 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.spudg.sentient.databinding.RecordRowBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
 class RecordAdapter(private val context: Context, private val items: ArrayList<RecordModel>) :
-        RecyclerView.Adapter<RecordAdapter.ViewHolder>() {
+        RecyclerView.Adapter<RecordAdapter.RecordViewHolder>() {
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val recordRowLayout = view.findViewById<LinearLayout>(R.id.record_row_layout)!!
-        val recordInnerRow = view.findViewById<LinearLayout>(R.id.record_main_row_layout)!!
-        val scoreView = view.findViewById<TextView>(R.id.score_record_row)!!
-        val timeView = view.findViewById<TextView>(R.id.at_time)!!
-        val dateView = view.findViewById<TextView>(R.id.date)!!
-        val noteView = view.findViewById<ImageView>(R.id.notes_btn)!!
+    inner class RecordViewHolder(val binding: RecordRowBinding)
+        :RecyclerView.ViewHolder(binding.root)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecordViewHolder {
+        val binding = RecordRowBinding
+                .inflate(LayoutInflater.from(parent.context), parent, false)
+        return RecordViewHolder(binding)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(
-                LayoutInflater.from(context).inflate(R.layout.record_row, parent, false)
-        )
-    }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecordViewHolder, position: Int) {
 
-        val record = items[position]
+        with (holder) {
+            val record = items[position]
 
-        val sdfDate = SimpleDateFormat("EEEE dd MMMM yyyy")
-        val sdfTime = SimpleDateFormat("HH:mm")
-        val date = sdfDate.format(record.time.toLong())
-        val time = sdfTime.format(record.time.toLong())
-        holder.dateView.text = date
-        holder.timeView.text = "at $time"
+            val sdfDate = SimpleDateFormat("EEEE dd MMMM yyyy")
+            val sdfTime = SimpleDateFormat("HH:mm")
+            val date = sdfDate.format(record.time.toLong())
+            val time = sdfTime.format(record.time.toLong())
+            binding.date.text = date
+            binding.atTime.text = "at $time"
 
-        holder.scoreView.text = record.score.toString()
+            binding.scoreRecordRow.text = record.score.toString()
 
-        when (record.score) {
-            in 0..9 -> {
-                holder.scoreView.setTextColor(-65527)
-            }
-            in 10..39 -> {
-                holder.scoreView.setTextColor(-25088)
-            }
-            in 40..69 -> {
-                holder.scoreView.setTextColor(-16728577)
-            }
-            in 70..89 -> {
-                holder.scoreView.setTextColor(-16711896)
-            }
-            in 90..100 -> {
-                holder.scoreView.setTextColor(-6881025)
-            }
-        }
-
-        if (context is MainActivity) {
-            try {
-                if (date == sdfDate.format(items[position - 1].time.toLong())) {
-                    holder.dateView.visibility = View.GONE
+            when (record.score) {
+                in 0..9 -> {
+                    binding.scoreRecordRow.setTextColor(-65527)
                 }
-            } catch (e: Exception) {
-                Log.v("Records", e.message.toString())
+                in 10..39 -> {
+                    binding.scoreRecordRow.setTextColor(-25088)
+                }
+                in 40..69 -> {
+                    binding.scoreRecordRow.setTextColor(-16728577)
+                }
+                in 70..89 -> {
+                    binding.scoreRecordRow.setTextColor(-16711896)
+                }
+                in 90..100 -> {
+                    binding.scoreRecordRow.setTextColor(-6881025)
+                }
+            }
+
+            if (context is MainActivity) {
+                try {
+                    if (date == sdfDate.format(items[position - 1].time.toLong())) {
+                        binding.date.visibility = View.GONE
+                    }
+                } catch (e: Exception) {
+                    Log.v("Records", e.message.toString())
+                }
+            }
+
+            binding.notesBtn.setOnClickListener {
+                if (context is MainActivity) {
+                    context.viewNoteForRecordId(record.id)
+                }
+            }
+
+            binding.recordRow.setOnClickListener {
+                if (context is MainActivity) {
+                    context.updateRecord(record)
+                }
+            }
+
+            binding.recordRow.setOnLongClickListener {
+                if (context is MainActivity) {
+                    context.deleteRecord(record)
+                }
+                true
             }
         }
 
-        holder.noteView.setOnClickListener {
-            if (context is MainActivity) {
-                context.viewNoteForRecordId(record.id)
-            }
-        }
-
-        holder.recordInnerRow.setOnClickListener {
-            if (context is MainActivity) {
-                context.updateRecord(record)
-            }
-        }
-
-        holder.recordInnerRow.setOnLongClickListener {
-            if (context is MainActivity) {
-                context.deleteRecord(record)
-            }
-            true
-        }
 
     }
 
