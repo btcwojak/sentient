@@ -69,9 +69,7 @@
             android:layout_height="match_parent"
             android:fontFamily="@font/open_sans_light"
             android:hint="Notes"
-            android:inputType="text"
-            android:maxLength="48"
-            android:maxLines="1" />
+            android:inputType="text" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
