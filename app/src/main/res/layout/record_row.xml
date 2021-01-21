@@ -8,7 +8,6 @@
     android:layout_height="wrap_content"
     android:layout_marginStart="20dp"
     android:layout_marginEnd="20dp"
-    android:layout_marginBottom="20dp"
     android:orientation="vertical">
 
     <LinearLayout
@@ -22,13 +21,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
             android:fontFamily="@font/open_sans_light"
             android:gravity="center_horizontal"
             android:text="Thursday 14 January 2021"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/black"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"/>
 
         <TextView
             android:id="@+id/row_line"
@@ -42,22 +41,18 @@
             android:background="@drawable/record_row_line" />
 
         <LinearLayout
-            android:id="@+id/policy_main_row_layout"
+            android:id="@+id/record_main_row_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:foreground="?attr/selectableItemBackground"
             android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingTop="6dp"
+                    android:paddingTop="10dp"
                     android:paddingBottom="10dp">
 
 
@@ -72,8 +67,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start"
-                            android:layout_marginLeft="20dp"
-                            android:layout_marginRight="5dp"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginEnd="5dp"
                             android:fontFamily="@font/open_sans_light"
                             android:gravity="start"
                             android:textColor="@color/colorAccent"
@@ -105,15 +100,13 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_marginTop="2dp"
-                            android:layout_marginRight="10dp"
-                            android:background="@drawable/arrow_right"
+                            android:layout_marginEnd="10dp"
+                            android:background="@drawable/note_btn"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
-
-                </LinearLayout>
 
             </LinearLayout>
 

@@ -17,7 +17,7 @@ class RecordAdapter(private val context: Context, private val items: ArrayList<R
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val recordRowLayout = view.findViewById<LinearLayout>(R.id.record_row_layout)!!
-        val recordInnerRow = view.findViewById<LinearLayout>(R.id.record_row)!!
+        val recordInnerRow = view.findViewById<LinearLayout>(R.id.record_main_row_layout)!!
         val scoreView = view.findViewById<TextView>(R.id.score_record_row)!!
         val timeView = view.findViewById<TextView>(R.id.at_time)!!
         val dateView = view.findViewById<TextView>(R.id.date)!!
@@ -71,7 +71,11 @@ class RecordAdapter(private val context: Context, private val items: ArrayList<R
             }
         }
 
-        holder.noteView.setOnClickListener {}
+        holder.noteView.setOnClickListener {
+            if (context is MainActivity) {
+                context.viewNoteForRecordId(record.id)
+            }
+        }
 
         holder.recordInnerRow.setOnClickListener {
             if (context is MainActivity) {

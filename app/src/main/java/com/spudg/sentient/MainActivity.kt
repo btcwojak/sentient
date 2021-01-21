@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bindingDeleteRecord: DialogDeleteRecordBinding
     private lateinit var bindingDMYP: DayMonthYearPickerBinding
     private lateinit var bindingHMP: HourMinutePickerBinding
+    private lateinit var bindingViewNote: DialogViewNoteBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -647,6 +648,28 @@ class MainActivity : AppCompatActivity() {
         }
 
         deleteDialog.show()
+    }
+
+    fun viewNoteForRecordId(recordId: Int) {
+        val viewNoteDialog = Dialog(this, R.style.Theme_Dialog)
+        viewNoteDialog.setCancelable(false)
+        bindingViewNote = DialogViewNoteBinding.inflate(layoutInflater)
+        val view = bindingViewNote.root
+        viewNoteDialog.setContentView(view)
+        viewNoteDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val dbHandler = RecordHandler(this, null)
+        val noteBody = dbHandler.getNoteForId(recordId)
+        dbHandler.close()
+
+        bindingViewNote.tvNoteBody.text = noteBody
+
+        bindingViewNote.tvDoneViewNote.setOnClickListener {
+            setUpRecordList()
+            viewNoteDialog.dismiss()
+        }
+
+        viewNoteDialog.show()
     }
 
 

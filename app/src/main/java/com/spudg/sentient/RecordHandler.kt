@@ -110,6 +110,28 @@ class RecordHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) :
 
     }
 
+    fun getNoteForId(recordId: Int): String {
+        var note = ""
+        val db = this.readableDatabase
+        val cursor = db.rawQuery(
+                "SELECT * FROM $TABLE_RECORDS WHERE $KEY_ID = $recordId",
+                null
+        )
+
+        if (cursor.moveToFirst()) {
+            do {
+                note = cursor.getString(cursor.getColumnIndex(KEY_NOTE))
+            } while (cursor.moveToNext())
+        }
+
+        return if (note.isNotEmpty()) {
+            note
+        } else {
+            "There aren't any notes on this record yet. Tap on the record to edit and add a note!"
+        }
+
+    }
+
 
 
 }
