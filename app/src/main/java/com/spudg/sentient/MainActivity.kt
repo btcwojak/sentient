@@ -43,7 +43,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
 
         bindingMain.visualiserBtn.setOnClickListener {
-
+            val intent = Intent(this, VisualiserActivity::class.java)
+            startActivity(intent)
         }
 
         bindingMain.aboutBtn.setOnClickListener {
@@ -466,7 +467,7 @@ class MainActivity : AppCompatActivity() {
                 dayPicked = Calendar.getInstance()[Calendar.DAY_OF_MONTH]
                 monthPicked = Calendar.getInstance()[Calendar.MONTH] + 1
                 yearPicked = Calendar.getInstance()[Calendar.YEAR]
-                bindingAddRecord.dateRecordPost.text =
+                bindingUpdateRecord.dateRecordUpdate.text =
                         "$dayPicked ${getShortMonth(monthPicked)} $yearPicked"
                 changeDateDialog.dismiss()
             }
