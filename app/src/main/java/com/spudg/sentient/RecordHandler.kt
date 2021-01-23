@@ -4,8 +4,10 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class RecordHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         SQLiteOpenHelper(context, DATABASE_NAME, factory, DATABASE_VERSION) {
@@ -108,6 +110,55 @@ class RecordHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) :
 
         return list
 
+    }
+
+    fun getRecordsForMonthYear(month: Int, year: Int): ArrayList<RecordModel> {
+        val list = ArrayList<RecordModel>()
+        val listForMonthYear = ArrayList<RecordModel>()
+
+        val db = this.readableDatabase
+        val cursor = db.rawQuery(
+                "SELECT * FROM $TABLE_RECORDS",
+                null
+        )
+
+        var id: Int
+        var score: Int
+        var time: String
+        var note: String
+
+        if (cursor.moveToFirst()) {
+            do {
+                id = cursor.getInt(cursor.getColumnIndex(KEY_ID))
+                score = cursor.getInt(cursor.getColumnIndex(KEY_SCORE))
+                time = cursor.getString(cursor.getColumnIndex(KEY_TIME))
+                note = cursor.getString(cursor.getColumnIndex(KEY_NOTE))
+                val record = RecordModel(
+                        id = id,
+                        score = score,
+                        time = time,
+                        note = note,
+                )
+                list.add(record)
+            } while (cursor.moveToNext())
+        }
+
+        for (record in list) {
+            var recordTime = Calendar.getInstance()
+            recordTime.timeInMillis = record.time.toLong()
+            var recordMonth = recordTime.get(Calendar.MONTH) + 1
+            var recordYear = recordTime.get(Calendar.YEAR)
+            Log.e("test",recordMonth.toString() + "" + recordYear.toString())
+            Log.e("test",month.toString() + year.toString())
+            if (recordMonth == month && recordYear == year) {
+                listForMonthYear.add(record)
+            }
+        }
+
+        cursor.close()
+        db.close()
+
+        return listForMonthYear
     }
 
     fun getNoteForId(recordId: Int): String {

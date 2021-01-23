@@ -454,7 +454,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             bindingDMYP.submitDmy.setOnClickListener {
-                bindingAddRecord.dateRecordPost.text =
+                bindingUpdateRecord.dateRecordUpdate.text =
                         "$dayPicked ${getShortMonth(monthPicked)} $yearPicked"
                 changeDateDialog.dismiss()
             }
@@ -666,7 +666,6 @@ class MainActivity : AppCompatActivity() {
         bindingViewNote.tvNoteBody.text = noteBody
 
         bindingViewNote.tvDoneViewNote.setOnClickListener {
-            setUpRecordList()
             viewNoteDialog.dismiss()
         }
 
