@@ -8,6 +8,7 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.spudg.sentient.databinding.ActivityVisualiserBinding
 import java.util.*
+import kotlin.collections.ArrayList
 
 class VisualiserActivity : AppCompatActivity() {
 
@@ -34,12 +35,12 @@ class VisualiserActivity : AppCompatActivity() {
     }
 
     private fun setUpNoteList() {
-        if (getRecordListMonthYear(monthFilter, yearFilter).size > 0) {
+        if (getRecordListMonthYearWithNoteOnly(monthFilter, yearFilter).size > 0) {
             bindingVisualiser.rvNotes.visibility = View.VISIBLE
             //bindingMain.tvNoRecords.visibility = View.GONE
             val manager = LinearLayoutManager(this)
             bindingVisualiser.rvNotes.layoutManager = manager
-            val noteAdapter = NoteListAdapter(this, getRecordListMonthYear(monthFilter, yearFilter))
+            val noteAdapter = NoteListAdapter(this, getRecordListMonthYearWithNoteOnly(monthFilter, yearFilter))
             bindingVisualiser.rvNotes.adapter = noteAdapter
         } else {
             bindingVisualiser.rvNotes.visibility = View.GONE
@@ -57,6 +58,13 @@ class VisualiserActivity : AppCompatActivity() {
     private fun getRecordListMonthYear(month: Int, year: Int): ArrayList<RecordModel> {
         val dbHandler = RecordHandler(this, null)
         val result = dbHandler.getRecordsForMonthYear(month, year)
+        dbHandler.close()
+        return result
+    }
+
+    private fun getRecordListMonthYearWithNoteOnly(month: Int, year: Int): ArrayList<RecordModel> {
+        val dbHandler = RecordHandler(this, null)
+        val result = dbHandler.getRecordsForMonthYearWithNoteOnly(month, year)
         dbHandler.close()
         return result
     }

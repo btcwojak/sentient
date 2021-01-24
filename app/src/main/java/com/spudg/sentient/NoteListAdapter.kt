@@ -37,16 +37,8 @@ class NoteListAdapter(private val context: Context, private val items: ArrayList
             val hour = cal.get(Calendar.HOUR_OF_DAY)
             val minute = cal.get(Calendar.MINUTE)
 
-            if (record.note.isNotEmpty() && month == Calendar.getInstance().get(Calendar.MONTH) + 1) {
-                binding.noteBody.text = record.note
-                binding.noteDate.text = "from $day ${getShortMonth(month)} $year at $hour:$minute"
-            } else {
-                binding.noteMainRowLayout.visibility = View.GONE
-                binding.noteRowLayout.visibility = View.GONE
-                binding.noteRow.visibility = View.GONE
-                binding.noteBody.visibility = View.GONE
-                binding.noteDate.visibility = View.GONE // FIX WHITESPACE ISSUE
-            }
+            binding.noteBody.text = record.note
+            binding.noteDate.text = "from $day ${getShortMonth(month)} $year at $hour:$minute"
 
         }
 
