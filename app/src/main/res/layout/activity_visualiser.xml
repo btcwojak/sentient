@@ -247,6 +247,16 @@
 
                 </RelativeLayout>
 
+                <TextView
+                    android:id="@+id/tvNoNotes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="14sp"
+                    android:textColor="#000000"
+                    android:fontFamily="@font/open_sans_light"
+                    android:text="No notes posted yet this month" />
+
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="2dp"

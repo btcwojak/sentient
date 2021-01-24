@@ -17,7 +17,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.spudg.sentient.databinding.*
-import kotlinx.android.synthetic.main.day_month_year_picker.*
 import java.text.SimpleDateFormat
 import java.time.Instant.now
 import java.time.LocalDateTime.now
