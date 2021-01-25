@@ -107,10 +107,8 @@ class MainActivity : AppCompatActivity() {
                 in 90..100 -> {
                     bindingMain.averageScoreMonth.setTextColor(-6881025)
                 }
-
             }
         }
-
     }
 
     private fun setUpRecordList() {

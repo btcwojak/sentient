@@ -43,6 +43,14 @@ class VisualiserActivity : AppCompatActivity() {
         val view = bindingVisualiser.root
         setContentView(view)
 
+        setMonthHeader(monthFilter, yearFilter)
+        setUpScoreNumberText()
+        makeBarData(monthFilter,yearFilter)
+        makePieData(monthFilter,yearFilter)
+        setUpBarChart()
+        setUpPieChart()
+        setUpNoteList()
+
         bindingVisualiser.selectNewMonthHeader.setOnClickListener {
 
             val filterDialog = Dialog(this, R.style.Theme_Dialog)
@@ -71,17 +79,14 @@ class VisualiserActivity : AppCompatActivity() {
             }
 
             bindingMonthYearPicker.submitMy.setOnClickListener {
-
-                makeBarData(monthFilter, yearFilter)
-                makePieData(monthFilter, yearFilter)
-
+                setMonthHeader(monthFilter, yearFilter)
+                setUpScoreNumberText()
+                makeBarData(monthFilter,yearFilter)
+                makePieData(monthFilter,yearFilter)
                 setUpBarChart()
                 setUpPieChart()
-
-                setMonthHeader(monthFilter, yearFilter)
-
-                setUpScoreNumberText()
                 setUpNoteList()
+
                 filterDialog.dismiss()
             }
 
@@ -98,19 +103,6 @@ class VisualiserActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-
-        setMonthHeader(monthFilter, yearFilter)
-
-        setUpScoreNumberText()
-
-        makeBarData(monthFilter,yearFilter)
-        setUpBarChart()
-
-        makePieData(monthFilter,yearFilter)
-        setUpPieChart()
-
-        setUpNoteList()
-
 
     }
 
@@ -129,6 +121,7 @@ class VisualiserActivity : AppCompatActivity() {
     private fun resetPieData() {
         scoreSplit = arrayListOf()
         scoreTitles = arrayListOf()
+        entriesPie = arrayListOf()
     }
 
     private fun makePieData(monthFilter: Int, yearFilter: Int) {
@@ -180,8 +173,15 @@ class VisualiserActivity : AppCompatActivity() {
                 entriesPie.add(PieEntry(scoreSplit[i].toFloat(), scoreTitles[i]))
             }
 
+            val splitColours = ArrayList<Int>()
+            splitColours.add(-65527)
+            splitColours.add(-25088)
+            splitColours.add(-16728577)
+            splitColours.add(-16711896)
+            splitColours.add(-6881025)
+
             val dataSetPie = PieDataSet(entriesPie, "")
-            //dataSetExp.colors = categoryColoursExp.toMutableList()
+            dataSetPie.colors = splitColours.toMutableList()
             val dataPie = PieData(dataSetPie)
 
             val chartPie: PieChart = bindingVisualiser.chartSplitAveScore
@@ -189,30 +189,30 @@ class VisualiserActivity : AppCompatActivity() {
                 chartPie.data = dataPie
             }
 
-            //chartExp.animateY(800)
-            //chartExp.setNoDataText("No net expenditure categories for the month selected.")
-            //chartExp.setNoDataTextColor(0xff000000.toInt())
-            //chartExp.setNoDataTextTypeface(ResourcesCompat.getFont(this, R.font.open_sans_light))
-            //chartExp.setEntryLabelTypeface(ResourcesCompat.getFont(this, R.font.open_sans_light))
-            //chartExp.dragDecelerationFrictionCoef = .95f
-            //chartExp.setDrawEntryLabels(false)
+            chartPie.animateY(800)
+            chartPie.setNoDataText("No records posted for the month selected.")
+            chartPie.setNoDataTextColor(0xff000000.toInt())
+            chartPie.setNoDataTextTypeface(ResourcesCompat.getFont(this, R.font.open_sans_light))
+            chartPie.setEntryLabelTypeface(ResourcesCompat.getFont(this, R.font.open_sans_light))
+            chartPie.dragDecelerationFrictionCoef = .95f
+            chartPie.setDrawEntryLabels(false)
 
-            //chartExp.description.isEnabled = false
+            chartPie.description.isEnabled = false
 
-            //val l: Legend = chartExp.legend
-            //l.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
-            //l.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
-            //l.orientation = Legend.LegendOrientation.HORIZONTAL
-            //l.setDrawInside(false)
+            val l: Legend = chartPie.legend
+            l.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
+            l.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+            l.orientation = Legend.LegendOrientation.HORIZONTAL
+            l.setDrawInside(false)
 
-            //dataSetExp.valueLinePart1OffsetPercentage = 80f
-            //dataSetExp.valueLinePart1Length = 0.4f
-            //dataSetExp.valueLinePart2Length = 0.8f
-            //dataSetExp.yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
+            dataSetPie.valueLinePart1OffsetPercentage = 80f
+            dataSetPie.valueLinePart1Length = 0.4f
+            dataSetPie.valueLinePart2Length = 0.8f
+            dataSetPie.yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
 
-            //dataExp.setValueFormatter(PercentFormatter())
-            //dataExp.setValueTextSize(11f)
-            //dataExp.setValueTextColor(Color.BLACK)
+            dataPie.setValueFormatter(PercentFormatter())
+            dataPie.setValueTextSize(11f)
+            dataPie.setValueTextColor(Color.BLACK)
 
             chartPie.invalidate()
 
