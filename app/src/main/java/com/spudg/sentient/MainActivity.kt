@@ -506,7 +506,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             bindingHMP.submitHm.setOnClickListener {
-                bindingAddRecord.timeRecordPost.text =
+                bindingUpdateRecord.timeRecordUpdate.text =
                         "$hourPicked:$minutePicked"
                 changeTimeDialog.dismiss()
             }

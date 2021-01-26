@@ -6,17 +6,21 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.renderscript.Sampler
 import android.util.Log
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.spudg.sentient.databinding.ActivityVisualiserBinding
 import com.spudg.sentient.databinding.DayMonthYearPickerBinding
 import com.spudg.sentient.databinding.MonthYearPickerBinding
@@ -210,7 +214,7 @@ class VisualiserActivity : AppCompatActivity() {
             dataSetPie.valueLinePart2Length = 0.8f
             dataSetPie.yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
 
-            dataPie.setValueFormatter(PercentFormatter())
+            dataSetPie.valueFormatter = PercentFormatter0dp()
             dataPie.setValueTextSize(11f)
             dataPie.setValueTextColor(Color.BLACK)
 
