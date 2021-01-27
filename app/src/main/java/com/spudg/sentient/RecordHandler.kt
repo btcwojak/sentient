@@ -160,6 +160,68 @@ class RecordHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) :
 
     }
 
+    fun getAveScoreForDayMonthYear(day:Int, month: Int, year: Int): Int {
+        val list = ArrayList<RecordModel>()
+        val listForDayMonthYear = ArrayList<RecordModel>()
+
+        var runningCount = 0
+        var runningTotal = 0
+
+        val db = this.readableDatabase
+        val cursor = db.rawQuery(
+                "SELECT * FROM $TABLE_RECORDS",
+                null
+        )
+
+        var id: Int
+        var score: Int
+        var time: String
+        var note: String
+
+        if (cursor.moveToFirst()) {
+            do {
+                id = cursor.getInt(cursor.getColumnIndex(KEY_ID))
+                score = cursor.getInt(cursor.getColumnIndex(KEY_SCORE))
+                time = cursor.getString(cursor.getColumnIndex(KEY_TIME))
+                note = cursor.getString(cursor.getColumnIndex(KEY_NOTE))
+                val record = RecordModel(
+                        id = id,
+                        score = score,
+                        time = time,
+                        note = note,
+                )
+                list.add(record)
+            } while (cursor.moveToNext())
+        }
+
+        for (record in list) {
+            var recordTime = Calendar.getInstance()
+            recordTime.timeInMillis = record.time.toLong()
+            var recordDay = recordTime.get(Calendar.DAY_OF_MONTH)
+            var recordMonth = recordTime.get(Calendar.MONTH) + 1
+            var recordYear = recordTime.get(Calendar.YEAR)
+            if (recordDay == day && recordMonth == month && recordYear == year) {
+                listForDayMonthYear.add(record)
+            }
+        }
+
+        for (record in listForDayMonthYear) {
+            runningCount += 1
+            runningTotal += record.score
+        }
+
+        cursor.close()
+        db.close()
+
+        return if (runningCount != 0) {
+            runningTotal / runningCount
+        } else {
+            0
+        }
+
+
+    }
+
     fun getRecordsForMonthYearWithNoteOnly(month: Int, year: Int): ArrayList<RecordModel> {
         val list = ArrayList<RecordModel>()
         val listForMonthYearWithNoteOnly = ArrayList<RecordModel>()

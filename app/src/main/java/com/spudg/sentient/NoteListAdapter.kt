@@ -38,7 +38,7 @@ class NoteListAdapter(private val context: Context, private val items: ArrayList
             val minute = cal.get(Calendar.MINUTE)
 
             binding.noteBody.text = record.note
-            binding.noteDate.text = "from $day ${getShortMonth(month)} $year at $hour:$minute"
+            binding.noteDate.text = "from $day ${Globals.getShortMonth(month)} $year at $hour:$minute"
 
         }
 
@@ -48,21 +48,4 @@ class NoteListAdapter(private val context: Context, private val items: ArrayList
         return items.size
     }
 
-    private fun getShortMonth(month: Int): String {
-        return when (month) {
-            1 -> "Jan"
-            2 -> "Feb"
-            3 -> "Mar"
-            4 -> "Apr"
-            5 -> "May"
-            6 -> "Jun"
-            7 -> "Jul"
-            8 -> "Aug"
-            9 -> "Sep"
-            10 -> "Oct"
-            11 -> "Nov"
-            12 -> "Dec"
-            else -> "Error"
-        }
-    }
 }

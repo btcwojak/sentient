@@ -183,7 +183,7 @@
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="@id/llgraphs" />
 
-                <com.github.mikephil.charting.charts.PieChart
+                <com.github.mikephil.charting.charts.BarChart
                     android:id="@+id/chartAverageDaily"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"

@@ -6,13 +6,13 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import java.text.DecimalFormat;
 
-public class PercentFormatter0dp extends ValueFormatter
+public class WholeNumberRecordFormatter extends ValueFormatter
 {
 
     public DecimalFormat mFormat;
     private PieChart pieChart;
 
-    public PercentFormatter0dp() {
+    public WholeNumberRecordFormatter() {
         mFormat = new DecimalFormat("###,###,##0 records");
     }
 

@@ -4,26 +4,20 @@ import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.renderscript.Sampler
-import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.components.YAxis
-import com.github.mikephil.charting.data.BarEntry
-import com.github.mikephil.charting.data.PieData
-import com.github.mikephil.charting.data.PieDataSet
-import com.github.mikephil.charting.data.PieEntry
-import com.github.mikephil.charting.formatter.PercentFormatter
+import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.spudg.sentient.databinding.ActivityVisualiserBinding
-import com.spudg.sentient.databinding.DayMonthYearPickerBinding
 import com.spudg.sentient.databinding.MonthYearPickerBinding
+import java.text.DecimalFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -34,6 +28,9 @@ class VisualiserActivity : AppCompatActivity() {
 
     private lateinit var bindingVisualiser: ActivityVisualiserBinding
     private lateinit var bindingMonthYearPicker: MonthYearPickerBinding
+
+    private var daysInMonth: ArrayList<Int> = ArrayList()
+    private var averageScoresPerDay: ArrayList<Int> = ArrayList()
 
     var scoreSplit: ArrayList<Int> = arrayListOf()
     var scoreTitles: ArrayList<String> = arrayListOf()
@@ -49,8 +46,8 @@ class VisualiserActivity : AppCompatActivity() {
 
         setMonthHeader(monthFilter, yearFilter)
         setUpScoreNumberText()
-        makeBarData(monthFilter,yearFilter)
-        makePieData(monthFilter,yearFilter)
+        makeBarData(monthFilter, yearFilter)
+        makePieData(monthFilter, yearFilter)
         setUpBarChart()
         setUpPieChart()
         setUpNoteList()
@@ -85,8 +82,8 @@ class VisualiserActivity : AppCompatActivity() {
             bindingMonthYearPicker.submitMy.setOnClickListener {
                 setMonthHeader(monthFilter, yearFilter)
                 setUpScoreNumberText()
-                makeBarData(monthFilter,yearFilter)
-                makePieData(monthFilter,yearFilter)
+                makeBarData(monthFilter, yearFilter)
+                makePieData(monthFilter, yearFilter)
                 setUpBarChart()
                 setUpPieChart()
                 setUpNoteList()
@@ -111,15 +108,102 @@ class VisualiserActivity : AppCompatActivity() {
     }
 
     private fun resetBarData() {
-
+        entriesBar = arrayListOf()
+        daysInMonth = arrayListOf()
+        averageScoresPerDay = arrayListOf()
     }
 
     private fun makeBarData(monthFilter: Int, yearFilter: Int) {
 
+        resetBarData()
+
+        val db = RecordHandler(this, null)
+
+        daysInMonth = if (yearFilter % 4 == 0) {
+            when (monthFilter) {
+                1, 3, 5, 7, 8, 10, 12 -> Globals.DAYS31
+                4, 6, 9, 11 -> Globals.DAYS30
+                2 -> Globals.DAYS29
+                else -> arrayListOf(0)
+            }
+        } else {
+            when (monthFilter) {
+                1, 3, 5, 7, 8, 10, 12 -> Globals.DAYS31
+                4, 6, 9, 11 -> Globals.DAYS30
+                2 -> Globals.DAYS28
+                else -> arrayListOf(0)
+            }
+        }
+
+        for (day in daysInMonth) {
+            var averageForDay = db.getAveScoreForDayMonthYear(
+                    day,
+                    monthFilter,
+                    yearFilter
+            )
+            averageScoresPerDay.add(averageForDay)
+        }
+
+        db.close()
     }
 
     private fun setUpBarChart() {
 
+        var runningTotal = 0
+
+        for (score in averageScoresPerDay) {
+            runningTotal += score
+        }
+
+        if (runningTotal != 0) {
+            for (i in 0 until daysInMonth.size) {
+                entriesBar.add(BarEntry(daysInMonth[i].toFloat(), averageScoresPerDay[i].toFloat()))
+
+
+                val dataSetBar = BarDataSet(entriesBar, "")
+                val dataBar = BarData(dataSetBar)
+                //dataSetBar.color = categoryColour
+
+                dataBar.setValueFormatter(object : ValueFormatter() {
+                    override fun getFormattedValue(value: Float): String {
+                        return if (value > 0) {
+                            super.getFormattedValue(value)
+                        } else {
+                            ""
+                        }
+                    }
+                })
+
+                val chartBar: BarChart = bindingVisualiser.chartAverageDaily
+                if (entriesBar.size > 0) {
+                    chartBar.data = dataBar
+                }
+
+                chartBar.animateY(800)
+                chartBar.setNoDataText("No data for the month and category selected.")
+                chartBar.setNoDataTextColor(0xff000000.toInt())
+                chartBar.setNoDataTextTypeface(ResourcesCompat.getFont(this, R.font.open_sans_light))
+                chartBar.xAxis.setDrawGridLines(false)
+                chartBar.axisRight.isEnabled = false
+                chartBar.xAxis.position = XAxis.XAxisPosition.BOTTOM
+                chartBar.legend.isEnabled = false
+
+                chartBar.description.isEnabled = false
+
+                val l: Legend = chartBar.legend
+                l.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
+                l.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+                l.orientation = Legend.LegendOrientation.HORIZONTAL
+                l.setDrawInside(false)
+
+                chartBar.invalidate()
+            }
+        } else {
+            bindingVisualiser.chartAverageDaily.clear()
+            bindingVisualiser.chartAverageDaily.setNoDataText("No data for the month and category selected.")
+            bindingVisualiser.chartAverageDaily.setNoDataTextColor(0xff000000.toInt())
+            bindingVisualiser.chartAverageDaily.setNoDataTextTypeface(ResourcesCompat.getFont(this, R.font.open_sans_light))
+        }
     }
 
     private fun resetPieData() {
@@ -163,8 +247,8 @@ class VisualiserActivity : AppCompatActivity() {
             }
         }
 
-        scoreSplit = arrayListOf(score0to9,score10to39,score40to69,score70to89,score90to100)
-        scoreTitles = arrayListOf("0 to 9","10 to 39", "40 to 69", "70 to 89", "90 to 100")
+        scoreSplit = arrayListOf(score0to9, score10to39, score40to69, score70to89, score90to100)
+        scoreTitles = arrayListOf("0 to 9", "10 to 39", "40 to 69", "70 to 89", "90 to 100")
 
         db.close()
 
@@ -213,8 +297,8 @@ class VisualiserActivity : AppCompatActivity() {
             dataSetPie.valueLinePart1Length = 0.4f
             dataSetPie.valueLinePart2Length = 0.8f
             dataSetPie.yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
+            dataSetPie.valueFormatter = WholeNumberRecordFormatter()
 
-            dataSetPie.valueFormatter = PercentFormatter0dp()
             dataPie.setValueTextSize(11f)
             dataPie.setValueTextColor(Color.BLACK)
 

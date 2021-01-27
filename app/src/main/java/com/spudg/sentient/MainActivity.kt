@@ -145,7 +145,7 @@ class MainActivity : AppCompatActivity() {
         var yearPicked = Calendar.getInstance()[Calendar.YEAR]
 
         bindingAddRecord.dateRecordPost.text =
-                "$dayPicked ${getShortMonth(monthPicked)} $yearPicked"
+                "$dayPicked ${Globals.getShortMonth(monthPicked)} $yearPicked"
 
         bindingAddRecord.dateRecordPost.setOnClickListener {
             val changeDateDialog = Dialog(this, R.style.Theme_Dialog)
@@ -181,7 +181,7 @@ class MainActivity : AppCompatActivity() {
             monthPicked = Calendar.getInstance()[Calendar.MONTH] + 1
             yearPicked = Calendar.getInstance()[Calendar.YEAR]
 
-            bindingDMYP.dmypMonth.displayedValues = monthsShortArray
+            bindingDMYP.dmypMonth.displayedValues = Globals.monthsShortArray
 
             bindingDMYP.dmypDay.setOnValueChangedListener { _, _, newVal ->
                 dayPicked = newVal
@@ -217,7 +217,7 @@ class MainActivity : AppCompatActivity() {
 
             bindingDMYP.submitDmy.setOnClickListener {
                 bindingAddRecord.dateRecordPost.text =
-                        "$dayPicked ${getShortMonth(monthPicked)} $yearPicked"
+                        "$dayPicked ${Globals.getShortMonth(monthPicked)} $yearPicked"
                 changeDateDialog.dismiss()
             }
 
@@ -230,7 +230,7 @@ class MainActivity : AppCompatActivity() {
                 monthPicked = Calendar.getInstance()[Calendar.MONTH] + 1
                 yearPicked = Calendar.getInstance()[Calendar.YEAR]
                 bindingAddRecord.dateRecordPost.text =
-                        "$dayPicked ${getShortMonth(monthPicked)} $yearPicked"
+                        "$dayPicked ${Globals.getShortMonth(monthPicked)} $yearPicked"
                 changeDateDialog.dismiss()
             }
 
@@ -380,7 +380,7 @@ class MainActivity : AppCompatActivity() {
         var yearPicked = oldYear
 
         bindingUpdateRecord.dateRecordUpdate.text =
-                "$dayPicked ${getShortMonth(monthPicked)} $yearPicked"
+                "$dayPicked ${Globals.getShortMonth(monthPicked)} $yearPicked"
 
         bindingUpdateRecord.dateRecordUpdate.setOnClickListener {
             val changeDateDialog = Dialog(this, R.style.Theme_Dialog)
@@ -416,7 +416,7 @@ class MainActivity : AppCompatActivity() {
             monthPicked = Calendar.getInstance()[Calendar.MONTH] + 1
             yearPicked = Calendar.getInstance()[Calendar.YEAR]
 
-            bindingDMYP.dmypMonth.displayedValues = monthsShortArray
+            bindingDMYP.dmypMonth.displayedValues = Globals.monthsShortArray
 
             bindingDMYP.dmypDay.setOnValueChangedListener { _, _, newVal ->
                 dayPicked = newVal
@@ -452,7 +452,7 @@ class MainActivity : AppCompatActivity() {
 
             bindingDMYP.submitDmy.setOnClickListener {
                 bindingUpdateRecord.dateRecordUpdate.text =
-                        "$dayPicked ${getShortMonth(monthPicked)} $yearPicked"
+                        "$dayPicked ${Globals.getShortMonth(monthPicked)} $yearPicked"
                 changeDateDialog.dismiss()
             }
 
@@ -465,7 +465,7 @@ class MainActivity : AppCompatActivity() {
                 monthPicked = Calendar.getInstance()[Calendar.MONTH] + 1
                 yearPicked = Calendar.getInstance()[Calendar.YEAR]
                 bindingUpdateRecord.dateRecordUpdate.text =
-                        "$dayPicked ${getShortMonth(monthPicked)} $yearPicked"
+                        "$dayPicked ${Globals.getShortMonth(monthPicked)} $yearPicked"
                 changeDateDialog.dismiss()
             }
 
@@ -668,40 +668,6 @@ class MainActivity : AppCompatActivity() {
 
         viewNoteDialog.show()
     }
-
-
-    private fun getShortMonth(month: Int): String {
-        return when (month) {
-            1 -> "Jan"
-            2 -> "Feb"
-            3 -> "Mar"
-            4 -> "Apr"
-            5 -> "May"
-            6 -> "Jun"
-            7 -> "Jul"
-            8 -> "Aug"
-            9 -> "Sep"
-            10 -> "Oct"
-            11 -> "Nov"
-            12 -> "Dec"
-            else -> "Error"
-        }
-    }
-
-    private var monthsShortArray: Array<String> = arrayOf(
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Oct",
-            "Nov",
-            "Dec"
-    )
 
 
 }
