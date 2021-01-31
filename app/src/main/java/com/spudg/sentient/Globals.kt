@@ -15,6 +15,21 @@ class Globals {
                 "Sep",
                 "Oct",
                 "Nov",
+                "Dec",
+        )
+        var monthsShortArrayEmptyFirstEntry: Array<String> = arrayOf(
+                "",
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+                "Jun",
+                "Jul",
+                "Aug",
+                "Sep",
+                "Oct",
+                "Nov",
                 "Dec"
         )
         var DAYS31: ArrayList<Int> = arrayListOf(

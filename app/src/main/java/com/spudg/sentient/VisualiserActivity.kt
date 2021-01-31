@@ -5,7 +5,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
@@ -15,12 +14,14 @@ import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.spudg.sentient.databinding.ActivityVisualiserBinding
 import com.spudg.sentient.databinding.MonthYearPickerBinding
 import java.text.DecimalFormat
 import java.util.*
 import kotlin.collections.ArrayList
+
 
 class VisualiserActivity : AppCompatActivity() {
 
@@ -48,6 +49,7 @@ class VisualiserActivity : AppCompatActivity() {
         setContentView(view)
 
         setMonthHeader(monthFilter, yearFilter)
+        setMonthlyBarHeader(yearFilter)
         setUpScoreNumberText()
         makeBarDataDaily(monthFilter, yearFilter)
         makePieData(monthFilter, yearFilter)
@@ -69,7 +71,7 @@ class VisualiserActivity : AppCompatActivity() {
             bindingMonthYearPicker.mypYear.maxValue = 2999
             bindingMonthYearPicker.mypMonth.minValue = 1
             bindingMonthYearPicker.mypMonth.maxValue = 12
-            bindingMonthYearPicker.mypMonth.displayedValues = monthsShortArray
+            bindingMonthYearPicker.mypMonth.displayedValues = Globals.monthsShortArray
 
             bindingMonthYearPicker.mypYear.wrapSelectorWheel = true
             bindingMonthYearPicker.mypMonth.wrapSelectorWheel = true
@@ -86,6 +88,7 @@ class VisualiserActivity : AppCompatActivity() {
 
             bindingMonthYearPicker.submitMy.setOnClickListener {
                 setMonthHeader(monthFilter, yearFilter)
+                setMonthlyBarHeader(yearFilter)
                 setUpScoreNumberText()
                 makeBarDataDaily(monthFilter, yearFilter)
                 makePieData(monthFilter, yearFilter)
@@ -195,14 +198,11 @@ class VisualiserActivity : AppCompatActivity() {
                 chartBarDaily.axisRight.isEnabled = false
                 chartBarDaily.xAxis.position = XAxis.XAxisPosition.BOTTOM
                 chartBarDaily.legend.isEnabled = false
+                chartBarDaily.axisRight.setDrawLabels(true)
+
+                chartBarDaily.xAxis.labelCount = 31
 
                 chartBarDaily.description.isEnabled = false
-
-                val l: Legend = chartBarDaily.legend
-                l.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
-                l.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
-                l.orientation = Legend.LegendOrientation.HORIZONTAL
-                l.setDrawInside(false)
 
                 chartBarDaily.invalidate()
             }
@@ -341,9 +341,9 @@ class VisualiserActivity : AppCompatActivity() {
 
         val db = RecordHandler(this, null)
 
-        repeat (12) {
+        repeat(12) {
             var averageForMonth = db.getAveScoreForMonthYear(
-                    it+1,
+                    it + 1,
                     yearFilter,
             )
             averageScoresPerMonth.add(averageForMonth)
@@ -363,7 +363,7 @@ class VisualiserActivity : AppCompatActivity() {
         if (runningTotal != 0) {
 
                 for (i in 1..12) {
-                    entriesBarMonthly.add(BarEntry((i).toFloat(), averageScoresPerMonth[i-1].toFloat()))
+                    entriesBarMonthly.add(BarEntry((i).toFloat(), averageScoresPerMonth[i - 1].toFloat()))
                 }
 
                 val dataSetBarMonthly = BarDataSet(entriesBarMonthly, "")
@@ -395,13 +395,10 @@ class VisualiserActivity : AppCompatActivity() {
                 chartBarMonthly.xAxis.position = XAxis.XAxisPosition.BOTTOM
                 chartBarMonthly.legend.isEnabled = false
 
-                chartBarMonthly.description.isEnabled = false
+                chartBarMonthly.xAxis.valueFormatter = IndexAxisValueFormatter(Globals.monthsShortArrayEmptyFirstEntry)
+                chartBarMonthly.xAxis.labelCount = 12
 
-                val l: Legend = chartBarMonthly.legend
-                l.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
-                l.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
-                l.orientation = Legend.LegendOrientation.HORIZONTAL
-                l.setDrawInside(false)
+                chartBarMonthly.description.isEnabled = false
 
                 chartBarMonthly.invalidate()
 
@@ -450,27 +447,16 @@ class VisualiserActivity : AppCompatActivity() {
     }
 
     private fun setMonthHeader(month: Int, year: Int) {
-        bindingVisualiser.monthSelectedHeader.text = "${monthsShortArray[month - 1]} $year"
+        bindingVisualiser.monthSelectedHeader.text = "${Globals.monthsShortArray[month - 1]} $year"
+    }
+
+    private fun setMonthlyBarHeader(year: Int) {
+        bindingVisualiser.averageMonthlyScoresHeading.text = "Average monthly scores\nfor $year"
     }
 
     private fun getNumberScoresMonthYear(month: Int, year: Int): Int {
         val db = RecordHandler(this, null)
         return db.getRecordsForMonthYear(month, year).size
     }
-
-    private var monthsShortArray: Array<String> = arrayOf(
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Oct",
-            "Nov",
-            "Dec"
-    )
 
 }
