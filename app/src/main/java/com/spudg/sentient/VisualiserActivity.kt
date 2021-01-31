@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
@@ -24,13 +25,15 @@ import kotlin.collections.ArrayList
 class VisualiserActivity : AppCompatActivity() {
 
     private var entriesPie: ArrayList<PieEntry> = ArrayList()
-    private var entriesBar: ArrayList<BarEntry> = ArrayList()
+    private var entriesBarDaily: ArrayList<BarEntry> = ArrayList()
+    private var entriesBarMonthly: ArrayList<BarEntry> = ArrayList()
 
     private lateinit var bindingVisualiser: ActivityVisualiserBinding
     private lateinit var bindingMonthYearPicker: MonthYearPickerBinding
 
     private var daysInMonth: ArrayList<Int> = ArrayList()
     private var averageScoresPerDay: ArrayList<Int> = ArrayList()
+    private var averageScoresPerMonth: ArrayList<Int> = ArrayList()
 
     var scoreSplit: ArrayList<Int> = arrayListOf()
     var scoreTitles: ArrayList<String> = arrayListOf()
@@ -46,10 +49,12 @@ class VisualiserActivity : AppCompatActivity() {
 
         setMonthHeader(monthFilter, yearFilter)
         setUpScoreNumberText()
-        makeBarData(monthFilter, yearFilter)
+        makeBarDataDaily(monthFilter, yearFilter)
         makePieData(monthFilter, yearFilter)
-        setUpBarChart()
+        makeBarDataMonthly(yearFilter)
+        setUpBarChartDaily()
         setUpPieChart()
+        setUpBarChartMonthly()
         setUpNoteList()
 
         bindingVisualiser.selectNewMonthHeader.setOnClickListener {
@@ -82,10 +87,12 @@ class VisualiserActivity : AppCompatActivity() {
             bindingMonthYearPicker.submitMy.setOnClickListener {
                 setMonthHeader(monthFilter, yearFilter)
                 setUpScoreNumberText()
-                makeBarData(monthFilter, yearFilter)
+                makeBarDataDaily(monthFilter, yearFilter)
                 makePieData(monthFilter, yearFilter)
-                setUpBarChart()
+                makeBarDataMonthly(yearFilter)
+                setUpBarChartDaily()
                 setUpPieChart()
+                setUpBarChartMonthly()
                 setUpNoteList()
 
                 filterDialog.dismiss()
@@ -107,15 +114,15 @@ class VisualiserActivity : AppCompatActivity() {
 
     }
 
-    private fun resetBarData() {
-        entriesBar = arrayListOf()
+    private fun resetBarDataDaily() {
+        entriesBarDaily = arrayListOf()
         daysInMonth = arrayListOf()
         averageScoresPerDay = arrayListOf()
     }
 
-    private fun makeBarData(monthFilter: Int, yearFilter: Int) {
+    private fun makeBarDataDaily(monthFilter: Int, yearFilter: Int) {
 
-        resetBarData()
+        resetBarDataDaily()
 
         val db = RecordHandler(this, null)
 
@@ -147,7 +154,7 @@ class VisualiserActivity : AppCompatActivity() {
         db.close()
     }
 
-    private fun setUpBarChart() {
+    private fun setUpBarChartDaily() {
 
         var runningTotal = 0
 
@@ -157,46 +164,47 @@ class VisualiserActivity : AppCompatActivity() {
 
         if (runningTotal != 0) {
             for (i in 0 until daysInMonth.size) {
-                entriesBar.add(BarEntry(daysInMonth[i].toFloat(), averageScoresPerDay[i].toFloat()))
+                entriesBarDaily.add(BarEntry(daysInMonth[i].toFloat(), averageScoresPerDay[i].toFloat()))
 
 
-                val dataSetBar = BarDataSet(entriesBar, "")
-                val dataBar = BarData(dataSetBar)
+                val dataSetBarDaily = BarDataSet(entriesBarDaily, "")
+                val dataBarDaily = BarData(dataSetBarDaily)
                 //dataSetBar.color = categoryColour
 
-                dataBar.setValueFormatter(object : ValueFormatter() {
+                dataBarDaily.setValueFormatter(object : ValueFormatter() {
                     override fun getFormattedValue(value: Float): String {
                         return if (value > 0) {
-                            super.getFormattedValue(value)
+                            val mFormat = DecimalFormat("###,###,##0")
+                            mFormat.format(super.getFormattedValue(value).toFloat())
                         } else {
                             ""
                         }
                     }
                 })
 
-                val chartBar: BarChart = bindingVisualiser.chartAverageDaily
-                if (entriesBar.size > 0) {
-                    chartBar.data = dataBar
+                val chartBarDaily: BarChart = bindingVisualiser.chartAverageDaily
+                if (entriesBarDaily.size > 0) {
+                    chartBarDaily.data = dataBarDaily
                 }
 
-                chartBar.animateY(800)
-                chartBar.setNoDataText("No data for the month and category selected.")
-                chartBar.setNoDataTextColor(0xff000000.toInt())
-                chartBar.setNoDataTextTypeface(ResourcesCompat.getFont(this, R.font.open_sans_light))
-                chartBar.xAxis.setDrawGridLines(false)
-                chartBar.axisRight.isEnabled = false
-                chartBar.xAxis.position = XAxis.XAxisPosition.BOTTOM
-                chartBar.legend.isEnabled = false
+                chartBarDaily.animateY(800)
+                chartBarDaily.setNoDataText("No data for the month and category selected.")
+                chartBarDaily.setNoDataTextColor(0xff000000.toInt())
+                chartBarDaily.setNoDataTextTypeface(ResourcesCompat.getFont(this, R.font.open_sans_light))
+                chartBarDaily.xAxis.setDrawGridLines(false)
+                chartBarDaily.axisRight.isEnabled = false
+                chartBarDaily.xAxis.position = XAxis.XAxisPosition.BOTTOM
+                chartBarDaily.legend.isEnabled = false
 
-                chartBar.description.isEnabled = false
+                chartBarDaily.description.isEnabled = false
 
-                val l: Legend = chartBar.legend
+                val l: Legend = chartBarDaily.legend
                 l.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
                 l.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
                 l.orientation = Legend.LegendOrientation.HORIZONTAL
                 l.setDrawInside(false)
 
-                chartBar.invalidate()
+                chartBarDaily.invalidate()
             }
         } else {
             bindingVisualiser.chartAverageDaily.clear()
@@ -297,7 +305,17 @@ class VisualiserActivity : AppCompatActivity() {
             dataSetPie.valueLinePart1Length = 0.4f
             dataSetPie.valueLinePart2Length = 0.8f
             dataSetPie.yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
-            dataSetPie.valueFormatter = WholeNumberRecordFormatter()
+
+            dataPie.setValueFormatter(object : ValueFormatter() {
+                override fun getFormattedValue(value: Float): String {
+                    return if (value > 0) {
+                        val mFormat = DecimalFormat("###,###,##0 records")
+                        mFormat.format(super.getFormattedValue(value).toFloat())
+                    } else {
+                        ""
+                    }
+                }
+            })
 
             dataPie.setValueTextSize(11f)
             dataPie.setValueTextColor(Color.BLACK)
@@ -309,6 +327,89 @@ class VisualiserActivity : AppCompatActivity() {
             bindingVisualiser.chartSplitAveScore.setNoDataText("No net expenditure categories for the month selected.")
             bindingVisualiser.chartSplitAveScore.setNoDataTextColor(0xff000000.toInt())
             bindingVisualiser.chartSplitAveScore.setNoDataTextTypeface(ResourcesCompat.getFont(this, R.font.open_sans_light))
+        }
+    }
+
+    private fun resetBarDataMonthly() {
+        entriesBarMonthly = arrayListOf()
+        averageScoresPerMonth = arrayListOf()
+    }
+
+    private fun makeBarDataMonthly(yearFilter: Int) {
+
+        resetBarDataMonthly()
+
+        val db = RecordHandler(this, null)
+
+        repeat (12) {
+            var averageForMonth = db.getAveScoreForMonthYear(
+                    it+1,
+                    yearFilter,
+            )
+            averageScoresPerMonth.add(averageForMonth)
+        }
+
+        db.close()
+    }
+
+    private fun setUpBarChartMonthly() {
+
+        var runningTotal = 0
+
+        for (score in averageScoresPerMonth) {
+            runningTotal += score
+        }
+
+        if (runningTotal != 0) {
+
+                for (i in 1..12) {
+                    entriesBarMonthly.add(BarEntry((i).toFloat(), averageScoresPerMonth[i-1].toFloat()))
+                }
+
+                val dataSetBarMonthly = BarDataSet(entriesBarMonthly, "")
+                val dataBarMonthly = BarData(dataSetBarMonthly)
+                //dataSetBar.color = categoryColour
+
+                dataBarMonthly.setValueFormatter(object : ValueFormatter() {
+                    override fun getFormattedValue(value: Float): String {
+                        return if (value > 0) {
+                            val mFormat = DecimalFormat("###,###,##0")
+                            mFormat.format(super.getFormattedValue(value).toFloat())
+                        } else {
+                            ""
+                        }
+                    }
+                })
+
+                val chartBarMonthly: BarChart = bindingVisualiser.chartAverageMonthly
+                if (entriesBarMonthly.size > 0) {
+                    chartBarMonthly.data = dataBarMonthly
+                }
+
+                chartBarMonthly.animateY(800)
+                chartBarMonthly.setNoDataText("No data for the month and y selected.")
+                chartBarMonthly.setNoDataTextColor(0xff000000.toInt())
+                chartBarMonthly.setNoDataTextTypeface(ResourcesCompat.getFont(this, R.font.open_sans_light))
+                chartBarMonthly.xAxis.setDrawGridLines(false)
+                chartBarMonthly.axisRight.isEnabled = false
+                chartBarMonthly.xAxis.position = XAxis.XAxisPosition.BOTTOM
+                chartBarMonthly.legend.isEnabled = false
+
+                chartBarMonthly.description.isEnabled = false
+
+                val l: Legend = chartBarMonthly.legend
+                l.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
+                l.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+                l.orientation = Legend.LegendOrientation.HORIZONTAL
+                l.setDrawInside(false)
+
+                chartBarMonthly.invalidate()
+
+        } else {
+            bindingVisualiser.chartAverageMonthly.clear()
+            bindingVisualiser.chartAverageMonthly.setNoDataText("No data for the month selected.")
+            bindingVisualiser.chartAverageMonthly.setNoDataTextColor(0xff000000.toInt())
+            bindingVisualiser.chartAverageMonthly.setNoDataTextTypeface(ResourcesCompat.getFont(this, R.font.open_sans_light))
         }
     }
 

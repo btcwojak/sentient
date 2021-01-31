@@ -187,6 +187,9 @@
                     android:id="@+id/chartAverageDaily"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/llHeader" />
@@ -212,6 +215,7 @@
                     android:id="@+id/chartSplitAveScore"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
+                    android:layout_marginBottom="5dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/chartAverageDaily" />
@@ -276,13 +280,12 @@
                         android:textStyle="bold" />
 
                 <com.github.mikephil.charting.charts.BarChart
-                    android:id="@+id/chartAveMonthlyScores"
+                    android:id="@+id/chartAverageMonthly"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginBottom="30dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/averageMonthlyScoresHeading" />
