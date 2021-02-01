@@ -1,26 +1,18 @@
 package com.spudg.sentient
 
-import android.app.AlarmManager
 import android.app.Dialog
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
 import android.view.View
+import android.widget.NumberPicker
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.spudg.sentient.databinding.*
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
-import java.time.Instant.now
-import java.time.LocalDateTime.now
-import java.time.Month
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -242,7 +234,7 @@ class MainActivity : AppCompatActivity() {
         var minutePicked = Calendar.getInstance()[Calendar.MINUTE]
 
         bindingAddRecord.timeRecordPost.text =
-                "$hourPicked:$minutePicked"
+                "${String.format("%02d",hourPicked)}:${String.format("%02d",minutePicked)}"
 
         bindingAddRecord.timeRecordPost.setOnClickListener {
             val changeTimeDialog = Dialog(this, R.style.Theme_Dialog)
@@ -251,6 +243,9 @@ class MainActivity : AppCompatActivity() {
             val view = bindingHMP.root
             changeTimeDialog.setContentView(view)
             changeTimeDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+            bindingHMP.dmypHour.setFormatter { i -> String.format("%02d", i) }
+            bindingHMP.dmypMinute.setFormatter { i -> String.format("%02d", i) }
 
             bindingHMP.dmypHour.maxValue = 23
             bindingHMP.dmypHour.minValue = 1
@@ -272,7 +267,7 @@ class MainActivity : AppCompatActivity() {
 
             bindingHMP.submitHm.setOnClickListener {
                 bindingAddRecord.timeRecordPost.text =
-                        "$hourPicked:$minutePicked"
+                        "${String.format("%02d",hourPicked)}:${String.format("%02d",minutePicked)}"
                 changeTimeDialog.dismiss()
             }
 
@@ -283,7 +278,7 @@ class MainActivity : AppCompatActivity() {
                 hourPicked = Calendar.getInstance()[Calendar.HOUR_OF_DAY]
                 minutePicked = Calendar.getInstance()[Calendar.MINUTE]
                 bindingAddRecord.timeRecordPost.text =
-                        "$hourPicked:$minutePicked"
+                        "${String.format("%02d",hourPicked)}:${String.format("%02d",minutePicked)}"
                 changeTimeDialog.dismiss()
             }
 
@@ -323,7 +318,7 @@ class MainActivity : AppCompatActivity() {
             val dbHandlerRecord = RecordHandler(this, null)
 
             val calendar = Calendar.getInstance()
-            calendar.set(yearPicked,monthPicked-1,dayPicked,hourPicked,minutePicked)
+            calendar.set(yearPicked, monthPicked - 1, dayPicked, hourPicked, minutePicked)
 
             val score = bindingAddRecord.scoreSliderPost.value.toInt()
             val time = calendar.timeInMillis.toString()
@@ -477,7 +472,7 @@ class MainActivity : AppCompatActivity() {
         var minutePicked = oldMinute
 
         bindingUpdateRecord.timeRecordUpdate.text =
-                "$hourPicked:$minutePicked"
+                "${String.format("%02d",hourPicked)}:${String.format("%02d",minutePicked)}"
 
         bindingUpdateRecord.timeRecordUpdate.setOnClickListener {
             val changeTimeDialog = Dialog(this, R.style.Theme_Dialog)
@@ -486,6 +481,9 @@ class MainActivity : AppCompatActivity() {
             val view = bindingHMP.root
             changeTimeDialog.setContentView(view)
             changeTimeDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+            bindingHMP.dmypHour.setFormatter { i -> String.format("%02d", i) }
+            bindingHMP.dmypMinute.setFormatter { i -> String.format("%02d", i) }
 
             bindingHMP.dmypHour.maxValue = 23
             bindingHMP.dmypHour.minValue = 1
@@ -507,7 +505,7 @@ class MainActivity : AppCompatActivity() {
 
             bindingHMP.submitHm.setOnClickListener {
                 bindingUpdateRecord.timeRecordUpdate.text =
-                        "$hourPicked:$minutePicked"
+                        "${String.format("%02d",hourPicked)}:${String.format("%02d",minutePicked)}"
                 changeTimeDialog.dismiss()
             }
 
@@ -518,7 +516,7 @@ class MainActivity : AppCompatActivity() {
                 hourPicked = Calendar.getInstance()[Calendar.HOUR_OF_DAY]
                 minutePicked = Calendar.getInstance()[Calendar.MINUTE]
                 bindingUpdateRecord.timeRecordUpdate.text =
-                        "$hourPicked:$minutePicked"
+                        "${String.format("%02d",hourPicked)}:${String.format("%02d",minutePicked)}"
                 changeTimeDialog.dismiss()
             }
 
