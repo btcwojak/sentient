@@ -60,11 +60,13 @@ class RecordAdapter(private val context: Context, private val items: ArrayList<R
 
             if (context is MainActivity) {
                 try {
-                    if (date == sdfDate.format(items[position - 1].time.toLong())) {
+                    if (context.newerRecordOnDay(record)) {
                         binding.date.visibility = View.GONE
+                    } else {
+                        binding.date.visibility = View.VISIBLE
                     }
                 } catch (e: Exception) {
-                    Log.v("Records", e.message.toString())
+                    Log.v("RecordAdapter", e.message.toString())
                 }
             }
 

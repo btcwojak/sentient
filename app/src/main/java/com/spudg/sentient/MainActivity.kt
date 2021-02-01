@@ -669,5 +669,28 @@ class MainActivity : AppCompatActivity() {
         viewNoteDialog.show()
     }
 
+    fun newerRecordOnDay(record: RecordModel): Boolean {
+        val cal = Calendar.getInstance()
+        cal.timeInMillis = record.time.toLong()
+
+        var newerRecord = false
+
+        val day = cal.get(Calendar.DAY_OF_MONTH)
+        val month = cal.get(Calendar.MONTH) + 1
+        val year = cal.get(Calendar.YEAR)
+
+        val db = RecordHandler(this, null)
+        val otherRecords = db.getRecordsForDayMonthYear(day, month, year)
+
+        for (otherRecord in otherRecords) {
+            if (record.time < otherRecord.time) {
+                newerRecord = true
+            }
+        }
+
+        return newerRecord
+
+    }
+
 
 }
