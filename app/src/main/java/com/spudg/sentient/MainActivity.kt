@@ -39,7 +39,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         bindingMain.aboutBtn.setOnClickListener {
-
+            val intent = Intent(this, AboutActivity::class.java)
+            startActivity(intent)
         }
 
         bindingMain.addRecord.setOnClickListener {
