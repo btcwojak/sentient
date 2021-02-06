@@ -62,9 +62,10 @@
             android:padding="10dp"
             android:text="Submit"
             android:textColor="@color/colorAccent"
-            app:layout_constraintRight_toLeftOf="@id/cancel_hm"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/dmyp_minute" />
 
+        <!--
         <TextView
             android:id="@+id/cancel_hm"
             android:layout_width="wrap_content"
@@ -77,6 +78,7 @@
             android:textColor="@android:color/black"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/dmyp_minute" />
+         -->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity() {
 
         if (numberOfRatings > 0) {
 
-            var averageScore = (runningTotal/numberOfRatings)
+            val averageScore = (runningTotal/numberOfRatings)
             bindingMain.averageScoreMonth.text = averageScore.toString()
 
             when (averageScore) {
@@ -167,12 +167,9 @@ class MainActivity : AppCompatActivity() {
             bindingDMYP.dmypYear.maxValue = 2999
             bindingDMYP.dmypYear.minValue = 1000
 
-            bindingDMYP.dmypDay.value = Calendar.getInstance()[Calendar.DAY_OF_MONTH]
-            bindingDMYP.dmypMonth.value = Calendar.getInstance()[Calendar.MONTH] + 1
-            bindingDMYP.dmypYear.value = Calendar.getInstance()[Calendar.YEAR]
-            dayPicked = Calendar.getInstance()[Calendar.DAY_OF_MONTH]
-            monthPicked = Calendar.getInstance()[Calendar.MONTH] + 1
-            yearPicked = Calendar.getInstance()[Calendar.YEAR]
+            bindingDMYP.dmypDay.value = dayPicked
+            bindingDMYP.dmypMonth.value = monthPicked
+            bindingDMYP.dmypYear.value = yearPicked
 
             bindingDMYP.dmypMonth.displayedValues = Globals.monthsShortArray
 
@@ -218,14 +215,14 @@ class MainActivity : AppCompatActivity() {
             bindingDMYP.dmypMonth.wrapSelectorWheel = true
             bindingDMYP.dmypYear.wrapSelectorWheel = true
 
-            bindingDMYP.cancelDmy.setOnClickListener {
-                dayPicked = Calendar.getInstance()[Calendar.DAY_OF_MONTH]
-                monthPicked = Calendar.getInstance()[Calendar.MONTH] + 1
-                yearPicked = Calendar.getInstance()[Calendar.YEAR]
-                bindingAddRecord.dateRecordPost.text =
-                        "$dayPicked ${Globals.getShortMonth(monthPicked)} $yearPicked"
-                changeDateDialog.dismiss()
-            }
+            //bindingDMYP.cancelDmy.setOnClickListener {
+            //    dayPicked = Calendar.getInstance()[Calendar.DAY_OF_MONTH]
+            //    monthPicked = Calendar.getInstance()[Calendar.MONTH] + 1
+            //    yearPicked = Calendar.getInstance()[Calendar.YEAR]
+            //    bindingAddRecord.dateRecordPost.text =
+            //            "$dayPicked ${Globals.getShortMonth(monthPicked)} $yearPicked"
+            //    changeDateDialog.dismiss()
+            //}
 
             changeDateDialog.show()
 
@@ -253,10 +250,8 @@ class MainActivity : AppCompatActivity() {
             bindingHMP.dmypMinute.maxValue = 59
             bindingHMP.dmypMinute.minValue = 1
 
-            bindingHMP.dmypHour.value = Calendar.getInstance()[Calendar.HOUR_OF_DAY]
-            bindingHMP.dmypMinute.value = Calendar.getInstance()[Calendar.MINUTE]
-            hourPicked = Calendar.getInstance()[Calendar.HOUR_OF_DAY]
-            minutePicked = Calendar.getInstance()[Calendar.MINUTE]
+            bindingHMP.dmypHour.value = hourPicked
+            bindingHMP.dmypMinute.value = minutePicked
 
             bindingHMP.dmypHour.setOnValueChangedListener { _, _, newVal ->
                 hourPicked = newVal
@@ -275,13 +270,13 @@ class MainActivity : AppCompatActivity() {
             bindingHMP.dmypHour.wrapSelectorWheel = true
             bindingHMP.dmypMinute.wrapSelectorWheel = true
 
-            bindingHMP.cancelHm.setOnClickListener {
-                hourPicked = Calendar.getInstance()[Calendar.HOUR_OF_DAY]
-                minutePicked = Calendar.getInstance()[Calendar.MINUTE]
-                bindingAddRecord.timeRecordPost.text =
-                        "${String.format("%02d",hourPicked)}:${String.format("%02d",minutePicked)}"
-                changeTimeDialog.dismiss()
-            }
+            //bindingHMP.cancelHm.setOnClickListener {
+            //    hourPicked = Calendar.getInstance()[Calendar.HOUR_OF_DAY]
+            //    minutePicked = Calendar.getInstance()[Calendar.MINUTE]
+            //    bindingAddRecord.timeRecordPost.text =
+            //            "${String.format("%02d",hourPicked)}:${String.format("%02d",minutePicked)}"
+            //    changeTimeDialog.dismiss()
+            //}
 
             changeTimeDialog.show()
 
@@ -405,12 +400,9 @@ class MainActivity : AppCompatActivity() {
             bindingDMYP.dmypYear.maxValue = 2999
             bindingDMYP.dmypYear.minValue = 1000
 
-            bindingDMYP.dmypDay.value = Calendar.getInstance()[Calendar.DAY_OF_MONTH]
-            bindingDMYP.dmypMonth.value = Calendar.getInstance()[Calendar.MONTH] + 1
-            bindingDMYP.dmypYear.value = Calendar.getInstance()[Calendar.YEAR]
-            dayPicked = Calendar.getInstance()[Calendar.DAY_OF_MONTH]
-            monthPicked = Calendar.getInstance()[Calendar.MONTH] + 1
-            yearPicked = Calendar.getInstance()[Calendar.YEAR]
+            bindingDMYP.dmypDay.value = dayPicked
+            bindingDMYP.dmypMonth.value = monthPicked
+            bindingDMYP.dmypYear.value = yearPicked
 
             bindingDMYP.dmypMonth.displayedValues = Globals.monthsShortArray
 
@@ -456,14 +448,14 @@ class MainActivity : AppCompatActivity() {
             bindingDMYP.dmypMonth.wrapSelectorWheel = true
             bindingDMYP.dmypYear.wrapSelectorWheel = true
 
-            bindingDMYP.cancelDmy.setOnClickListener {
-                dayPicked = Calendar.getInstance()[Calendar.DAY_OF_MONTH]
-                monthPicked = Calendar.getInstance()[Calendar.MONTH] + 1
-                yearPicked = Calendar.getInstance()[Calendar.YEAR]
-                bindingUpdateRecord.dateRecordUpdate.text =
-                        "$dayPicked ${Globals.getShortMonth(monthPicked)} $yearPicked"
-                changeDateDialog.dismiss()
-            }
+            //bindingDMYP.cancelDmy.setOnClickListener {
+            //    dayPicked = oldDay
+            //    monthPicked = oldMonth
+            //    yearPicked = oldYear
+            //    bindingUpdateRecord.dateRecordUpdate.text =
+            //            "$dayPicked ${Globals.getShortMonth(monthPicked)} $yearPicked"
+            //    changeDateDialog.dismiss()
+            //}
 
             changeDateDialog.show()
 
@@ -491,10 +483,8 @@ class MainActivity : AppCompatActivity() {
             bindingHMP.dmypMinute.maxValue = 59
             bindingHMP.dmypMinute.minValue = 1
 
-            bindingHMP.dmypHour.value = Calendar.getInstance()[Calendar.HOUR_OF_DAY]
-            bindingHMP.dmypMinute.value = Calendar.getInstance()[Calendar.MINUTE]
-            hourPicked = Calendar.getInstance()[Calendar.HOUR_OF_DAY]
-            minutePicked = Calendar.getInstance()[Calendar.MINUTE]
+            bindingHMP.dmypHour.value = hourPicked
+            bindingHMP.dmypMinute.value = minutePicked
 
             bindingHMP.dmypHour.setOnValueChangedListener { _, _, newVal ->
                 hourPicked = newVal
@@ -513,13 +503,13 @@ class MainActivity : AppCompatActivity() {
             bindingHMP.dmypHour.wrapSelectorWheel = true
             bindingHMP.dmypMinute.wrapSelectorWheel = true
 
-            bindingHMP.cancelHm.setOnClickListener {
-                hourPicked = Calendar.getInstance()[Calendar.HOUR_OF_DAY]
-                minutePicked = Calendar.getInstance()[Calendar.MINUTE]
-                bindingUpdateRecord.timeRecordUpdate.text =
-                        "${String.format("%02d",hourPicked)}:${String.format("%02d",minutePicked)}"
-                changeTimeDialog.dismiss()
-            }
+            //bindingHMP.cancelHm.setOnClickListener {
+            //    hourPicked = oldHour
+            //    minutePicked = oldMinute
+            //    bindingUpdateRecord.timeRecordUpdate.text =
+            //            "${String.format("%02d",hourPicked)}:${String.format("%02d",minutePicked)}"
+            //    changeTimeDialog.dismiss()
+            //}
 
             changeTimeDialog.show()
 
