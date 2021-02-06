@@ -160,9 +160,27 @@ class VisualiserActivity : AppCompatActivity() {
     private fun setUpBarChartDaily() {
 
         var runningTotal = 0
+        val colours = ArrayList<Int>()
 
         for (score in averageScoresPerDay) {
             runningTotal += score
+            when (score) {
+                in 0..9 -> {
+                    colours.add(-65527)
+                }
+                in 10..39 -> {
+                    colours.add(-25088)
+                }
+                in 40..69 -> {
+                    colours.add(-16728577)
+                }
+                in 70..89 -> {
+                    colours.add(-16711896)
+                }
+                in 90..100 -> {
+                    colours.add(-6881025)
+                }
+            }
         }
 
         if (runningTotal != 0) {
@@ -172,7 +190,7 @@ class VisualiserActivity : AppCompatActivity() {
 
                 val dataSetBarDaily = BarDataSet(entriesBarDaily, "")
                 val dataBarDaily = BarData(dataSetBarDaily)
-                //dataSetBar.color = categoryColour
+                dataSetBarDaily.colors = colours
 
                 dataBarDaily.setValueFormatter(object : ValueFormatter() {
                     override fun getFormattedValue(value: Float): String {
@@ -355,9 +373,27 @@ class VisualiserActivity : AppCompatActivity() {
     private fun setUpBarChartMonthly() {
 
         var runningTotal = 0
+        val colours = ArrayList<Int>()
 
         for (score in averageScoresPerMonth) {
             runningTotal += score
+            when (score) {
+                in 0..9 -> {
+                    colours.add(-65527)
+                }
+                in 10..39 -> {
+                    colours.add(-25088)
+                }
+                in 40..69 -> {
+                    colours.add(-16728577)
+                }
+                in 70..89 -> {
+                    colours.add(-16711896)
+                }
+                in 90..100 -> {
+                    colours.add(-6881025)
+                }
+            }
         }
 
         if (runningTotal != 0) {
@@ -368,7 +404,7 @@ class VisualiserActivity : AppCompatActivity() {
 
                 val dataSetBarMonthly = BarDataSet(entriesBarMonthly, "")
                 val dataBarMonthly = BarData(dataSetBarMonthly)
-                //dataSetBar.color = categoryColour
+                dataSetBarMonthly.colors = colours
 
                 dataBarMonthly.setValueFormatter(object : ValueFormatter() {
                     override fun getFormattedValue(value: Float): String {
