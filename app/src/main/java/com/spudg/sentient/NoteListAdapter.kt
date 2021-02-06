@@ -38,7 +38,7 @@ class NoteListAdapter(private val context: Context, private val items: ArrayList
             val minute = cal.get(Calendar.MINUTE)
 
             binding.noteBody.text = record.note
-            binding.noteDate.text = "from $day ${Globals.getShortMonth(month)} $year at $hour:$minute"
+            binding.noteDate.text = "from $day ${Globals.getShortMonth(month)} $year at ${String.format("%02d",hour)}:${String.format("%02d",minute)}"
 
         }
 

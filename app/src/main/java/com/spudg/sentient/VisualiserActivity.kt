@@ -12,10 +12,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.utils.ColorTemplate
 import com.spudg.sentient.databinding.ActivityVisualiserBinding
 import com.spudg.sentient.databinding.MonthYearPickerBinding
 import java.text.DecimalFormat
@@ -36,8 +38,9 @@ class VisualiserActivity : AppCompatActivity() {
     private var averageScoresPerDay: ArrayList<Int> = ArrayList()
     private var averageScoresPerMonth: ArrayList<Int> = ArrayList()
 
-    var scoreSplit: ArrayList<Int> = arrayListOf()
-    var scoreTitles: ArrayList<String> = arrayListOf()
+    var scoreSplitPie: ArrayList<Int> = arrayListOf()
+    var scoreTitlesPie: ArrayList<String> = arrayListOf()
+    var scoreColoursPie: ArrayList<Int> = arrayListOf()
 
     var monthFilter = Calendar.getInstance()[Calendar.MONTH] + 1
     var yearFilter = Calendar.getInstance()[Calendar.YEAR]
@@ -233,8 +236,9 @@ class VisualiserActivity : AppCompatActivity() {
     }
 
     private fun resetPieData() {
-        scoreSplit = arrayListOf()
-        scoreTitles = arrayListOf()
+        scoreSplitPie = arrayListOf()
+        scoreTitlesPie = arrayListOf()
+        scoreColoursPie = arrayListOf()
         entriesPie = arrayListOf()
     }
 
@@ -273,8 +277,31 @@ class VisualiserActivity : AppCompatActivity() {
             }
         }
 
-        scoreSplit = arrayListOf(score0to9, score10to39, score40to69, score70to89, score90to100)
-        scoreTitles = arrayListOf("0 to 9", "10 to 39", "40 to 69", "70 to 89", "90 to 100")
+        if (score0to9 != 0) {
+            scoreSplitPie.add(score0to9)
+            scoreTitlesPie.add("0 to 9")
+            scoreColoursPie.add(-65527)
+        }
+        if (score10to39 != 0) {
+            scoreSplitPie.add(score10to39)
+            scoreTitlesPie.add("10 to 39")
+            scoreColoursPie.add(-25088)
+        }
+        if (score40to69 != 0) {
+            scoreSplitPie.add(score40to69)
+            scoreTitlesPie.add("40 to 69")
+            scoreColoursPie.add(-16728577)
+        }
+        if (score70to89 != 0) {
+            scoreSplitPie.add(score70to89)
+            scoreTitlesPie.add("70 to 89")
+            scoreColoursPie.add(-16711896)
+        }
+        if (score90to100 != 0) {
+            scoreSplitPie.add(score90to100)
+            scoreTitlesPie.add("90 to 100")
+            scoreColoursPie.add(-6881025)
+        }
 
         db.close()
 
@@ -282,20 +309,13 @@ class VisualiserActivity : AppCompatActivity() {
 
     private fun setUpPieChart() {
 
-        if (scoreSplit.size > 0) {
-            for (i in 0 until scoreSplit.size) {
-                entriesPie.add(PieEntry(scoreSplit[i].toFloat(), scoreTitles[i]))
+        if (scoreSplitPie.size > 0) {
+            for (i in 0 until scoreSplitPie.size) {
+                entriesPie.add(PieEntry(scoreSplitPie[i].toFloat(), scoreTitlesPie[i]))
             }
 
-            val splitColours = ArrayList<Int>()
-            splitColours.add(-65527)
-            splitColours.add(-25088)
-            splitColours.add(-16728577)
-            splitColours.add(-16711896)
-            splitColours.add(-6881025)
-
             val dataSetPie = PieDataSet(entriesPie, "")
-            dataSetPie.colors = splitColours.toMutableList()
+            dataSetPie.colors = scoreColoursPie
             val dataPie = PieData(dataSetPie)
 
             val chartPie: PieChart = bindingVisualiser.chartSplitAveScore
@@ -318,6 +338,12 @@ class VisualiserActivity : AppCompatActivity() {
             l.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
             l.orientation = Legend.LegendOrientation.HORIZONTAL
             l.setDrawInside(false)
+            val l1 = LegendEntry("0 to 9",Legend.LegendForm.CIRCLE,10f,2f,null,-65527)
+            val l2 = LegendEntry("10 to 39",Legend.LegendForm.CIRCLE,10f,2f,null,-25088)
+            val l3 = LegendEntry("40 to 69",Legend.LegendForm.CIRCLE,10f,2f,null,-16728577)
+            val l4 = LegendEntry("70 to 89",Legend.LegendForm.CIRCLE,10f,2f,null,-16711896)
+            val l5 = LegendEntry("90 to 100",Legend.LegendForm.CIRCLE,10f,2f,null,-6881025)
+            l.setCustom(arrayOf(l1,l2,l3,l4,l5))
 
             dataSetPie.valueLinePart1OffsetPercentage = 80f
             dataSetPie.valueLinePart1Length = 0.4f
