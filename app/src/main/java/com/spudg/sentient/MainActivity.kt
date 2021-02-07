@@ -56,9 +56,11 @@ class MainActivity : AppCompatActivity() {
         var runningTotal = 0
         var numberOfRatings = 0
 
-        var currentMonth = Calendar.getInstance().get(Calendar.MONTH) + 1
-        var currentYear = Calendar.getInstance().get(Calendar.YEAR)
-        var currentDate = currentMonth.toString() + currentYear.toString()
+        val currentMonth = Calendar.getInstance().get(Calendar.MONTH) + 1
+        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+        val currentDate = currentMonth.toString() + currentYear.toString()
+
+        bindingMain.monthHeading.text = Globals.getLongMonth(currentMonth) + " " + currentYear
 
         val cal = Calendar.getInstance()
 
