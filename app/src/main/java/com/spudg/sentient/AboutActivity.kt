@@ -23,7 +23,7 @@ class AboutActivity : AppCompatActivity() {
         val view = bindingAbout.root
         setContentView(view)
 
-        var version = packageManager.getPackageInfo(packageName, 0).versionName
+        val version = packageManager.getPackageInfo(packageName, 0).versionName
         bindingAbout.sentientDesc.text = "v$version, made by Spudg Studios"
 
         bindingAbout.backToRecordsFromAbout.setOnClickListener {

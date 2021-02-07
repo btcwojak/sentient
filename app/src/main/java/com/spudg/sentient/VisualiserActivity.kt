@@ -66,8 +66,8 @@ class VisualiserActivity : AppCompatActivity() {
             val filterDialog = Dialog(this, R.style.Theme_Dialog)
             filterDialog.setCancelable(false)
             bindingMonthYearPicker = MonthYearPickerBinding.inflate(layoutInflater)
-            val view = bindingMonthYearPicker.root
-            filterDialog.setContentView(view)
+            val viewMonthYearPicker = bindingMonthYearPicker.root
+            filterDialog.setContentView(viewMonthYearPicker)
             filterDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             bindingMonthYearPicker.mypYear.minValue = 1000
             bindingMonthYearPicker.mypYear.maxValue = 2999
@@ -148,7 +148,7 @@ class VisualiserActivity : AppCompatActivity() {
         }
 
         for (day in daysInMonth) {
-            var averageForDay = db.getAveScoreForDayMonthYear(
+            val averageForDay = db.getAveScoreForDayMonthYear(
                     day,
                     monthFilter,
                     yearFilter
@@ -385,7 +385,7 @@ class VisualiserActivity : AppCompatActivity() {
         val db = RecordHandler(this, null)
 
         repeat(12) {
-            var averageForMonth = db.getAveScoreForMonthYear(
+            val averageForMonth = db.getAveScoreForMonthYear(
                     it + 1,
                     yearFilter,
             )

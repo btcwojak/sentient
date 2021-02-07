@@ -142,10 +142,10 @@ class RecordHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         }
 
         for (record in list) {
-            var recordTime = Calendar.getInstance()
+            val recordTime = Calendar.getInstance()
             recordTime.timeInMillis = record.time.toLong()
-            var recordMonth = recordTime.get(Calendar.MONTH) + 1
-            var recordYear = recordTime.get(Calendar.YEAR)
+            val recordMonth = recordTime.get(Calendar.MONTH) + 1
+            val recordYear = recordTime.get(Calendar.YEAR)
             if (recordMonth == month && recordYear == year) {
                 listForMonthYear.add(record)
             }
@@ -193,10 +193,10 @@ class RecordHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         }
 
         for (record in list) {
-            var recordTime = Calendar.getInstance()
+            val recordTime = Calendar.getInstance()
             recordTime.timeInMillis = record.time.toLong()
-            var recordMonth = recordTime.get(Calendar.MONTH) + 1
-            var recordYear = recordTime.get(Calendar.YEAR)
+            val recordMonth = recordTime.get(Calendar.MONTH) + 1
+            val recordYear = recordTime.get(Calendar.YEAR)
             if (recordMonth == month && recordYear == year) {
                 listForMonthYear.add(record)
             }
@@ -254,11 +254,11 @@ class RecordHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         }
 
         for (record in list) {
-            var recordTime = Calendar.getInstance()
+            val recordTime = Calendar.getInstance()
             recordTime.timeInMillis = record.time.toLong()
-            var recordDay = recordTime.get(Calendar.DAY_OF_MONTH)
-            var recordMonth = recordTime.get(Calendar.MONTH) + 1
-            var recordYear = recordTime.get(Calendar.YEAR)
+            val recordDay = recordTime.get(Calendar.DAY_OF_MONTH)
+            val recordMonth = recordTime.get(Calendar.MONTH) + 1
+            val recordYear = recordTime.get(Calendar.YEAR)
             if (recordDay == day && recordMonth == month && recordYear == year) {
                 listForDayMonthYear.add(record)
             }
@@ -313,11 +313,11 @@ class RecordHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         }
 
         for (record in list) {
-            var recordTime = Calendar.getInstance()
+            val recordTime = Calendar.getInstance()
             recordTime.timeInMillis = record.time.toLong()
-            var recordDay = recordTime.get(Calendar.DAY_OF_MONTH)
-            var recordMonth = recordTime.get(Calendar.MONTH) + 1
-            var recordYear = recordTime.get(Calendar.YEAR)
+            val recordDay = recordTime.get(Calendar.DAY_OF_MONTH)
+            val recordMonth = recordTime.get(Calendar.MONTH) + 1
+            val recordYear = recordTime.get(Calendar.YEAR)
             if (recordDay == day && recordMonth == month && recordYear == year) {
                 listForDayMonthYear.add(record)
             }
@@ -363,10 +363,10 @@ class RecordHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         }
 
         for (record in list) {
-            var recordTime = Calendar.getInstance()
+            val recordTime = Calendar.getInstance()
             recordTime.timeInMillis = record.time.toLong()
-            var recordMonth = recordTime.get(Calendar.MONTH) + 1
-            var recordYear = recordTime.get(Calendar.YEAR)
+            val recordMonth = recordTime.get(Calendar.MONTH) + 1
+            val recordYear = recordTime.get(Calendar.YEAR)
             if (recordMonth == month && recordYear == year && record.note.isNotEmpty()) {
                 listForMonthYearWithNoteOnly.add(record)
             }
@@ -391,6 +391,8 @@ class RecordHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) :
                 note = cursor.getString(cursor.getColumnIndex(KEY_NOTE))
             } while (cursor.moveToNext())
         }
+
+        cursor.close()
 
         return if (note.isNotEmpty()) {
             note

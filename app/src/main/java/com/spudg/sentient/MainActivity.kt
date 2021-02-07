@@ -146,8 +146,8 @@ class MainActivity : AppCompatActivity() {
             val changeDateDialog = Dialog(this, R.style.Theme_Dialog)
             changeDateDialog.setCancelable(false)
             bindingDMYP = DayMonthYearPickerBinding.inflate(layoutInflater)
-            val view = bindingDMYP.root
-            changeDateDialog.setContentView(view)
+            val viewDMYP = bindingDMYP.root
+            changeDateDialog.setContentView(viewDMYP)
             changeDateDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
             if (Calendar.getInstance()[Calendar.DAY_OF_MONTH] == 4 || Calendar.getInstance()[Calendar.DAY_OF_MONTH] == 6 || Calendar.getInstance()[Calendar.DAY_OF_MONTH] == 9 || Calendar.getInstance()[Calendar.DAY_OF_MONTH] == 11) {
@@ -240,8 +240,8 @@ class MainActivity : AppCompatActivity() {
             val changeTimeDialog = Dialog(this, R.style.Theme_Dialog)
             changeTimeDialog.setCancelable(false)
             bindingHMP = HourMinutePickerBinding.inflate(layoutInflater)
-            val view = bindingHMP.root
-            changeTimeDialog.setContentView(view)
+            val viewHMP = bindingHMP.root
+            changeTimeDialog.setContentView(viewHMP)
             changeTimeDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
             bindingHMP.dmypHour.setFormatter { i -> String.format("%02d", i) }
@@ -360,13 +360,13 @@ class MainActivity : AppCompatActivity() {
         updateDialog.setContentView(view)
         updateDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        var calForOldRecordTime = Calendar.getInstance()
+        val calForOldRecordTime = Calendar.getInstance()
         calForOldRecordTime.timeInMillis = record.time.toLong()
-        var oldDay = calForOldRecordTime.get(Calendar.DAY_OF_MONTH)
-        var oldMonth = calForOldRecordTime.get(Calendar.MONTH) + 1
-        var oldYear = calForOldRecordTime.get(Calendar.YEAR)
-        var oldHour = calForOldRecordTime.get(Calendar.HOUR_OF_DAY)
-        var oldMinute = calForOldRecordTime.get(Calendar.MINUTE)
+        val oldDay = calForOldRecordTime.get(Calendar.DAY_OF_MONTH)
+        val oldMonth = calForOldRecordTime.get(Calendar.MONTH) + 1
+        val oldYear = calForOldRecordTime.get(Calendar.YEAR)
+        val oldHour = calForOldRecordTime.get(Calendar.HOUR_OF_DAY)
+        val oldMinute = calForOldRecordTime.get(Calendar.MINUTE)
 
         var dayPicked = oldDay
         var monthPicked = oldMonth
@@ -379,8 +379,8 @@ class MainActivity : AppCompatActivity() {
             val changeDateDialog = Dialog(this, R.style.Theme_Dialog)
             changeDateDialog.setCancelable(false)
             bindingDMYP = DayMonthYearPickerBinding.inflate(layoutInflater)
-            val view = bindingDMYP.root
-            changeDateDialog.setContentView(view)
+            val viewDMYP = bindingDMYP.root
+            changeDateDialog.setContentView(viewDMYP)
             changeDateDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
             if (Calendar.getInstance()[Calendar.DAY_OF_MONTH] == 4 || Calendar.getInstance()[Calendar.DAY_OF_MONTH] == 6 || Calendar.getInstance()[Calendar.DAY_OF_MONTH] == 9 || Calendar.getInstance()[Calendar.DAY_OF_MONTH] == 11) {
@@ -473,8 +473,8 @@ class MainActivity : AppCompatActivity() {
             val changeTimeDialog = Dialog(this, R.style.Theme_Dialog)
             changeTimeDialog.setCancelable(false)
             bindingHMP = HourMinutePickerBinding.inflate(layoutInflater)
-            val view = bindingHMP.root
-            changeTimeDialog.setContentView(view)
+            val viewHMP = bindingHMP.root
+            changeTimeDialog.setContentView(viewHMP)
             changeTimeDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
             bindingHMP.dmypHour.setFormatter { i -> String.format("%02d", i) }
