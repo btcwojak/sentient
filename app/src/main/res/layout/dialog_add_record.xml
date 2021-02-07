@@ -19,7 +19,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="5dp"
             android:fontFamily="@font/open_sans_light"
-            android:text="How are you feeling?"
+            android:text="@string/how_are_you_feeling"
             android:textColor="@android:color/black"
             android:textSize="24sp" />
 
@@ -68,7 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fontFamily="@font/open_sans_light"
-            android:hint="Notes"
+            android:hint="@string/notes"
             android:inputType="text" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -83,7 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:fontFamily="@font/open_sans_light"
-            android:text="Post for"
+            android:text="@string/post_for"
             android:textColor="@android:color/black"
             android:textSize="16sp" />
 
@@ -93,7 +93,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:fontFamily="@font/open_sans_light"
-            android:text="18 Jan 2021"
+            android:text="@string/_18_jan_2021"
             android:textColor="@color/colorAccent"
             android:textSize="16sp" />
 
@@ -102,7 +102,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:fontFamily="@font/open_sans_light"
-            android:text="at"
+            android:text="@string/at"
             android:textColor="@android:color/black"
             android:textSize="16sp" />
 
@@ -112,7 +112,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:fontFamily="@font/open_sans_light"
-            android:text="15:46"
+            android:text="@string/_15_46"
             android:textColor="@color/colorAccent"
             android:textSize="16sp" />
 
@@ -133,7 +133,7 @@
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
             android:padding="10dp"
-            android:text="Post"
+            android:text="@string/post"
             android:textColor="@color/colorAccent" />
 
         <TextView
@@ -144,7 +144,7 @@
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
             android:padding="10dp"
-            android:text="Cancel"
+            android:text="@string/cancel"
             android:textColor="@android:color/black" />
 
     </LinearLayout>

@@ -26,7 +26,7 @@
             android:layout_marginRight="10dp"
             android:fontFamily="@font/open_sans_light"
             android:gravity="center_horizontal"
-            android:text="Thursday 14 January 2021"
+            android:text="@string/thursday_14_january_2021"
             android:textColor="@android:color/black" />
 
         <TextView

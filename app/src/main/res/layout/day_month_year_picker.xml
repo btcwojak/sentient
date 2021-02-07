@@ -20,7 +20,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="5dp"
             android:fontFamily="@font/open_sans_light"
-            android:text="Set record date"
+            android:text="@string/set_record_date"
             android:textColor="@android:color/black"
             android:textSize="18sp"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -74,7 +74,7 @@
             android:fontFamily="@font/open_sans_light"
             android:foreground="?attr/selectableItemBackground"
             android:padding="10dp"
-            android:text="Submit"
+            android:text="@string/submit"
             android:textColor="@color/colorAccent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/dmyp_year" />

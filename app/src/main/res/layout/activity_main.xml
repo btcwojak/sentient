@@ -29,7 +29,7 @@
             android:gravity="center"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:text="Visualiser"
+            android:text="@string/visualiser"
             android:textColor="@color/colorAccent"
             android:textSize="16sp" />
 
@@ -38,7 +38,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"
             android:layout_marginBottom="5dp"
             android:layout_weight="1"
             android:fontFamily="@font/open_sans_light"
@@ -46,7 +46,7 @@
             android:gravity="center"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:text="About"
+            android:text="@string/about"
             android:textColor="@color/colorAccent"
             android:textSize="16sp" />
 
@@ -60,7 +60,7 @@
         android:gravity="center_horizontal"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:text="January 2021"
+        android:text="@string/january_2021"
         android:textColor="@android:color/black"
         android:textSize="20sp" />
 
@@ -82,7 +82,7 @@
         android:gravity="center_horizontal"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:text="Average score this month"
+        android:text="@string/average_score_this_month"
         android:textColor="@android:color/black"
         android:textSize="16sp" />
 
@@ -104,7 +104,7 @@
                 android:layout_marginBottom="25dp"
                 android:background="#99FFFFFF"
                 android:fontFamily="@font/open_sans_light"
-                android:text="Add record for today"
+                android:text="@string/add_record_for_today"
                 android:textColor="@color/colorAccent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -135,7 +135,7 @@
                 android:gravity="center_horizontal"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
-                android:text="No records yet. Tap below to add a record for today!"
+                android:text="@string/no_records"
                 android:textColor="@android:color/black"
                 android:textSize="16sp"
                 android:visibility="gone"

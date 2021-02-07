@@ -12,7 +12,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="5dp"
         android:fontFamily="@font/open_sans_light"
-        android:text="Delete record"
+        android:text="@string/delete_record"
         android:textColor="@android:color/black"
         android:textSize="18sp" />
 
@@ -22,7 +22,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="10dp"
         android:fontFamily="@font/open_sans_light"
-        android:text="Are you sure you want to delete this mood record?"
+        android:text="@string/are_you_sure_you_want_to_delete_this_mood_record"
         android:textColor="@android:color/black"
         android:textSize="16sp" />
 
@@ -42,7 +42,7 @@
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
             android:padding="10dp"
-            android:text="Delete"
+            android:text="@string/delete"
             android:textColor="#673AB7" />
 
         <TextView
@@ -53,7 +53,7 @@
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
             android:padding="10dp"
-            android:text="Cancel"
+            android:text="@string/cancel"
             android:textColor="@android:color/black" />
 
     </LinearLayout>

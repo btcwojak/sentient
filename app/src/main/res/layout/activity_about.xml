@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
                 android:fontFamily="@font/open_sans_light"
-                android:text="About Sentient"
+                android:text="@string/about_sentient"
                 android:textColor="#000000"
                 android:textSize="24sp"
                 android:textStyle="bold"
@@ -87,7 +87,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:background="@mipmap/ic_launcher"
-                        android:contentDescription="sentientLogo" />
+                        android:contentDescription="@string/sentientlogo" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -101,7 +101,7 @@
                             android:layout_gravity="start"
                             android:fontFamily="@font/open_sans_light"
                             android:padding="6dp"
-                            android:text="Sentient"
+                            android:text="@string/sentient"
                             android:textColor="@android:color/black"
                             android:textSize="20sp" />
 
@@ -113,7 +113,7 @@
                             android:fontFamily="@font/open_sans_light"
                             android:paddingStart="10dp"
                             android:paddingEnd="10dp"
-                            android:text="v1.0.0, made by Spudg Studios"
+                            android:text="@string/v1_0_0_made_by_spudg_studios"
                             android:textColor="@android:color/black"
                             android:textSize="16sp" />
 
@@ -130,7 +130,7 @@
                     android:foreground="?attr/selectableItemBackground"
                     android:paddingLeft="25dp"
                     android:paddingRight="25dp"
-                    android:text="Sentient is a simple mood tracker where you can post ratings and see a visualisation of how your mood changes over days and months. \n\nSpudg Studios is currently a one-man development studio and this is an early version of the application, so if you have any suggestions or you\'ve found a bug, please send an email below!"
+                    android:text="@string/sentient_description"
                     android:textColor="@android:color/black"
                     android:textSize="16sp"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -145,7 +145,7 @@
                     android:fontFamily="@font/open_sans_light"
                     android:foreground="?attr/selectableItemBackground"
                     android:padding="10dp"
-                    android:text="Privacy Policy"
+                    android:text="@string/privacy_policy"
                     android:textColor="@color/colorAccent"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toTopOf="@id/terms_of_use"
@@ -161,7 +161,7 @@
                     android:fontFamily="@font/open_sans_light"
                     android:foreground="?attr/selectableItemBackground"
                     android:padding="10dp"
-                    android:text="Terms of Use"
+                    android:text="@string/terms_of_use"
                     android:textColor="@color/colorAccent"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toTopOf="@id/rate_btn"
@@ -177,7 +177,7 @@
                     android:fontFamily="@font/open_sans_light"
                     android:foreground="?attr/selectableItemBackground"
                     android:padding="10dp"
-                    android:text="Rate on Play Store"
+                    android:text="@string/rate_on_play_store"
                     android:textColor="@color/colorAccent"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toTopOf="@id/email_btn"
@@ -194,7 +194,7 @@
                     android:fontFamily="@font/open_sans_light"
                     android:foreground="?attr/selectableItemBackground"
                     android:padding="10dp"
-                    android:text="Send an email"
+                    android:text="@string/send_an_email"
                     android:textColor="@color/colorAccent"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="parent"
