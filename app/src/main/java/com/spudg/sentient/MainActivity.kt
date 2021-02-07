@@ -6,13 +6,10 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
-import android.widget.NumberPicker
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.spudg.sentient.databinding.*
-import java.text.DecimalFormat
-import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -81,7 +78,7 @@ class MainActivity : AppCompatActivity() {
 
         if (numberOfRatings > 0) {
 
-            val averageScore = (runningTotal/numberOfRatings)
+            val averageScore = (runningTotal / numberOfRatings)
             bindingMain.averageScoreMonth.text = averageScore.toString()
 
             when (averageScore) {
@@ -235,7 +232,7 @@ class MainActivity : AppCompatActivity() {
         var minutePicked = Calendar.getInstance()[Calendar.MINUTE]
 
         bindingAddRecord.timeRecordPost.text =
-                "${String.format("%02d",hourPicked)}:${String.format("%02d",minutePicked)}"
+                "${String.format("%02d", hourPicked)}:${String.format("%02d", minutePicked)}"
 
         bindingAddRecord.timeRecordPost.setOnClickListener {
             val changeTimeDialog = Dialog(this, R.style.Theme_Dialog)
@@ -266,7 +263,7 @@ class MainActivity : AppCompatActivity() {
 
             bindingHMP.submitHm.setOnClickListener {
                 bindingAddRecord.timeRecordPost.text =
-                        "${String.format("%02d",hourPicked)}:${String.format("%02d",minutePicked)}"
+                        "${String.format("%02d", hourPicked)}:${String.format("%02d", minutePicked)}"
                 changeTimeDialog.dismiss()
             }
 
@@ -468,7 +465,7 @@ class MainActivity : AppCompatActivity() {
         var minutePicked = oldMinute
 
         bindingUpdateRecord.timeRecordUpdate.text =
-                "${String.format("%02d",hourPicked)}:${String.format("%02d",minutePicked)}"
+                "${String.format("%02d", hourPicked)}:${String.format("%02d", minutePicked)}"
 
         bindingUpdateRecord.timeRecordUpdate.setOnClickListener {
             val changeTimeDialog = Dialog(this, R.style.Theme_Dialog)
@@ -499,7 +496,7 @@ class MainActivity : AppCompatActivity() {
 
             bindingHMP.submitHm.setOnClickListener {
                 bindingUpdateRecord.timeRecordUpdate.text =
-                        "${String.format("%02d",hourPicked)}:${String.format("%02d",minutePicked)}"
+                        "${String.format("%02d", hourPicked)}:${String.format("%02d", minutePicked)}"
                 changeTimeDialog.dismiss()
             }
 

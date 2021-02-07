@@ -12,7 +12,7 @@
         <activity
             android:name=".AboutActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Sentient"/>
+            android:theme="@style/Sentient" />
         <activity
             android:name=".VisualiserActivity"
             android:screenOrientation="portrait"

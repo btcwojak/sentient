@@ -1,26 +1,20 @@
 package com.spudg.sentient
 
 import android.content.Context
-import android.opengl.Visibility
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.spudg.sentient.databinding.NoteRowBinding
-import com.spudg.sentient.databinding.RecordRowBinding
-import java.text.SimpleDateFormat
 import java.util.*
 
 class NoteListAdapter(private val context: Context, private val items: ArrayList<RecordModel>) :
-        RecyclerView.Adapter<NoteListAdapter.NoteViewHolder>() {
+    RecyclerView.Adapter<NoteListAdapter.NoteViewHolder>() {
 
-    inner class NoteViewHolder(val binding: NoteRowBinding)
-        : RecyclerView.ViewHolder(binding.root)
+    inner class NoteViewHolder(val binding: NoteRowBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
         val binding = NoteRowBinding
-                .inflate(LayoutInflater.from(parent.context), parent, false)
+            .inflate(LayoutInflater.from(parent.context), parent, false)
         return NoteViewHolder(binding)
     }
 
@@ -38,7 +32,12 @@ class NoteListAdapter(private val context: Context, private val items: ArrayList
             val minute = cal.get(Calendar.MINUTE)
 
             binding.noteBody.text = record.note
-            binding.noteDate.text = "from $day ${Globals.getShortMonth(month)} $year at ${String.format("%02d",hour)}:${String.format("%02d",minute)}"
+            binding.noteDate.text = "from $day ${Globals.getShortMonth(month)} $year at ${
+                String.format(
+                    "%02d",
+                    hour
+                )
+            }:${String.format("%02d", minute)}"
 
         }
 

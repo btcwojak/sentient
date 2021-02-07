@@ -7,11 +7,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="20dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginEnd="20dp"
+    android:layout_marginBottom="20dp"
     android:background="@drawable/dialog_background_solid"
     android:elevation="10dp"
-    android:layout_marginTop="5dp"
-    android:layout_marginBottom="20dp"
-    android:layout_marginEnd="20dp"
     android:orientation="vertical">
 
     <LinearLayout
@@ -34,21 +34,21 @@
                 android:orientation="vertical"
                 android:padding="5dp">
 
-                    <TextView
-                        android:id="@+id/noteBody"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="start"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="10dp"
-                        android:fontFamily="@font/open_sans_light"
-                        android:gravity="start"
-                        android:textColor="@android:color/black"
-                        android:textSize="16sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:text="This is an example note etc etc..." />
+                <TextView
+                    android:id="@+id/noteBody"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="10dp"
+                    android:fontFamily="@font/open_sans_light"
+                    android:gravity="start"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="This is an example note etc etc..." />
 
                 <TextView
                     android:id="@+id/noteDate"

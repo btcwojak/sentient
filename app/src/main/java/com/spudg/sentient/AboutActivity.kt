@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.spudg.sentient.databinding.ActivityAboutBinding
-import com.spudg.sentient.databinding.ActivityMainBinding
 import com.spudg.sentient.databinding.DialogTermsOfUseBinding
 
 class AboutActivity : AppCompatActivity() {

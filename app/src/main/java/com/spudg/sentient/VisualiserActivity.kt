@@ -17,7 +17,6 @@ import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
-import com.github.mikephil.charting.utils.ColorTemplate
 import com.spudg.sentient.databinding.ActivityVisualiserBinding
 import com.spudg.sentient.databinding.MonthYearPickerBinding
 import java.text.DecimalFormat
@@ -338,12 +337,12 @@ class VisualiserActivity : AppCompatActivity() {
             l.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
             l.orientation = Legend.LegendOrientation.HORIZONTAL
             l.setDrawInside(false)
-            val l1 = LegendEntry("0 to 9",Legend.LegendForm.CIRCLE,10f,2f,null,-65527)
-            val l2 = LegendEntry("10 to 39",Legend.LegendForm.CIRCLE,10f,2f,null,-25088)
-            val l3 = LegendEntry("40 to 69",Legend.LegendForm.CIRCLE,10f,2f,null,-16728577)
-            val l4 = LegendEntry("70 to 89",Legend.LegendForm.CIRCLE,10f,2f,null,-16711896)
-            val l5 = LegendEntry("90 to 100",Legend.LegendForm.CIRCLE,10f,2f,null,-6881025)
-            l.setCustom(arrayOf(l1,l2,l3,l4,l5))
+            val l1 = LegendEntry("0 to 9", Legend.LegendForm.CIRCLE, 10f, 2f, null, -65527)
+            val l2 = LegendEntry("10 to 39", Legend.LegendForm.CIRCLE, 10f, 2f, null, -25088)
+            val l3 = LegendEntry("40 to 69", Legend.LegendForm.CIRCLE, 10f, 2f, null, -16728577)
+            val l4 = LegendEntry("70 to 89", Legend.LegendForm.CIRCLE, 10f, 2f, null, -16711896)
+            val l5 = LegendEntry("90 to 100", Legend.LegendForm.CIRCLE, 10f, 2f, null, -6881025)
+            l.setCustom(arrayOf(l1, l2, l3, l4, l5))
 
             dataSetPie.valueLinePart1OffsetPercentage = 80f
             dataSetPie.valueLinePart1Length = 0.4f
@@ -424,45 +423,45 @@ class VisualiserActivity : AppCompatActivity() {
 
         if (runningTotal != 0) {
 
-                for (i in 1..12) {
-                    entriesBarMonthly.add(BarEntry((i).toFloat(), averageScoresPerMonth[i - 1].toFloat()))
-                }
+            for (i in 1..12) {
+                entriesBarMonthly.add(BarEntry((i).toFloat(), averageScoresPerMonth[i - 1].toFloat()))
+            }
 
-                val dataSetBarMonthly = BarDataSet(entriesBarMonthly, "")
-                val dataBarMonthly = BarData(dataSetBarMonthly)
-                dataSetBarMonthly.colors = colours
+            val dataSetBarMonthly = BarDataSet(entriesBarMonthly, "")
+            val dataBarMonthly = BarData(dataSetBarMonthly)
+            dataSetBarMonthly.colors = colours
 
-                dataBarMonthly.setValueFormatter(object : ValueFormatter() {
-                    override fun getFormattedValue(value: Float): String {
-                        return if (value > 0) {
-                            val mFormat = DecimalFormat("###,###,##0")
-                            mFormat.format(super.getFormattedValue(value).toFloat())
-                        } else {
-                            ""
-                        }
+            dataBarMonthly.setValueFormatter(object : ValueFormatter() {
+                override fun getFormattedValue(value: Float): String {
+                    return if (value > 0) {
+                        val mFormat = DecimalFormat("###,###,##0")
+                        mFormat.format(super.getFormattedValue(value).toFloat())
+                    } else {
+                        ""
                     }
-                })
-
-                val chartBarMonthly: BarChart = bindingVisualiser.chartAverageMonthly
-                if (entriesBarMonthly.size > 0) {
-                    chartBarMonthly.data = dataBarMonthly
                 }
+            })
 
-                chartBarMonthly.animateY(800)
-                chartBarMonthly.setNoDataText("No records for the month and year selected.")
-                chartBarMonthly.setNoDataTextColor(0xff000000.toInt())
-                chartBarMonthly.setNoDataTextTypeface(ResourcesCompat.getFont(this, R.font.open_sans_light))
-                chartBarMonthly.xAxis.setDrawGridLines(false)
-                chartBarMonthly.axisRight.isEnabled = false
-                chartBarMonthly.xAxis.position = XAxis.XAxisPosition.BOTTOM
-                chartBarMonthly.legend.isEnabled = false
+            val chartBarMonthly: BarChart = bindingVisualiser.chartAverageMonthly
+            if (entriesBarMonthly.size > 0) {
+                chartBarMonthly.data = dataBarMonthly
+            }
 
-                chartBarMonthly.xAxis.valueFormatter = IndexAxisValueFormatter(Globals.monthsShortArrayEmptyFirstEntry)
-                chartBarMonthly.xAxis.labelCount = 12
+            chartBarMonthly.animateY(800)
+            chartBarMonthly.setNoDataText("No records for the month and year selected.")
+            chartBarMonthly.setNoDataTextColor(0xff000000.toInt())
+            chartBarMonthly.setNoDataTextTypeface(ResourcesCompat.getFont(this, R.font.open_sans_light))
+            chartBarMonthly.xAxis.setDrawGridLines(false)
+            chartBarMonthly.axisRight.isEnabled = false
+            chartBarMonthly.xAxis.position = XAxis.XAxisPosition.BOTTOM
+            chartBarMonthly.legend.isEnabled = false
 
-                chartBarMonthly.description.isEnabled = false
+            chartBarMonthly.xAxis.valueFormatter = IndexAxisValueFormatter(Globals.monthsShortArrayEmptyFirstEntry)
+            chartBarMonthly.xAxis.labelCount = 12
 
-                chartBarMonthly.invalidate()
+            chartBarMonthly.description.isEnabled = false
+
+            chartBarMonthly.invalidate()
 
         } else {
             bindingVisualiser.chartAverageMonthly.clear()

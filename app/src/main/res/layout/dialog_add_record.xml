@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/dialog_background_solid"
     android:orientation="vertical"
     android:padding="10dp">
@@ -16,10 +16,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="5dp"
             android:fontFamily="@font/open_sans_light"
             android:text="How are you feeling?"
-            android:layout_gravity="center_horizontal"
             android:textColor="@android:color/black"
             android:textSize="24sp" />
 
@@ -38,13 +38,13 @@
         android:id="@+id/currentScorePost"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
-        tools:text="50"
-        android:layout_marginTop="25dp"
-        android:textSize="75sp"
-        android:fontFamily="@font/open_sans_light"
         android:layout_gravity="center"
-        android:gravity="center"/>
+        android:layout_marginTop="25dp"
+        android:fontFamily="@font/open_sans_light"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        android:textSize="75sp"
+        tools:text="50" />
 
     <com.google.android.material.slider.Slider
         android:id="@+id/scoreSliderPost"
@@ -75,8 +75,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_marginTop="20dp"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
 
         <TextView
             android:layout_width="wrap_content"
