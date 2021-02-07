@@ -212,7 +212,7 @@ class VisualiserActivity : AppCompatActivity() {
                 }
 
                 chartBarDaily.animateY(800)
-                chartBarDaily.setNoDataText("No data for the month and category selected.")
+                chartBarDaily.setNoDataText("No records for the month and year selected.")
                 chartBarDaily.setNoDataTextColor(0xff000000.toInt())
                 chartBarDaily.setNoDataTextTypeface(ResourcesCompat.getFont(this, R.font.open_sans_light))
                 chartBarDaily.xAxis.setDrawGridLines(false)
@@ -221,7 +221,7 @@ class VisualiserActivity : AppCompatActivity() {
                 chartBarDaily.legend.isEnabled = false
                 chartBarDaily.axisRight.setDrawLabels(true)
 
-                chartBarDaily.xAxis.labelCount = 31
+                chartBarDaily.xAxis.labelCount = 15
 
                 chartBarDaily.description.isEnabled = false
 
@@ -324,7 +324,7 @@ class VisualiserActivity : AppCompatActivity() {
             }
 
             chartPie.animateY(800)
-            chartPie.setNoDataText("No records posted for the month selected.")
+            chartPie.setNoDataText("No records for the month and year selected.")
             chartPie.setNoDataTextColor(0xff000000.toInt())
             chartPie.setNoDataTextTypeface(ResourcesCompat.getFont(this, R.font.open_sans_light))
             chartPie.setEntryLabelTypeface(ResourcesCompat.getFont(this, R.font.open_sans_light))
@@ -368,7 +368,7 @@ class VisualiserActivity : AppCompatActivity() {
 
         } else {
             bindingVisualiser.chartSplitAveScore.clear()
-            bindingVisualiser.chartSplitAveScore.setNoDataText("No net expenditure categories for the month selected.")
+            bindingVisualiser.chartSplitAveScore.setNoDataText("No records for the month and year selected.")
             bindingVisualiser.chartSplitAveScore.setNoDataTextColor(0xff000000.toInt())
             bindingVisualiser.chartSplitAveScore.setNoDataTextTypeface(ResourcesCompat.getFont(this, R.font.open_sans_light))
         }
@@ -449,7 +449,7 @@ class VisualiserActivity : AppCompatActivity() {
                 }
 
                 chartBarMonthly.animateY(800)
-                chartBarMonthly.setNoDataText("No data for the month and y selected.")
+                chartBarMonthly.setNoDataText("No records for the month and year selected.")
                 chartBarMonthly.setNoDataTextColor(0xff000000.toInt())
                 chartBarMonthly.setNoDataTextTypeface(ResourcesCompat.getFont(this, R.font.open_sans_light))
                 chartBarMonthly.xAxis.setDrawGridLines(false)
@@ -466,7 +466,7 @@ class VisualiserActivity : AppCompatActivity() {
 
         } else {
             bindingVisualiser.chartAverageMonthly.clear()
-            bindingVisualiser.chartAverageMonthly.setNoDataText("No data for the month selected.")
+            bindingVisualiser.chartAverageMonthly.setNoDataText("No records for the month and year selected.")
             bindingVisualiser.chartAverageMonthly.setNoDataTextColor(0xff000000.toInt())
             bindingVisualiser.chartAverageMonthly.setNoDataTextTypeface(ResourcesCompat.getFont(this, R.font.open_sans_light))
         }

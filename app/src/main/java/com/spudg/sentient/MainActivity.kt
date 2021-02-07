@@ -101,6 +101,9 @@ class MainActivity : AppCompatActivity() {
                     bindingMain.averageScoreMonth.setTextColor(-6881025)
                 }
             }
+        } else {
+            bindingMain.averageScoreMonth.text = "n/a"
+            bindingMain.averageScoreMonth.setTextColor(Color.GRAY)
         }
     }
 
@@ -626,11 +629,13 @@ class MainActivity : AppCompatActivity() {
 
             Toast.makeText(this, "Record deleted.", Toast.LENGTH_LONG).show()
             setUpRecordList()
+            setUpAverageMonthScore()
             dbHandler.close()
             deleteDialog.dismiss()
         }
 
         bindingDeleteRecord.tvCancelDeleteRecord.setOnClickListener {
+            setUpAverageMonthScore()
             deleteDialog.dismiss()
         }
 

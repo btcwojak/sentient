@@ -71,9 +71,9 @@
         android:layout_gravity="center_horizontal"
         android:fontFamily="@font/open_sans_light"
         android:gravity="center_horizontal"
-        android:textColor="@color/colorAccent"
+        tools:textColor="@android:color/darker_gray"
         android:textSize="60sp"
-        android:text="91"/>
+        tools:text="n/a"/>
 
     <TextView
         android:layout_width="match_parent"
