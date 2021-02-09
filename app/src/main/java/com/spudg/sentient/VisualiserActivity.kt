@@ -228,7 +228,7 @@ class VisualiserActivity : AppCompatActivity() {
             }
         } else {
             bindingVisualiser.chartAverageDaily.clear()
-            bindingVisualiser.chartAverageDaily.setNoDataText("No data for the month and category selected.")
+            bindingVisualiser.chartAverageDaily.setNoDataText("No data for the month and year selected.")
             bindingVisualiser.chartAverageDaily.setNoDataTextColor(0xff000000.toInt())
             bindingVisualiser.chartAverageDaily.setNoDataTextTypeface(ResourcesCompat.getFont(this, R.font.open_sans_light))
         }
