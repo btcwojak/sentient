@@ -1,0 +1,29 @@
+package com.spudg.sentient;
+
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
+
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
+public class RecordReminder extends BroadcastReceiver {
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "recordReminder")
+                .setSmallIcon(R.drawable.notification_icon)
+                .setContentTitle("Don't forget to record your mood!")
+                .setContentText("A score hasn't been posted yet today. Tap here to post a record.")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true)
+                .setContentIntent(PendingIntent.getActivity(context, 1, new Intent(context, MainActivity.class), 0));
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        notificationManager.notify(1, builder.build());
+
+    }
+}

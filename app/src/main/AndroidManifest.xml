@@ -9,24 +9,29 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Sentient">
+
         <activity
             android:name=".AboutActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Sentient" />
+
         <activity
             android:name=".VisualiserActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Sentient" />
+
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Sentient">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver android:name="com.spudg.sentient.RecordReminder" />
+
     </application>
 
 </manifest>

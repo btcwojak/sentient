@@ -1,15 +1,19 @@
 package com.spudg.sentient
 
-import android.app.Dialog
+import android.app.*
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.spudg.sentient.databinding.*
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -23,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bindingDMYP: DayMonthYearPickerBinding
     private lateinit var bindingHMP: HourMinutePickerBinding
     private lateinit var bindingViewNote: DialogViewNoteBinding
+    private lateinit var bindingReminder: DialogReminderBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,9 +35,15 @@ class MainActivity : AppCompatActivity() {
         val view = bindingMain.root
         setContentView(view)
 
+        createNotificationChannel()
+
         bindingMain.visualiserBtn.setOnClickListener {
             val intent = Intent(this, VisualiserActivity::class.java)
             startActivity(intent)
+        }
+
+        bindingMain.reminderBtn.setOnClickListener {
+            openReminderDialog()
         }
 
         bindingMain.aboutBtn.setOnClickListener {
@@ -47,6 +58,162 @@ class MainActivity : AppCompatActivity() {
         setUpRecordList()
         setUpAverageMonthScore()
 
+    }
+
+    private fun openReminderDialog() {
+        val addUpdateReminderDialog = Dialog(this, R.style.Theme_Dialog)
+        addUpdateReminderDialog.setCancelable(false)
+        bindingReminder = DialogReminderBinding.inflate(layoutInflater)
+        val view = bindingReminder.root
+        addUpdateReminderDialog.setContentView(view)
+        addUpdateReminderDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val db = ReminderHandler(this, null)
+
+        if (db.timeExists()) {
+            val cal = Calendar.getInstance()
+            cal.timeInMillis = db.getReminderTime().toLong()
+            var timeHour = cal.get(Calendar.HOUR_OF_DAY)
+            var timeMinute = cal.get(Calendar.MINUTE)
+            bindingReminder.currentTime.text = "Current reminder: ${String.format("%02d", timeHour)}:${String.format("%02d", timeMinute)} daily"
+            bindingReminder.btnAddUpdateReminder.text = "Update your reminder"
+            bindingReminder.btnAddUpdateReminder.setOnClickListener {
+                val updateTimeDialog = Dialog(this, R.style.Theme_Dialog)
+                updateTimeDialog.setCancelable(false)
+                bindingHMP = HourMinutePickerBinding.inflate(layoutInflater)
+                val viewHMP = bindingHMP.root
+                updateTimeDialog.setContentView(viewHMP)
+                updateTimeDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+                bindingHMP.dmypHour.setFormatter { i -> String.format("%02d", i) }
+                bindingHMP.dmypMinute.setFormatter { i -> String.format("%02d", i) }
+
+                bindingHMP.dmypHour.maxValue = 23
+                bindingHMP.dmypHour.minValue = 1
+                bindingHMP.dmypMinute.maxValue = 59
+                bindingHMP.dmypMinute.minValue = 1
+
+                bindingHMP.dmypHour.value = timeHour
+                bindingHMP.dmypMinute.value = timeMinute
+
+                bindingHMP.dmypHour.setOnValueChangedListener { _, _, newVal ->
+                    timeHour = newVal
+                }
+
+                bindingHMP.dmypMinute.setOnValueChangedListener { _, _, newVal ->
+                    timeMinute = newVal
+                }
+
+                bindingHMP.submitHm.setOnClickListener {
+                    bindingReminder.currentTime.text = "Current reminder: ${String.format("%02d", timeHour)}:${String.format("%02d", timeMinute)} daily"
+                    val dbSubmit = ReminderHandler(this, null)
+                    dbSubmit.addReminderTime(timeHour, timeMinute)
+
+                    val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                    notificationManager.cancel(1)
+
+                    val intent = Intent(this, RecordReminder::class.java)
+                    val pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0)
+                    val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+                    alarmManager.setRepeating(
+                            AlarmManager.RTC_WAKEUP,
+                            dbSubmit.getReminderTime().toLong(),
+                            86400000,
+                            pendingIntent
+                    )
+
+                    updateTimeDialog.dismiss()
+                }
+
+                bindingHMP.dmypHour.wrapSelectorWheel = true
+                bindingHMP.dmypMinute.wrapSelectorWheel = true
+
+                updateTimeDialog.show()
+            }
+        } else {
+            bindingReminder.btnAddUpdateReminder.text = "Add a new reminder"
+            bindingReminder.currentTime.text = "Current reminder: None"
+            bindingReminder.btnAddUpdateReminder.setOnClickListener {
+                var timeHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+                var timeMinute = Calendar.getInstance().get(Calendar.MINUTE)
+                val updateTimeDialog = Dialog(this, R.style.Theme_Dialog)
+                updateTimeDialog.setCancelable(false)
+                bindingHMP = HourMinutePickerBinding.inflate(layoutInflater)
+                val viewHMP = bindingHMP.root
+                updateTimeDialog.setContentView(viewHMP)
+                updateTimeDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+                bindingHMP.dmypHour.setFormatter { i -> String.format("%02d", i) }
+                bindingHMP.dmypMinute.setFormatter { i -> String.format("%02d", i) }
+
+                bindingHMP.dmypHour.maxValue = 23
+                bindingHMP.dmypHour.minValue = 1
+                bindingHMP.dmypMinute.maxValue = 59
+                bindingHMP.dmypMinute.minValue = 1
+
+                bindingHMP.dmypHour.value = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+                bindingHMP.dmypMinute.value = Calendar.getInstance().get(Calendar.MINUTE)
+
+                bindingHMP.dmypHour.setOnValueChangedListener { _, _, newVal ->
+                    timeHour = newVal
+                }
+
+                bindingHMP.dmypMinute.setOnValueChangedListener { _, _, newVal ->
+                    timeMinute = newVal
+                }
+
+                bindingHMP.submitHm.setOnClickListener {
+                    bindingReminder.currentTime.text = "Current reminder: ${String.format("%02d", timeHour)}:${String.format("%02d", timeMinute)} daily"
+                    val dbSubmit = ReminderHandler(this, null)
+                    dbSubmit.addReminderTime(timeHour, timeMinute)
+
+                    val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                    notificationManager.cancel(1)
+
+                    val intent = Intent(this, RecordReminder::class.java)
+                    val pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0)
+                    val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+                    alarmManager.setRepeating(
+                            AlarmManager.RTC_WAKEUP,
+                            dbSubmit.getReminderTime().toLong(),
+                            86400000,
+                            pendingIntent
+                    )
+
+                    bindingReminder.btnAddUpdateReminder.text = "Update your reminder"
+                    updateTimeDialog.dismiss()
+                }
+
+                bindingHMP.dmypHour.wrapSelectorWheel = true
+                bindingHMP.dmypMinute.wrapSelectorWheel = true
+
+                updateTimeDialog.show()
+            }
+
+        }
+
+        bindingReminder.tvDoneReminder.setOnClickListener {
+            addUpdateReminderDialog.dismiss()
+        }
+
+        addUpdateReminderDialog.show()
+
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            val name = "Daily Record Reminder"
+            val description =
+                    "Channel to remind users to post a record for the day"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel("recordReminder", name, importance)
+            channel.description = description
+
+            val notificationManager = getSystemService(NotificationManager::class.java)
+            notificationManager.createNotificationChannel(channel)
+
+        }
     }
 
     private fun setUpAverageMonthScore() {
