@@ -17,7 +17,7 @@ public class RecordReminder extends BroadcastReceiver {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "recordReminder")
                 .setSmallIcon(R.drawable.notification_icon)
                 .setContentTitle("Don't forget to record your mood!")
-                .setContentText("A score hasn't been posted yet today. Tap here to post a record.")
+                .setContentText("This is your reminder, tap here to add a record")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true)
                 .setContentIntent(PendingIntent.getActivity(context, 1, new Intent(context, MainActivity.class), 0));

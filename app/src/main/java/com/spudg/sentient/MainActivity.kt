@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bindingHMP: HourMinutePickerBinding
     private lateinit var bindingViewNote: DialogViewNoteBinding
     private lateinit var bindingReminder: DialogReminderBinding
+    private lateinit var bindingSupport: DialogSupportBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,9 +48,23 @@ class MainActivity : AppCompatActivity() {
             openReminderDialog()
         }
 
-        bindingMain.aboutBtn.setOnClickListener {
-            val intent = Intent(this, AboutActivity::class.java)
-            startActivity(intent)
+        bindingMain.moreBtn.setOnClickListener {
+            val popupMenu: PopupMenu = PopupMenu(this, bindingMain.moreBtn)
+            popupMenu.menuInflater.inflate(R.menu.menu_popup, popupMenu.menu)
+            popupMenu.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.action_support -> {
+                        openSupportDialog()
+                    }
+                    R.id.action_about -> {
+                        val intent = Intent(this, AboutActivity::class.java)
+                        startActivity(intent)
+                    }
+                }
+                true
+            })
+
+            popupMenu.show()
         }
 
         bindingMain.addRecord.setOnClickListener {
@@ -58,6 +74,21 @@ class MainActivity : AppCompatActivity() {
         setUpRecordList()
         setUpAverageMonthScore()
 
+    }
+
+    private fun openSupportDialog() {
+        val supportDialog = Dialog(this, R.style.Theme_Dialog)
+        supportDialog.setCancelable(false)
+        bindingSupport = DialogSupportBinding.inflate(layoutInflater)
+        val view = bindingSupport.root
+        supportDialog.setContentView(view)
+        supportDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        bindingSupport.tvDoneS.setOnClickListener {
+            supportDialog.dismiss()
+        }
+
+        supportDialog.show()
     }
 
     private fun openReminderDialog() {
@@ -84,14 +115,15 @@ class MainActivity : AppCompatActivity() {
                 val viewHMP = bindingHMP.root
                 updateTimeDialog.setContentView(viewHMP)
                 updateTimeDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                bindingHMP.hourMinutePickerTitle.text = "Set daily reminder time"
 
                 bindingHMP.dmypHour.setFormatter { i -> String.format("%02d", i) }
                 bindingHMP.dmypMinute.setFormatter { i -> String.format("%02d", i) }
 
                 bindingHMP.dmypHour.maxValue = 23
-                bindingHMP.dmypHour.minValue = 1
+                bindingHMP.dmypHour.minValue = 0
                 bindingHMP.dmypMinute.maxValue = 59
-                bindingHMP.dmypMinute.minValue = 1
+                bindingHMP.dmypMinute.minValue = 0
 
                 bindingHMP.dmypHour.value = timeHour
                 bindingHMP.dmypMinute.value = timeMinute
@@ -142,14 +174,15 @@ class MainActivity : AppCompatActivity() {
                 val viewHMP = bindingHMP.root
                 updateTimeDialog.setContentView(viewHMP)
                 updateTimeDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                bindingHMP.hourMinutePickerTitle.text = "Set daily reminder time"
 
                 bindingHMP.dmypHour.setFormatter { i -> String.format("%02d", i) }
                 bindingHMP.dmypMinute.setFormatter { i -> String.format("%02d", i) }
 
                 bindingHMP.dmypHour.maxValue = 23
-                bindingHMP.dmypHour.minValue = 1
+                bindingHMP.dmypHour.minValue = 0
                 bindingHMP.dmypMinute.maxValue = 59
-                bindingHMP.dmypMinute.minValue = 1
+                bindingHMP.dmypMinute.minValue = 0
 
                 bindingHMP.dmypHour.value = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
                 bindingHMP.dmypMinute.value = Calendar.getInstance().get(Calendar.MINUTE)
@@ -415,9 +448,9 @@ class MainActivity : AppCompatActivity() {
             bindingHMP.dmypMinute.setFormatter { i -> String.format("%02d", i) }
 
             bindingHMP.dmypHour.maxValue = 23
-            bindingHMP.dmypHour.minValue = 1
+            bindingHMP.dmypHour.minValue = 0
             bindingHMP.dmypMinute.maxValue = 59
-            bindingHMP.dmypMinute.minValue = 1
+            bindingHMP.dmypMinute.minValue = 0
 
             bindingHMP.dmypHour.value = hourPicked
             bindingHMP.dmypMinute.value = minutePicked
@@ -648,9 +681,9 @@ class MainActivity : AppCompatActivity() {
             bindingHMP.dmypMinute.setFormatter { i -> String.format("%02d", i) }
 
             bindingHMP.dmypHour.maxValue = 23
-            bindingHMP.dmypHour.minValue = 1
+            bindingHMP.dmypHour.minValue = 0
             bindingHMP.dmypMinute.maxValue = 59
-            bindingHMP.dmypMinute.minValue = 1
+            bindingHMP.dmypMinute.minValue = 0
 
             bindingHMP.dmypHour.value = hourPicked
             bindingHMP.dmypMinute.value = minutePicked
