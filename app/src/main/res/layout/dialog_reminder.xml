@@ -47,6 +47,21 @@
                 android:text="Add a new reminder"
                 android:textColor="#673AB7" />
 
+            <TextView
+                android:id="@+id/btnRemoveReminder"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/open_sans_light"
+                android:foreground="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:padding="10dp"
+                android:textSize="16sp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="8dp"
+                android:text="Remove your reminder"
+                android:textColor="#673AB7" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

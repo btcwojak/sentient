@@ -5,16 +5,15 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.spudg.sentient.databinding.*
-import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -108,6 +107,7 @@ class MainActivity : AppCompatActivity() {
             var timeMinute = cal.get(Calendar.MINUTE)
             bindingReminder.currentTime.text = "Current reminder: ${String.format("%02d", timeHour)}:${String.format("%02d", timeMinute)} daily"
             bindingReminder.btnAddUpdateReminder.text = "Update your reminder"
+            bindingReminder.btnRemoveReminder.visibility = View.VISIBLE
             bindingReminder.btnAddUpdateReminder.setOnClickListener {
                 val updateTimeDialog = Dialog(this, R.style.Theme_Dialog)
                 updateTimeDialog.setCancelable(false)
@@ -141,17 +141,20 @@ class MainActivity : AppCompatActivity() {
                     val dbSubmit = ReminderHandler(this, null)
                     dbSubmit.addReminderTime(timeHour, timeMinute)
 
-                    val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                    notificationManager.cancel(1)
-
-                    val intent = Intent(this, RecordReminder::class.java)
-                    val pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0)
+                    val alarmIntent = Intent(applicationContext, RecordReminder::class.java)
                     val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+                    val displayIntent = PendingIntent.getBroadcast(applicationContext, 1, alarmIntent, 0)
+                    alarmManager.cancel(displayIntent)
+
+                    //val intent = Intent(this, RecordReminder::class.java)
+                    //val pendingIntent = PendingIntent.getBroadcast(this, 1, alarmIntent, 0)
+                    //val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+
                     alarmManager.setRepeating(
                             AlarmManager.RTC_WAKEUP,
-                            dbSubmit.getReminderTime().toLong(),
+                            db.getReminderTime().toLong(),
                             86400000,
-                            pendingIntent
+                            displayIntent
                     )
 
                     updateTimeDialog.dismiss()
@@ -162,9 +165,25 @@ class MainActivity : AppCompatActivity() {
 
                 updateTimeDialog.show()
             }
+
+            bindingReminder.btnRemoveReminder.setOnClickListener {
+                val alarmIntent = Intent(applicationContext, RecordReminder::class.java)
+                val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+                val displayIntent = PendingIntent.getBroadcast(applicationContext, 1, alarmIntent, 0)
+                alarmManager.cancel(displayIntent)
+
+                db.removeReminder()
+
+                bindingReminder.btnAddUpdateReminder.text = "Add a new reminder"
+                bindingReminder.currentTime.text = "Current reminder: None"
+
+                bindingReminder.btnRemoveReminder.visibility = View.GONE
+            }
+
         } else {
             bindingReminder.btnAddUpdateReminder.text = "Add a new reminder"
             bindingReminder.currentTime.text = "Current reminder: None"
+            bindingReminder.btnRemoveReminder.visibility = View.GONE
             bindingReminder.btnAddUpdateReminder.setOnClickListener {
                 var timeHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
                 var timeMinute = Calendar.getInstance().get(Calendar.MINUTE)
@@ -200,20 +219,24 @@ class MainActivity : AppCompatActivity() {
                     val dbSubmit = ReminderHandler(this, null)
                     dbSubmit.addReminderTime(timeHour, timeMinute)
 
-                    val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                    notificationManager.cancel(1)
-
-                    val intent = Intent(this, RecordReminder::class.java)
-                    val pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0)
+                    val alarmIntent = Intent(applicationContext, RecordReminder::class.java)
                     val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+                    val displayIntent = PendingIntent.getBroadcast(applicationContext, 1, alarmIntent, 0)
+                    alarmManager.cancel(displayIntent)
+
+                    //val intent = Intent(this, RecordReminder::class.java)
+                    //val pendingIntent = PendingIntent.getBroadcast(this, 1, alarmIntent, 0)
+                    //val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+
                     alarmManager.setRepeating(
                             AlarmManager.RTC_WAKEUP,
-                            dbSubmit.getReminderTime().toLong(),
+                            db.getReminderTime().toLong(),
                             86400000,
-                            pendingIntent
+                            displayIntent
                     )
 
                     bindingReminder.btnAddUpdateReminder.text = "Update your reminder"
+                    bindingReminder.btnRemoveReminder.visibility = View.VISIBLE
                     updateTimeDialog.dismiss()
                 }
 
@@ -221,6 +244,20 @@ class MainActivity : AppCompatActivity() {
                 bindingHMP.dmypMinute.wrapSelectorWheel = true
 
                 updateTimeDialog.show()
+            }
+
+            bindingReminder.btnRemoveReminder.setOnClickListener {
+                val alarmIntent = Intent(applicationContext, RecordReminder::class.java)
+                val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+                val displayIntent = PendingIntent.getBroadcast(applicationContext, 1, alarmIntent, 0)
+                alarmManager.cancel(displayIntent)
+
+                db.removeReminder()
+
+                bindingReminder.btnAddUpdateReminder.text = "Add a new reminder"
+                bindingReminder.currentTime.text = "Current reminder: None"
+
+                bindingReminder.btnRemoveReminder.visibility = View.GONE
             }
 
         }

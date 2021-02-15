@@ -52,6 +52,12 @@ class ReminderHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) 
 
     }
 
+    fun removeReminder() {
+        val db = this.writableDatabase
+        db.delete(TABLE_REMINDER_TIME, "$KEY_ID=1", null)
+        db.close()
+    }
+
     fun getReminderTime(): String {
         val db = this.writableDatabase
         val cursor = db.rawQuery(
