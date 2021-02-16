@@ -1,13 +1,12 @@
 package com.spudg.sentient
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.spudg.sentient.databinding.NoteRowBinding
 import java.util.*
 
-class NoteListAdapter(private val context: Context, private val items: ArrayList<RecordModel>) :
+class NoteListAdapter(private val items: ArrayList<RecordModel>) :
         RecyclerView.Adapter<NoteListAdapter.NoteViewHolder>() {
 
     inner class NoteViewHolder(val binding: NoteRowBinding) : RecyclerView.ViewHolder(binding.root)
@@ -32,12 +31,7 @@ class NoteListAdapter(private val context: Context, private val items: ArrayList
             val minute = cal.get(Calendar.MINUTE)
 
             binding.noteBody.text = record.note
-            binding.noteDate.text = "from $day ${Globals.getShortMonth(month)} $year at ${
-                String.format(
-                        "%02d",
-                        hour
-                )
-            }:${String.format("%02d", minute)}"
+            binding.noteDate.text = binding.noteDate.context.getString(R.string.visualiser_note_from_date_time, day.toString(), Globals.getShortMonth(month), year.toString(), String.format("%02d", hour), String.format("%02d", minute))
 
         }
 

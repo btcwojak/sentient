@@ -37,12 +37,12 @@ class VisualiserActivity : AppCompatActivity() {
     private var averageScoresPerDay: ArrayList<Int> = ArrayList()
     private var averageScoresPerMonth: ArrayList<Int> = ArrayList()
 
-    var scoreSplitPie: ArrayList<Int> = arrayListOf()
-    var scoreTitlesPie: ArrayList<String> = arrayListOf()
-    var scoreColoursPie: ArrayList<Int> = arrayListOf()
+    private var scoreSplitPie: ArrayList<Int> = arrayListOf()
+    private var scoreTitlesPie: ArrayList<String> = arrayListOf()
+    private var scoreColoursPie: ArrayList<Int> = arrayListOf()
 
-    var monthFilter = Calendar.getInstance()[Calendar.MONTH] + 1
-    var yearFilter = Calendar.getInstance()[Calendar.YEAR]
+    private var monthFilter = Calendar.getInstance()[Calendar.MONTH] + 1
+    private var yearFilter = Calendar.getInstance()[Calendar.YEAR]
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -477,7 +477,7 @@ class VisualiserActivity : AppCompatActivity() {
             bindingVisualiser.tvNoNotes.visibility = View.GONE
             val manager = LinearLayoutManager(this)
             bindingVisualiser.rvNotes.layoutManager = manager
-            val noteAdapter = NoteListAdapter(this, getRecordListMonthYearWithNoteOnly(monthFilter, yearFilter))
+            val noteAdapter = NoteListAdapter(getRecordListMonthYearWithNoteOnly(monthFilter, yearFilter))
             bindingVisualiser.rvNotes.adapter = noteAdapter
         } else {
             bindingVisualiser.rvNotes.visibility = View.GONE
@@ -493,26 +493,25 @@ class VisualiserActivity : AppCompatActivity() {
     }
 
     private fun setUpScoreNumberText() {
-        var numberScores = getNumberScoresMonthYear(monthFilter, yearFilter)
-        when (numberScores) {
+        when (val numberScores = getNumberScoresMonthYear(monthFilter, yearFilter)) {
             0 -> {
-                bindingVisualiser.numberScoresMonth.text = "No scores posted yet this month"
+                bindingVisualiser.numberScoresMonth.text = getString(R.string.no_scores_posted)
             }
             1 -> {
-                bindingVisualiser.numberScoresMonth.text = "1 score posted this month"
+                bindingVisualiser.numberScoresMonth.text = getString(R.string.one_score_posted)
             }
             else -> {
-                bindingVisualiser.numberScoresMonth.text = "$numberScores scores posted this month"
+                bindingVisualiser.numberScoresMonth.text = getString(R.string.number_scores_posted, numberScores.toString())
             }
         }
     }
 
     private fun setMonthHeader(month: Int, year: Int) {
-        bindingVisualiser.monthSelectedHeader.text = "${Globals.monthsShortArray[month - 1]} $year"
+        bindingVisualiser.monthSelectedHeader.text = getString(R.string.month_year, Globals.monthsShortArray[month - 1], year.toString())
     }
 
     private fun setMonthlyBarHeader(year: Int) {
-        bindingVisualiser.averageMonthlyScoresHeading.text = "Average monthly scores\nfor $year"
+        bindingVisualiser.averageMonthlyScoresHeading.text = getString(R.string.average_monthly_scores_visualiser_heading, year.toString())
     }
 
     private fun getNumberScoresMonthYear(month: Int, year: Int): Int {

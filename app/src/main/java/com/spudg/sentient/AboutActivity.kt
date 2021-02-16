@@ -24,7 +24,7 @@ class AboutActivity : AppCompatActivity() {
         setContentView(view)
 
         val version = packageManager.getPackageInfo(packageName, 0).versionName
-        bindingAbout.sentientDesc.text = "v$version, made by Spudg Studios"
+        bindingAbout.sentientDesc.text = getString(R.string.made_by_ss, version)
 
         bindingAbout.backToRecordsFromAbout.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)

@@ -33,7 +33,7 @@ class RecordAdapter(private val context: Context, private val items: ArrayList<R
             val date = sdfDate.format(record.time.toLong())
             val time = sdfTime.format(record.time.toLong())
             binding.date.text = date
-            binding.atTime.text = "at $time"
+            binding.atTime.text = binding.atTime.context.getString(R.string.at_time, time)
 
             binding.scoreRecordRow.text = record.score.toString()
 

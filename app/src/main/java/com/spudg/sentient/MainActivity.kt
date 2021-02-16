@@ -45,9 +45,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         bindingMain.moreBtn.setOnClickListener {
-            val popupMenu: PopupMenu = PopupMenu(this, bindingMain.moreBtn)
+            val popupMenu = PopupMenu(this, bindingMain.moreBtn)
             popupMenu.menuInflater.inflate(R.menu.menu_popup, popupMenu.menu)
-            popupMenu.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item ->
+            popupMenu.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.action_about -> {
                         val intent = Intent(this, AboutActivity::class.java)
@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 true
-            })
+            }
 
             popupMenu.show()
         }
@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity() {
                 val viewHMP = bindingHMP.root
                 updateTimeDialog.setContentView(viewHMP)
                 updateTimeDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                bindingHMP.hourMinutePickerTitle.text = "Set daily reminder time"
+                bindingHMP.hourMinutePickerTitle.text = getString(R.string.set_daily_reminder_time)
 
                 bindingHMP.dmypHour.setFormatter { i -> String.format("%02d", i) }
                 bindingHMP.dmypMinute.setFormatter { i -> String.format("%02d", i) }
@@ -168,7 +168,7 @@ class MainActivity : AppCompatActivity() {
                 val viewHMP = bindingHMP.root
                 updateTimeDialog.setContentView(viewHMP)
                 updateTimeDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                bindingHMP.hourMinutePickerTitle.text = "Set daily reminder time"
+                bindingHMP.hourMinutePickerTitle.text = getString(R.string.set_daily_reminder_time)
 
                 bindingHMP.dmypHour.setFormatter { i -> String.format("%02d", i) }
                 bindingHMP.dmypMinute.setFormatter { i -> String.format("%02d", i) }
@@ -239,14 +239,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setButtonsForExistingReminder(timeHour: Int, timeMinute: Int) {
-        bindingReminder.currentTime.text = "Current reminder: ${String.format("%02d", timeHour)}:${String.format("%02d", timeMinute)} daily"
-        bindingReminder.btnAddUpdateReminder.text = "Update your reminder"
+        bindingReminder.currentTime.text = getString(R.string.current_reminder_time, String.format("%02d", timeHour), String.format("%02d", timeMinute))
+        bindingReminder.btnAddUpdateReminder.text = getString(R.string.update_your_reminder)
         bindingReminder.btnRemoveReminder.visibility = View.VISIBLE
+
     }
 
     private fun setButtonsForNoReminder() {
-        bindingReminder.btnAddUpdateReminder.text = "Add a new reminder"
-        bindingReminder.currentTime.text = "Current reminder: None"
+        bindingReminder.btnAddUpdateReminder.text = getString(R.string.add_a_new_reminder)
+        bindingReminder.currentTime.text = getString(R.string.current_reminder_none)
         bindingReminder.btnRemoveReminder.visibility = View.GONE
     }
 
@@ -277,7 +278,7 @@ class MainActivity : AppCompatActivity() {
         val currentYear = Calendar.getInstance().get(Calendar.YEAR)
         val currentDate = currentMonth.toString() + currentYear.toString()
 
-        bindingMain.monthHeading.text = Globals.getLongMonth(currentMonth) + " " + currentYear
+        bindingMain.monthHeading.text = getString(R.string.average_month_score_heading, Globals.getLongMonth(currentMonth), currentYear.toString())
 
         val cal = Calendar.getInstance()
 
@@ -357,7 +358,7 @@ class MainActivity : AppCompatActivity() {
         var yearPicked = Calendar.getInstance()[Calendar.YEAR]
 
         bindingAddRecord.dateRecordPost.text =
-                "$dayPicked ${Globals.getShortMonth(monthPicked)} $yearPicked"
+                getString(R.string.day_month_year, dayPicked.toString(), Globals.getShortMonth(monthPicked), yearPicked.toString())
 
         bindingAddRecord.dateRecordPost.setOnClickListener {
             val changeDateDialog = Dialog(this, R.style.Theme_Dialog)
@@ -426,7 +427,7 @@ class MainActivity : AppCompatActivity() {
 
             bindingDMYP.submitDmy.setOnClickListener {
                 bindingAddRecord.dateRecordPost.text =
-                        "$dayPicked ${Globals.getShortMonth(monthPicked)} $yearPicked"
+                        getString(R.string.day_month_year, dayPicked.toString(), Globals.getShortMonth(monthPicked), yearPicked.toString())
                 changeDateDialog.dismiss()
             }
 
@@ -451,7 +452,7 @@ class MainActivity : AppCompatActivity() {
         var minutePicked = Calendar.getInstance()[Calendar.MINUTE]
 
         bindingAddRecord.timeRecordPost.text =
-                "${String.format("%02d", hourPicked)}:${String.format("%02d", minutePicked)}"
+                getString(R.string.hour_minute, String.format("%02d", hourPicked), String.format("%02d", minutePicked))
 
         bindingAddRecord.timeRecordPost.setOnClickListener {
             val changeTimeDialog = Dialog(this, R.style.Theme_Dialog)
@@ -482,20 +483,12 @@ class MainActivity : AppCompatActivity() {
 
             bindingHMP.submitHm.setOnClickListener {
                 bindingAddRecord.timeRecordPost.text =
-                        "${String.format("%02d", hourPicked)}:${String.format("%02d", minutePicked)}"
+                        getString(R.string.hour_minute, String.format("%02d", hourPicked), String.format("%02d", minutePicked))
                 changeTimeDialog.dismiss()
             }
 
             bindingHMP.dmypHour.wrapSelectorWheel = true
             bindingHMP.dmypMinute.wrapSelectorWheel = true
-
-            //bindingHMP.cancelHm.setOnClickListener {
-            //    hourPicked = Calendar.getInstance()[Calendar.HOUR_OF_DAY]
-            //    minutePicked = Calendar.getInstance()[Calendar.MINUTE]
-            //    bindingAddRecord.timeRecordPost.text =
-            //            "${String.format("%02d",hourPicked)}:${String.format("%02d",minutePicked)}"
-            //    changeTimeDialog.dismiss()
-            //}
 
             changeTimeDialog.show()
 
@@ -505,7 +498,7 @@ class MainActivity : AppCompatActivity() {
         bindingAddRecord.currentScorePost.text = bindingAddRecord.scoreSliderPost.value.roundToInt().toString()
         bindingAddRecord.currentScorePost.setTextColor(-16728577)
 
-        bindingAddRecord.scoreSliderPost.addOnChangeListener { slider, value, fromUser ->
+        bindingAddRecord.scoreSliderPost.addOnChangeListener { slider, value, _ ->
             slider.value = value.roundToInt().toFloat()
             bindingAddRecord.currentScorePost.text = value.roundToInt().toString()
             when (value) {
@@ -590,7 +583,7 @@ class MainActivity : AppCompatActivity() {
         var yearPicked = oldYear
 
         bindingUpdateRecord.dateRecordUpdate.text =
-                "$dayPicked ${Globals.getShortMonth(monthPicked)} $yearPicked"
+                getString(R.string.day_month_year, dayPicked.toString(), Globals.getShortMonth(monthPicked), yearPicked.toString())
 
         bindingUpdateRecord.dateRecordUpdate.setOnClickListener {
             val changeDateDialog = Dialog(this, R.style.Theme_Dialog)
@@ -659,7 +652,7 @@ class MainActivity : AppCompatActivity() {
 
             bindingDMYP.submitDmy.setOnClickListener {
                 bindingUpdateRecord.dateRecordUpdate.text =
-                        "$dayPicked ${Globals.getShortMonth(monthPicked)} $yearPicked"
+                        getString(R.string.day_month_year, dayPicked.toString(), Globals.getShortMonth(monthPicked), yearPicked.toString())
                 changeDateDialog.dismiss()
             }
 
@@ -684,7 +677,7 @@ class MainActivity : AppCompatActivity() {
         var minutePicked = oldMinute
 
         bindingUpdateRecord.timeRecordUpdate.text =
-                "${String.format("%02d", hourPicked)}:${String.format("%02d", minutePicked)}"
+                getString(R.string.hour_minute, String.format("%02d", hourPicked), String.format("%02d", minutePicked))
 
         bindingUpdateRecord.timeRecordUpdate.setOnClickListener {
             val changeTimeDialog = Dialog(this, R.style.Theme_Dialog)
@@ -715,20 +708,12 @@ class MainActivity : AppCompatActivity() {
 
             bindingHMP.submitHm.setOnClickListener {
                 bindingUpdateRecord.timeRecordUpdate.text =
-                        "${String.format("%02d", hourPicked)}:${String.format("%02d", minutePicked)}"
+                        getString(R.string.hour_minute, String.format("%02d", hourPicked), String.format("%02d", minutePicked))
                 changeTimeDialog.dismiss()
             }
 
             bindingHMP.dmypHour.wrapSelectorWheel = true
             bindingHMP.dmypMinute.wrapSelectorWheel = true
-
-            //bindingHMP.cancelHm.setOnClickListener {
-            //    hourPicked = oldHour
-            //    minutePicked = oldMinute
-            //    bindingUpdateRecord.timeRecordUpdate.text =
-            //            "${String.format("%02d",hourPicked)}:${String.format("%02d",minutePicked)}"
-            //    changeTimeDialog.dismiss()
-            //}
 
             changeTimeDialog.show()
 
@@ -758,7 +743,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        bindingUpdateRecord.scoreSliderUpdate.addOnChangeListener { slider, value, fromUser ->
+        bindingUpdateRecord.scoreSliderUpdate.addOnChangeListener { slider, value, _ ->
             slider.value = value.roundToInt().toFloat()
             bindingUpdateRecord.currentScoreUpdate.text = value.roundToInt().toString()
             when (value) {

@@ -17,20 +17,6 @@ class Globals {
                 "Nov",
                 "Dec",
         )
-        var monthsLongArray: Array<String> = arrayOf(
-                "January",
-                "February",
-                "March",
-                "April",
-                "May",
-                "June",
-                "July",
-                "August",
-                "September",
-                "October",
-                "November",
-                "December",
-        )
         var monthsShortArrayEmptyFirstEntry: Array<String> = arrayOf(
                 "",
                 "Jan",
@@ -172,9 +158,6 @@ class Globals {
                 27,
                 28
         )
-        var MONTH_FILTER: Int = 0
-        var YEAR_FILTER: Int = 0
-        var CATEGORY_FILTER_BAR: Int = 0
 
         fun getShortMonth(month: Int): String {
             return when (month) {
