@@ -28,7 +28,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bindingHMP: HourMinutePickerBinding
     private lateinit var bindingViewNote: DialogViewNoteBinding
     private lateinit var bindingReminder: DialogReminderBinding
-    private lateinit var bindingSupport: DialogSupportBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,9 +51,6 @@ class MainActivity : AppCompatActivity() {
             popupMenu.menuInflater.inflate(R.menu.menu_popup, popupMenu.menu)
             popupMenu.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item ->
                 when (item.itemId) {
-                    R.id.action_support -> {
-                        openSupportDialog()
-                    }
                     R.id.action_about -> {
                         val intent = Intent(this, AboutActivity::class.java)
                         startActivity(intent)
@@ -73,21 +69,6 @@ class MainActivity : AppCompatActivity() {
         setUpRecordList()
         setUpAverageMonthScore()
 
-    }
-
-    private fun openSupportDialog() {
-        val supportDialog = Dialog(this, R.style.Theme_Dialog)
-        supportDialog.setCancelable(false)
-        bindingSupport = DialogSupportBinding.inflate(layoutInflater)
-        val view = bindingSupport.root
-        supportDialog.setContentView(view)
-        supportDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-        bindingSupport.tvDoneS.setOnClickListener {
-            supportDialog.dismiss()
-        }
-
-        supportDialog.show()
     }
 
     private fun openReminderDialog() {
