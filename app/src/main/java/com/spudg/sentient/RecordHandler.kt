@@ -8,7 +8,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class RecordHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) :
-    SQLiteOpenHelper(context, DATABASE_NAME, factory, DATABASE_VERSION) {
+        SQLiteOpenHelper(context, DATABASE_NAME, factory, DATABASE_VERSION) {
 
     companion object {
         private const val DATABASE_VERSION = 2
@@ -24,7 +24,7 @@ class RecordHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) :
 
     override fun onCreate(db: SQLiteDatabase?) {
         val createRecordTable =
-            ("CREATE TABLE $TABLE_RECORDS($KEY_ID INTEGER PRIMARY KEY,$KEY_SCORE INTEGER,$KEY_TIME TEXT,$KEY_NOTE TEXT)")
+                ("CREATE TABLE $TABLE_RECORDS($KEY_ID INTEGER PRIMARY KEY,$KEY_SCORE INTEGER,$KEY_TIME TEXT,$KEY_NOTE TEXT)")
         db?.execSQL(createRecordTable)
     }
 
@@ -66,8 +66,8 @@ class RecordHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         val list = ArrayList<RecordModel>()
         val db = this.readableDatabase
         val cursor = db.rawQuery(
-            "SELECT * FROM $TABLE_RECORDS",
-            null
+                "SELECT * FROM $TABLE_RECORDS",
+                null
         )
 
         var id: Int
@@ -82,10 +82,10 @@ class RecordHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) :
                 time = cursor.getString(cursor.getColumnIndex(KEY_TIME))
                 note = cursor.getString(cursor.getColumnIndex(KEY_NOTE))
                 val record = RecordModel(
-                    id = id,
-                    score = score,
-                    time = time,
-                    note = note,
+                        id = id,
+                        score = score,
+                        time = time,
+                        note = note,
                 )
                 list.add(record)
             } while (cursor.moveToNext())
@@ -116,8 +116,8 @@ class RecordHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) :
 
         val db = this.readableDatabase
         val cursor = db.rawQuery(
-            "SELECT * FROM $TABLE_RECORDS",
-            null
+                "SELECT * FROM $TABLE_RECORDS",
+                null
         )
 
         var id: Int
@@ -132,10 +132,10 @@ class RecordHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) :
                 time = cursor.getString(cursor.getColumnIndex(KEY_TIME))
                 note = cursor.getString(cursor.getColumnIndex(KEY_NOTE))
                 val record = RecordModel(
-                    id = id,
-                    score = score,
-                    time = time,
-                    note = note,
+                        id = id,
+                        score = score,
+                        time = time,
+                        note = note,
                 )
                 list.add(record)
             } while (cursor.moveToNext())
@@ -167,8 +167,8 @@ class RecordHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) :
 
         val db = this.readableDatabase
         val cursor = db.rawQuery(
-            "SELECT * FROM $TABLE_RECORDS",
-            null
+                "SELECT * FROM $TABLE_RECORDS",
+                null
         )
 
         var id: Int
@@ -183,10 +183,10 @@ class RecordHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) :
                 time = cursor.getString(cursor.getColumnIndex(KEY_TIME))
                 note = cursor.getString(cursor.getColumnIndex(KEY_NOTE))
                 val record = RecordModel(
-                    id = id,
-                    score = score,
-                    time = time,
-                    note = note,
+                        id = id,
+                        score = score,
+                        time = time,
+                        note = note,
                 )
                 list.add(record)
             } while (cursor.moveToNext())
@@ -228,8 +228,8 @@ class RecordHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) :
 
         val db = this.readableDatabase
         val cursor = db.rawQuery(
-            "SELECT * FROM $TABLE_RECORDS",
-            null
+                "SELECT * FROM $TABLE_RECORDS",
+                null
         )
 
         var id: Int
@@ -244,10 +244,10 @@ class RecordHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) :
                 time = cursor.getString(cursor.getColumnIndex(KEY_TIME))
                 note = cursor.getString(cursor.getColumnIndex(KEY_NOTE))
                 val record = RecordModel(
-                    id = id,
-                    score = score,
-                    time = time,
-                    note = note,
+                        id = id,
+                        score = score,
+                        time = time,
+                        note = note,
                 )
                 list.add(record)
             } while (cursor.moveToNext())
@@ -287,8 +287,8 @@ class RecordHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) :
 
         val db = this.readableDatabase
         val cursor = db.rawQuery(
-            "SELECT * FROM $TABLE_RECORDS",
-            null
+                "SELECT * FROM $TABLE_RECORDS",
+                null
         )
 
         var id: Int
@@ -303,10 +303,10 @@ class RecordHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) :
                 time = cursor.getString(cursor.getColumnIndex(KEY_TIME))
                 note = cursor.getString(cursor.getColumnIndex(KEY_NOTE))
                 val record = RecordModel(
-                    id = id,
-                    score = score,
-                    time = time,
-                    note = note,
+                        id = id,
+                        score = score,
+                        time = time,
+                        note = note,
                 )
                 list.add(record)
             } while (cursor.moveToNext())
@@ -337,8 +337,8 @@ class RecordHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) :
 
         val db = this.readableDatabase
         val cursor = db.rawQuery(
-            "SELECT * FROM $TABLE_RECORDS",
-            null
+                "SELECT * FROM $TABLE_RECORDS",
+                null
         )
 
         var id: Int
@@ -353,10 +353,10 @@ class RecordHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) :
                 time = cursor.getString(cursor.getColumnIndex(KEY_TIME))
                 note = cursor.getString(cursor.getColumnIndex(KEY_NOTE))
                 val record = RecordModel(
-                    id = id,
-                    score = score,
-                    time = time,
-                    note = note,
+                        id = id,
+                        score = score,
+                        time = time,
+                        note = note,
                 )
                 list.add(record)
             } while (cursor.moveToNext())
@@ -382,8 +382,8 @@ class RecordHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         var note = ""
         val db = this.readableDatabase
         val cursor = db.rawQuery(
-            "SELECT * FROM $TABLE_RECORDS WHERE $KEY_ID = $recordId",
-            null
+                "SELECT * FROM $TABLE_RECORDS WHERE $KEY_ID = $recordId",
+                null
         )
 
         if (cursor.moveToFirst()) {
