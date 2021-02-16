@@ -84,9 +84,9 @@ class MainActivity : AppCompatActivity() {
             cal.timeInMillis = db.getReminderTime().toLong()
             var timeHour = cal.get(Calendar.HOUR_OF_DAY)
             var timeMinute = cal.get(Calendar.MINUTE)
-            bindingReminder.currentTime.text = "Current reminder: ${String.format("%02d", timeHour)}:${String.format("%02d", timeMinute)} daily"
-            bindingReminder.btnAddUpdateReminder.text = "Update your reminder"
-            bindingReminder.btnRemoveReminder.visibility = View.VISIBLE
+
+            setButtonsForExistingReminder(timeHour, timeMinute)
+
             bindingReminder.btnAddUpdateReminder.setOnClickListener {
                 val updateTimeDialog = Dialog(this, R.style.Theme_Dialog)
                 updateTimeDialog.setCancelable(false)
@@ -116,7 +116,6 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 bindingHMP.submitHm.setOnClickListener {
-                    bindingReminder.currentTime.text = "Current reminder: ${String.format("%02d", timeHour)}:${String.format("%02d", timeMinute)} daily"
                     val dbSubmit = ReminderHandler(this, null)
                     dbSubmit.addReminderTime(timeHour, timeMinute)
 
@@ -125,16 +124,14 @@ class MainActivity : AppCompatActivity() {
                     val displayIntent = PendingIntent.getBroadcast(applicationContext, 1, alarmIntent, 0)
                     alarmManager.cancel(displayIntent)
 
-                    //val intent = Intent(this, RecordReminder::class.java)
-                    //val pendingIntent = PendingIntent.getBroadcast(this, 1, alarmIntent, 0)
-                    //val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
-
                     alarmManager.setRepeating(
                             AlarmManager.RTC_WAKEUP,
                             db.getReminderTime().toLong(),
                             86400000,
                             displayIntent
                     )
+
+                    setButtonsForExistingReminder(timeHour, timeMinute)
 
                     updateTimeDialog.dismiss()
                 }
@@ -153,16 +150,15 @@ class MainActivity : AppCompatActivity() {
 
                 db.removeReminder()
 
-                bindingReminder.btnAddUpdateReminder.text = "Add a new reminder"
-                bindingReminder.currentTime.text = "Current reminder: None"
+                setButtonsForNoReminder()
 
                 bindingReminder.btnRemoveReminder.visibility = View.GONE
             }
 
         } else {
-            bindingReminder.btnAddUpdateReminder.text = "Add a new reminder"
-            bindingReminder.currentTime.text = "Current reminder: None"
-            bindingReminder.btnRemoveReminder.visibility = View.GONE
+
+            setButtonsForNoReminder()
+
             bindingReminder.btnAddUpdateReminder.setOnClickListener {
                 var timeHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
                 var timeMinute = Calendar.getInstance().get(Calendar.MINUTE)
@@ -194,7 +190,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 bindingHMP.submitHm.setOnClickListener {
-                    bindingReminder.currentTime.text = "Current reminder: ${String.format("%02d", timeHour)}:${String.format("%02d", timeMinute)} daily"
+                    setButtonsForExistingReminder(timeHour, timeMinute)
                     val dbSubmit = ReminderHandler(this, null)
                     dbSubmit.addReminderTime(timeHour, timeMinute)
 
@@ -203,10 +199,6 @@ class MainActivity : AppCompatActivity() {
                     val displayIntent = PendingIntent.getBroadcast(applicationContext, 1, alarmIntent, 0)
                     alarmManager.cancel(displayIntent)
 
-                    //val intent = Intent(this, RecordReminder::class.java)
-                    //val pendingIntent = PendingIntent.getBroadcast(this, 1, alarmIntent, 0)
-                    //val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
-
                     alarmManager.setRepeating(
                             AlarmManager.RTC_WAKEUP,
                             db.getReminderTime().toLong(),
@@ -214,8 +206,8 @@ class MainActivity : AppCompatActivity() {
                             displayIntent
                     )
 
-                    bindingReminder.btnAddUpdateReminder.text = "Update your reminder"
-                    bindingReminder.btnRemoveReminder.visibility = View.VISIBLE
+                    setButtonsForExistingReminder(timeHour, timeMinute)
+
                     updateTimeDialog.dismiss()
                 }
 
@@ -233,10 +225,7 @@ class MainActivity : AppCompatActivity() {
 
                 db.removeReminder()
 
-                bindingReminder.btnAddUpdateReminder.text = "Add a new reminder"
-                bindingReminder.currentTime.text = "Current reminder: None"
-
-                bindingReminder.btnRemoveReminder.visibility = View.GONE
+                setButtonsForNoReminder()
             }
 
         }
@@ -247,6 +236,18 @@ class MainActivity : AppCompatActivity() {
 
         addUpdateReminderDialog.show()
 
+    }
+
+    private fun setButtonsForExistingReminder(timeHour: Int, timeMinute: Int) {
+        bindingReminder.currentTime.text = "Current reminder: ${String.format("%02d", timeHour)}:${String.format("%02d", timeMinute)} daily"
+        bindingReminder.btnAddUpdateReminder.text = "Update your reminder"
+        bindingReminder.btnRemoveReminder.visibility = View.VISIBLE
+    }
+
+    private fun setButtonsForNoReminder() {
+        bindingReminder.btnAddUpdateReminder.text = "Add a new reminder"
+        bindingReminder.currentTime.text = "Current reminder: None"
+        bindingReminder.btnRemoveReminder.visibility = View.GONE
     }
 
     private fun createNotificationChannel() {
