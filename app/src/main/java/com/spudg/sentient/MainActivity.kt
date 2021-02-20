@@ -12,7 +12,6 @@ import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.github.jinatonic.confetti.CommonConfetti
 import com.spudg.sentient.databinding.*
 import nl.dionsegijn.konfetti.models.Shape
 import java.util.*
@@ -493,9 +492,8 @@ class MainActivity : AppCompatActivity() {
         bindingAddRecord.currentScorePost.setTextColor(-16728577)
 
         bindingAddRecord.scoreSliderPost.addOnChangeListener { slider, value, _ ->
-            slider.value = value.roundToInt().toFloat()
             bindingAddRecord.currentScorePost.text = value.roundToInt().toString()
-            when (value) {
+            when (slider.value) {
                 in 0F..9F -> {
                     bindingAddRecord.currentScorePost.setTextColor(-65527)
                     slider.thumbTintList
@@ -515,11 +513,11 @@ class MainActivity : AppCompatActivity() {
                 100F -> {
                     bindingAddRecord.currentScorePost.setTextColor(-6881025)
                     bindingAddRecord.viewKonfetti.build()
-                            .addColors(R.color.design_default_color_on_primary, Color.GREEN, Color.MAGENTA)
-                            .setDirection(0.0, 359.0)
+                            .addColors(-6881025, -16711896)
+                            .setDirection(0.0, 360.0)
                             .setSpeed(3f, 6f)
                             .setFadeOutEnabled(true)
-                            .setTimeToLive(1000L)
+                            .setTimeToLive(600L)
                             .addShapes(Shape.Square, Shape.Circle)
                             .addSizes(nl.dionsegijn.konfetti.models.Size(12))
                             .setPosition(bindingAddRecord.viewKonfetti.x + bindingAddRecord.viewKonfetti.width / 2, bindingAddRecord.viewKonfetti.y + bindingAddRecord.viewKonfetti.height / 3)
@@ -667,15 +665,6 @@ class MainActivity : AppCompatActivity() {
             bindingDMYP.dmypMonth.wrapSelectorWheel = true
             bindingDMYP.dmypYear.wrapSelectorWheel = true
 
-            //bindingDMYP.cancelDmy.setOnClickListener {
-            //    dayPicked = oldDay
-            //    monthPicked = oldMonth
-            //    yearPicked = oldYear
-            //    bindingUpdateRecord.dateRecordUpdate.text =
-            //            "$dayPicked ${Globals.getShortMonth(monthPicked)} $yearPicked"
-            //    changeDateDialog.dismiss()
-            //}
-
             changeDateDialog.show()
 
         }
@@ -767,8 +756,21 @@ class MainActivity : AppCompatActivity() {
                 in 70F..89F -> {
                     bindingUpdateRecord.currentScoreUpdate.setTextColor(-16711896)
                 }
-                in 90F..100F -> {
+                in 90F..99F -> {
                     bindingUpdateRecord.currentScoreUpdate.setTextColor(-6881025)
+                }
+                100F -> {
+                    bindingUpdateRecord.currentScoreUpdate.setTextColor(-6881025)
+                    bindingUpdateRecord.viewKonfetti.build()
+                            .addColors(-6881025, -16711896)
+                            .setDirection(0.0, 360.0)
+                            .setSpeed(3f, 6f)
+                            .setFadeOutEnabled(true)
+                            .setTimeToLive(600L)
+                            .addShapes(Shape.Square, Shape.Circle)
+                            .addSizes(nl.dionsegijn.konfetti.models.Size(12))
+                            .setPosition(bindingUpdateRecord.viewKonfetti.x + bindingUpdateRecord.viewKonfetti.width / 2, bindingUpdateRecord.viewKonfetti.y + bindingUpdateRecord.viewKonfetti.height / 3)
+                            .burst(100)
                 }
             }
         }

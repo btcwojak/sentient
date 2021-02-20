@@ -113,6 +113,24 @@
                 android:text="@string/licensed_under_the_apache_license_2_0"
                 android:textSize="16sp" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/open_sans_light"
+                android:text="DanielMartinus / Konfetti"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/open_sans_light"
+                android:text="Licensed under the ISC License"
+                android:textSize="16sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
