@@ -52,7 +52,7 @@ class AboutActivity : AppCompatActivity() {
 
     private fun privacyPolicy() {
         val url =
-                "https://docs.google.com/document/d/13xwVTv2-UjiIXAd9teQtx_1icbOlJUKoLGbFfVODBdU"
+            "https://docs.google.com/document/d/13xwVTv2-UjiIXAd9teQtx_1icbOlJUKoLGbFfVODBdU"
         val i = Intent(Intent.ACTION_VIEW)
         i.data = Uri.parse(url)
         startActivity(i)
@@ -85,9 +85,9 @@ class AboutActivity : AppCompatActivity() {
             startActivity(Intent.createChooser(intent, "Send mail..."))
         } catch (ex: ActivityNotFoundException) {
             Toast.makeText(
-                    this,
-                    "There are no email clients installed.",
-                    Toast.LENGTH_SHORT
+                this,
+                "There are no email clients installed.",
+                Toast.LENGTH_SHORT
             ).show()
         }
 
@@ -95,7 +95,7 @@ class AboutActivity : AppCompatActivity() {
 
     private fun rate() {
         val url =
-                "https://play.google.com/store/apps/details?id=com.spudg.sentient"
+            "https://play.google.com/store/apps/details?id=com.spudg.sentient"
         val i = Intent(Intent.ACTION_VIEW)
         i.data = Uri.parse(url)
         startActivity(i)

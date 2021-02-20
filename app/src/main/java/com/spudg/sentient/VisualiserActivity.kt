@@ -149,9 +149,9 @@ class VisualiserActivity : AppCompatActivity() {
 
         for (day in daysInMonth) {
             val averageForDay = db.getAveScoreForDayMonthYear(
-                    day,
-                    monthFilter,
-                    yearFilter
+                day,
+                monthFilter,
+                yearFilter
             )
             averageScoresPerDay.add(averageForDay)
         }
@@ -187,7 +187,12 @@ class VisualiserActivity : AppCompatActivity() {
 
         if (runningTotal != 0) {
             for (i in 0 until daysInMonth.size) {
-                entriesBarDaily.add(BarEntry(daysInMonth[i].toFloat(), averageScoresPerDay[i].toFloat()))
+                entriesBarDaily.add(
+                    BarEntry(
+                        daysInMonth[i].toFloat(),
+                        averageScoresPerDay[i].toFloat()
+                    )
+                )
 
 
                 val dataSetBarDaily = BarDataSet(entriesBarDaily, "")
@@ -213,7 +218,12 @@ class VisualiserActivity : AppCompatActivity() {
                 chartBarDaily.animateY(800)
                 chartBarDaily.setNoDataText("No records for the month and year selected.")
                 chartBarDaily.setNoDataTextColor(0xff000000.toInt())
-                chartBarDaily.setNoDataTextTypeface(ResourcesCompat.getFont(this, R.font.open_sans_light))
+                chartBarDaily.setNoDataTextTypeface(
+                    ResourcesCompat.getFont(
+                        this,
+                        R.font.open_sans_light
+                    )
+                )
                 chartBarDaily.xAxis.setDrawGridLines(false)
                 chartBarDaily.axisRight.isEnabled = false
                 chartBarDaily.xAxis.position = XAxis.XAxisPosition.BOTTOM
@@ -230,7 +240,12 @@ class VisualiserActivity : AppCompatActivity() {
             bindingVisualiser.chartAverageDaily.clear()
             bindingVisualiser.chartAverageDaily.setNoDataText("No data for the month and year selected.")
             bindingVisualiser.chartAverageDaily.setNoDataTextColor(0xff000000.toInt())
-            bindingVisualiser.chartAverageDaily.setNoDataTextTypeface(ResourcesCompat.getFont(this, R.font.open_sans_light))
+            bindingVisualiser.chartAverageDaily.setNoDataTextTypeface(
+                ResourcesCompat.getFont(
+                    this,
+                    R.font.open_sans_light
+                )
+            )
         }
     }
 
@@ -369,7 +384,12 @@ class VisualiserActivity : AppCompatActivity() {
             bindingVisualiser.chartSplitAveScore.clear()
             bindingVisualiser.chartSplitAveScore.setNoDataText("No records for the month and year selected.")
             bindingVisualiser.chartSplitAveScore.setNoDataTextColor(0xff000000.toInt())
-            bindingVisualiser.chartSplitAveScore.setNoDataTextTypeface(ResourcesCompat.getFont(this, R.font.open_sans_light))
+            bindingVisualiser.chartSplitAveScore.setNoDataTextTypeface(
+                ResourcesCompat.getFont(
+                    this,
+                    R.font.open_sans_light
+                )
+            )
         }
     }
 
@@ -386,8 +406,8 @@ class VisualiserActivity : AppCompatActivity() {
 
         repeat(12) {
             val averageForMonth = db.getAveScoreForMonthYear(
-                    it + 1,
-                    yearFilter,
+                it + 1,
+                yearFilter,
             )
             averageScoresPerMonth.add(averageForMonth)
         }
@@ -424,7 +444,12 @@ class VisualiserActivity : AppCompatActivity() {
         if (runningTotal != 0) {
 
             for (i in 1..12) {
-                entriesBarMonthly.add(BarEntry((i).toFloat(), averageScoresPerMonth[i - 1].toFloat()))
+                entriesBarMonthly.add(
+                    BarEntry(
+                        (i).toFloat(),
+                        averageScoresPerMonth[i - 1].toFloat()
+                    )
+                )
             }
 
             val dataSetBarMonthly = BarDataSet(entriesBarMonthly, "")
@@ -450,13 +475,19 @@ class VisualiserActivity : AppCompatActivity() {
             chartBarMonthly.animateY(800)
             chartBarMonthly.setNoDataText("No records for the month and year selected.")
             chartBarMonthly.setNoDataTextColor(0xff000000.toInt())
-            chartBarMonthly.setNoDataTextTypeface(ResourcesCompat.getFont(this, R.font.open_sans_light))
+            chartBarMonthly.setNoDataTextTypeface(
+                ResourcesCompat.getFont(
+                    this,
+                    R.font.open_sans_light
+                )
+            )
             chartBarMonthly.xAxis.setDrawGridLines(false)
             chartBarMonthly.axisRight.isEnabled = false
             chartBarMonthly.xAxis.position = XAxis.XAxisPosition.BOTTOM
             chartBarMonthly.legend.isEnabled = false
 
-            chartBarMonthly.xAxis.valueFormatter = IndexAxisValueFormatter(Globals.monthsShortArrayEmptyFirstEntry)
+            chartBarMonthly.xAxis.valueFormatter =
+                IndexAxisValueFormatter(Globals.monthsShortArrayEmptyFirstEntry)
             chartBarMonthly.xAxis.labelCount = 12
 
             chartBarMonthly.description.isEnabled = false
@@ -467,7 +498,12 @@ class VisualiserActivity : AppCompatActivity() {
             bindingVisualiser.chartAverageMonthly.clear()
             bindingVisualiser.chartAverageMonthly.setNoDataText("No records for the month and year selected.")
             bindingVisualiser.chartAverageMonthly.setNoDataTextColor(0xff000000.toInt())
-            bindingVisualiser.chartAverageMonthly.setNoDataTextTypeface(ResourcesCompat.getFont(this, R.font.open_sans_light))
+            bindingVisualiser.chartAverageMonthly.setNoDataTextTypeface(
+                ResourcesCompat.getFont(
+                    this,
+                    R.font.open_sans_light
+                )
+            )
         }
     }
 
@@ -477,7 +513,8 @@ class VisualiserActivity : AppCompatActivity() {
             bindingVisualiser.tvNoNotes.visibility = View.GONE
             val manager = LinearLayoutManager(this)
             bindingVisualiser.rvNotes.layoutManager = manager
-            val noteAdapter = NoteListAdapter(getRecordListMonthYearWithNoteOnly(monthFilter, yearFilter))
+            val noteAdapter =
+                NoteListAdapter(getRecordListMonthYearWithNoteOnly(monthFilter, yearFilter))
             bindingVisualiser.rvNotes.adapter = noteAdapter
         } else {
             bindingVisualiser.rvNotes.visibility = View.GONE
@@ -501,17 +538,20 @@ class VisualiserActivity : AppCompatActivity() {
                 bindingVisualiser.numberScoresMonth.text = getString(R.string.one_score_posted)
             }
             else -> {
-                bindingVisualiser.numberScoresMonth.text = getString(R.string.number_scores_posted, numberScores.toString())
+                bindingVisualiser.numberScoresMonth.text =
+                    getString(R.string.number_scores_posted, numberScores.toString())
             }
         }
     }
 
     private fun setMonthHeader(month: Int, year: Int) {
-        bindingVisualiser.monthSelectedHeader.text = getString(R.string.month_year, Globals.monthsShortArray[month - 1], year.toString())
+        bindingVisualiser.monthSelectedHeader.text =
+            getString(R.string.month_year, Globals.monthsShortArray[month - 1], year.toString())
     }
 
     private fun setMonthlyBarHeader(year: Int) {
-        bindingVisualiser.averageMonthlyScoresHeading.text = getString(R.string.average_monthly_scores_visualiser_heading, year.toString())
+        bindingVisualiser.averageMonthlyScoresHeading.text =
+            getString(R.string.average_monthly_scores_visualiser_heading, year.toString())
     }
 
     private fun getNumberScoresMonthYear(month: Int, year: Int): Int {

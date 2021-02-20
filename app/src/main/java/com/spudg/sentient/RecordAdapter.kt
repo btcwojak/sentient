@@ -11,14 +11,14 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class RecordAdapter(private val context: Context, private val items: ArrayList<RecordModel>) :
-        RecyclerView.Adapter<RecordAdapter.RecordViewHolder>() {
+    RecyclerView.Adapter<RecordAdapter.RecordViewHolder>() {
 
     inner class RecordViewHolder(val binding: RecordRowBinding) :
-            RecyclerView.ViewHolder(binding.root)
+        RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecordViewHolder {
         val binding = RecordRowBinding
-                .inflate(LayoutInflater.from(parent.context), parent, false)
+            .inflate(LayoutInflater.from(parent.context), parent, false)
         return RecordViewHolder(binding)
     }
 

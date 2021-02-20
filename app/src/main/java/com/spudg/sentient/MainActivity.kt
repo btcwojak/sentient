@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
-import android.util.Size
 import android.view.View
 import android.widget.PopupMenu
 import android.widget.Toast
@@ -123,14 +122,15 @@ class MainActivity : AppCompatActivity() {
 
                     val alarmIntent = Intent(applicationContext, RecordReminder::class.java)
                     val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
-                    val displayIntent = PendingIntent.getBroadcast(applicationContext, 1, alarmIntent, 0)
+                    val displayIntent =
+                        PendingIntent.getBroadcast(applicationContext, 1, alarmIntent, 0)
                     alarmManager.cancel(displayIntent)
 
                     alarmManager.setRepeating(
-                            AlarmManager.RTC_WAKEUP,
-                            db.getReminderTime().toLong(),
-                            86400000,
-                            displayIntent
+                        AlarmManager.RTC_WAKEUP,
+                        db.getReminderTime().toLong(),
+                        86400000,
+                        displayIntent
                     )
 
                     setButtonsForExistingReminder(timeHour, timeMinute)
@@ -147,7 +147,8 @@ class MainActivity : AppCompatActivity() {
             bindingReminder.btnRemoveReminder.setOnClickListener {
                 val alarmIntent = Intent(applicationContext, RecordReminder::class.java)
                 val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
-                val displayIntent = PendingIntent.getBroadcast(applicationContext, 1, alarmIntent, 0)
+                val displayIntent =
+                    PendingIntent.getBroadcast(applicationContext, 1, alarmIntent, 0)
                 alarmManager.cancel(displayIntent)
 
                 db.removeReminder()
@@ -198,14 +199,15 @@ class MainActivity : AppCompatActivity() {
 
                     val alarmIntent = Intent(applicationContext, RecordReminder::class.java)
                     val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
-                    val displayIntent = PendingIntent.getBroadcast(applicationContext, 1, alarmIntent, 0)
+                    val displayIntent =
+                        PendingIntent.getBroadcast(applicationContext, 1, alarmIntent, 0)
                     alarmManager.cancel(displayIntent)
 
                     alarmManager.setRepeating(
-                            AlarmManager.RTC_WAKEUP,
-                            db.getReminderTime().toLong(),
-                            86400000,
-                            displayIntent
+                        AlarmManager.RTC_WAKEUP,
+                        db.getReminderTime().toLong(),
+                        86400000,
+                        displayIntent
                     )
 
                     setButtonsForExistingReminder(timeHour, timeMinute)
@@ -222,7 +224,8 @@ class MainActivity : AppCompatActivity() {
             bindingReminder.btnRemoveReminder.setOnClickListener {
                 val alarmIntent = Intent(applicationContext, RecordReminder::class.java)
                 val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
-                val displayIntent = PendingIntent.getBroadcast(applicationContext, 1, alarmIntent, 0)
+                val displayIntent =
+                    PendingIntent.getBroadcast(applicationContext, 1, alarmIntent, 0)
                 alarmManager.cancel(displayIntent)
 
                 db.removeReminder()
@@ -241,7 +244,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setButtonsForExistingReminder(timeHour: Int, timeMinute: Int) {
-        bindingReminder.currentTime.text = getString(R.string.current_reminder_time, String.format("%02d", timeHour), String.format("%02d", timeMinute))
+        bindingReminder.currentTime.text = getString(
+            R.string.current_reminder_time,
+            String.format("%02d", timeHour),
+            String.format("%02d", timeMinute)
+        )
         bindingReminder.btnAddUpdateReminder.text = getString(R.string.update_your_reminder)
         bindingReminder.btnRemoveReminder.visibility = View.VISIBLE
 
@@ -258,7 +265,7 @@ class MainActivity : AppCompatActivity() {
 
             val name = "Daily Record Reminder"
             val description =
-                    "Channel to remind users to post a record for the day"
+                "Channel to remind users to post a record for the day"
             val importance = NotificationManager.IMPORTANCE_DEFAULT
             val channel = NotificationChannel("recordReminder", name, importance)
             channel.description = description
@@ -280,7 +287,11 @@ class MainActivity : AppCompatActivity() {
         val currentYear = Calendar.getInstance().get(Calendar.YEAR)
         val currentDate = currentMonth.toString() + currentYear.toString()
 
-        bindingMain.monthHeading.text = getString(R.string.average_month_score_heading, Globals.getLongMonth(currentMonth), currentYear.toString())
+        bindingMain.monthHeading.text = getString(
+            R.string.average_month_score_heading,
+            Globals.getLongMonth(currentMonth),
+            currentYear.toString()
+        )
 
         val cal = Calendar.getInstance()
 
@@ -360,7 +371,12 @@ class MainActivity : AppCompatActivity() {
         var yearPicked = Calendar.getInstance()[Calendar.YEAR]
 
         bindingAddRecord.dateRecordPost.text =
-                getString(R.string.day_month_year, dayPicked.toString(), Globals.getShortMonth(monthPicked), yearPicked.toString())
+            getString(
+                R.string.day_month_year,
+                dayPicked.toString(),
+                Globals.getShortMonth(monthPicked),
+                yearPicked.toString()
+            )
 
         bindingAddRecord.dateRecordPost.setOnClickListener {
             val changeDateDialog = Dialog(this, R.style.Theme_Dialog)
@@ -429,7 +445,12 @@ class MainActivity : AppCompatActivity() {
 
             bindingDMYP.submitDmy.setOnClickListener {
                 bindingAddRecord.dateRecordPost.text =
-                        getString(R.string.day_month_year, dayPicked.toString(), Globals.getShortMonth(monthPicked), yearPicked.toString())
+                    getString(
+                        R.string.day_month_year,
+                        dayPicked.toString(),
+                        Globals.getShortMonth(monthPicked),
+                        yearPicked.toString()
+                    )
                 changeDateDialog.dismiss()
             }
 
@@ -445,7 +466,11 @@ class MainActivity : AppCompatActivity() {
         var minutePicked = Calendar.getInstance()[Calendar.MINUTE]
 
         bindingAddRecord.timeRecordPost.text =
-                getString(R.string.hour_minute, String.format("%02d", hourPicked), String.format("%02d", minutePicked))
+            getString(
+                R.string.hour_minute,
+                String.format("%02d", hourPicked),
+                String.format("%02d", minutePicked)
+            )
 
         bindingAddRecord.timeRecordPost.setOnClickListener {
             val changeTimeDialog = Dialog(this, R.style.Theme_Dialog)
@@ -476,7 +501,11 @@ class MainActivity : AppCompatActivity() {
 
             bindingHMP.submitHm.setOnClickListener {
                 bindingAddRecord.timeRecordPost.text =
-                        getString(R.string.hour_minute, String.format("%02d", hourPicked), String.format("%02d", minutePicked))
+                    getString(
+                        R.string.hour_minute,
+                        String.format("%02d", hourPicked),
+                        String.format("%02d", minutePicked)
+                    )
                 changeTimeDialog.dismiss()
             }
 
@@ -488,7 +517,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         bindingAddRecord.scoreSliderPost.value = 50F
-        bindingAddRecord.currentScorePost.text = bindingAddRecord.scoreSliderPost.value.roundToInt().toString()
+        bindingAddRecord.currentScorePost.text =
+            bindingAddRecord.scoreSliderPost.value.roundToInt().toString()
         bindingAddRecord.currentScorePost.setTextColor(-16728577)
 
         bindingAddRecord.scoreSliderPost.addOnChangeListener { slider, value, _ ->
@@ -513,15 +543,18 @@ class MainActivity : AppCompatActivity() {
                 100F -> {
                     bindingAddRecord.currentScorePost.setTextColor(-6881025)
                     bindingAddRecord.viewKonfetti.build()
-                            .addColors(-6881025, -16711896)
-                            .setDirection(0.0, 360.0)
-                            .setSpeed(3f, 6f)
-                            .setFadeOutEnabled(true)
-                            .setTimeToLive(600L)
-                            .addShapes(Shape.Square, Shape.Circle)
-                            .addSizes(nl.dionsegijn.konfetti.models.Size(12))
-                            .setPosition(bindingAddRecord.viewKonfetti.x + bindingAddRecord.viewKonfetti.width / 2, bindingAddRecord.viewKonfetti.y + bindingAddRecord.viewKonfetti.height / 3)
-                            .burst(100)
+                        .addColors(-6881025, -16711896)
+                        .setDirection(0.0, 360.0)
+                        .setSpeed(3f, 6f)
+                        .setFadeOutEnabled(true)
+                        .setTimeToLive(600L)
+                        .addShapes(Shape.Square, Shape.Circle)
+                        .addSizes(nl.dionsegijn.konfetti.models.Size(12))
+                        .setPosition(
+                            bindingAddRecord.viewKonfetti.x + bindingAddRecord.viewKonfetti.width / 2,
+                            bindingAddRecord.viewKonfetti.y + bindingAddRecord.viewKonfetti.height / 3
+                        )
+                        .burst(100)
                 }
             }
         }
@@ -539,12 +572,12 @@ class MainActivity : AppCompatActivity() {
 
             if (score.toString().isNotEmpty() && time.isNotEmpty()) {
                 dbHandlerRecord.addRecord(
-                        RecordModel(
-                                0,
-                                score,
-                                time,
-                                note,
-                        )
+                    RecordModel(
+                        0,
+                        score,
+                        time,
+                        note,
+                    )
                 )
 
                 Toast.makeText(this, "Record posted.", Toast.LENGTH_LONG).show()
@@ -554,7 +587,7 @@ class MainActivity : AppCompatActivity() {
 
             } else {
                 Toast.makeText(this, "Mood can't be blank.", Toast.LENGTH_LONG)
-                        .show()
+                    .show()
             }
 
             dbHandlerRecord.close()
@@ -588,7 +621,12 @@ class MainActivity : AppCompatActivity() {
         var yearPicked = oldYear
 
         bindingUpdateRecord.dateRecordUpdate.text =
-                getString(R.string.day_month_year, dayPicked.toString(), Globals.getShortMonth(monthPicked), yearPicked.toString())
+            getString(
+                R.string.day_month_year,
+                dayPicked.toString(),
+                Globals.getShortMonth(monthPicked),
+                yearPicked.toString()
+            )
 
         bindingUpdateRecord.dateRecordUpdate.setOnClickListener {
             val changeDateDialog = Dialog(this, R.style.Theme_Dialog)
@@ -657,7 +695,12 @@ class MainActivity : AppCompatActivity() {
 
             bindingDMYP.submitDmy.setOnClickListener {
                 bindingUpdateRecord.dateRecordUpdate.text =
-                        getString(R.string.day_month_year, dayPicked.toString(), Globals.getShortMonth(monthPicked), yearPicked.toString())
+                    getString(
+                        R.string.day_month_year,
+                        dayPicked.toString(),
+                        Globals.getShortMonth(monthPicked),
+                        yearPicked.toString()
+                    )
                 changeDateDialog.dismiss()
             }
 
@@ -673,7 +716,11 @@ class MainActivity : AppCompatActivity() {
         var minutePicked = oldMinute
 
         bindingUpdateRecord.timeRecordUpdate.text =
-                getString(R.string.hour_minute, String.format("%02d", hourPicked), String.format("%02d", minutePicked))
+            getString(
+                R.string.hour_minute,
+                String.format("%02d", hourPicked),
+                String.format("%02d", minutePicked)
+            )
 
         bindingUpdateRecord.timeRecordUpdate.setOnClickListener {
             val changeTimeDialog = Dialog(this, R.style.Theme_Dialog)
@@ -704,7 +751,11 @@ class MainActivity : AppCompatActivity() {
 
             bindingHMP.submitHm.setOnClickListener {
                 bindingUpdateRecord.timeRecordUpdate.text =
-                        getString(R.string.hour_minute, String.format("%02d", hourPicked), String.format("%02d", minutePicked))
+                    getString(
+                        R.string.hour_minute,
+                        String.format("%02d", hourPicked),
+                        String.format("%02d", minutePicked)
+                    )
                 changeTimeDialog.dismiss()
             }
 
@@ -762,15 +813,18 @@ class MainActivity : AppCompatActivity() {
                 100F -> {
                     bindingUpdateRecord.currentScoreUpdate.setTextColor(-6881025)
                     bindingUpdateRecord.viewKonfetti.build()
-                            .addColors(-6881025, -16711896)
-                            .setDirection(0.0, 360.0)
-                            .setSpeed(3f, 6f)
-                            .setFadeOutEnabled(true)
-                            .setTimeToLive(600L)
-                            .addShapes(Shape.Square, Shape.Circle)
-                            .addSizes(nl.dionsegijn.konfetti.models.Size(12))
-                            .setPosition(bindingUpdateRecord.viewKonfetti.x + bindingUpdateRecord.viewKonfetti.width / 2, bindingUpdateRecord.viewKonfetti.y + bindingUpdateRecord.viewKonfetti.height / 3)
-                            .burst(100)
+                        .addColors(-6881025, -16711896)
+                        .setDirection(0.0, 360.0)
+                        .setSpeed(3f, 6f)
+                        .setFadeOutEnabled(true)
+                        .setTimeToLive(600L)
+                        .addShapes(Shape.Square, Shape.Circle)
+                        .addSizes(nl.dionsegijn.konfetti.models.Size(12))
+                        .setPosition(
+                            bindingUpdateRecord.viewKonfetti.x + bindingUpdateRecord.viewKonfetti.width / 2,
+                            bindingUpdateRecord.viewKonfetti.y + bindingUpdateRecord.viewKonfetti.height / 3
+                        )
+                        .burst(100)
                 }
             }
         }
@@ -788,12 +842,12 @@ class MainActivity : AppCompatActivity() {
 
             if (score.toString().isNotEmpty() && time.isNotEmpty()) {
                 dbHandlerRecord.updateRecord(
-                        RecordModel(
-                                record.id,
-                                score,
-                                time,
-                                note,
-                        )
+                    RecordModel(
+                        record.id,
+                        score,
+                        time,
+                        note,
+                    )
                 )
 
                 Toast.makeText(this, "Record updated.", Toast.LENGTH_LONG).show()
@@ -803,7 +857,7 @@ class MainActivity : AppCompatActivity() {
 
             } else {
                 Toast.makeText(this, "Mood can't be blank.", Toast.LENGTH_LONG)
-                        .show()
+                    .show()
             }
 
             dbHandlerRecord.close()
@@ -829,12 +883,12 @@ class MainActivity : AppCompatActivity() {
         bindingDeleteRecord.tvDeleteRecord.setOnClickListener {
             val dbHandler = RecordHandler(this, null)
             dbHandler.deleteRecord(
-                    RecordModel(
-                            record.id,
-                            0,
-                            "",
-                            "",
-                    )
+                RecordModel(
+                    record.id,
+                    0,
+                    "",
+                    "",
+                )
             )
 
             Toast.makeText(this, "Record deleted.", Toast.LENGTH_LONG).show()

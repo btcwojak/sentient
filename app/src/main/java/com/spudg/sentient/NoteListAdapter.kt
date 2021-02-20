@@ -7,13 +7,13 @@ import com.spudg.sentient.databinding.NoteRowBinding
 import java.util.*
 
 class NoteListAdapter(private val items: ArrayList<RecordModel>) :
-        RecyclerView.Adapter<NoteListAdapter.NoteViewHolder>() {
+    RecyclerView.Adapter<NoteListAdapter.NoteViewHolder>() {
 
     inner class NoteViewHolder(val binding: NoteRowBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
         val binding = NoteRowBinding
-                .inflate(LayoutInflater.from(parent.context), parent, false)
+            .inflate(LayoutInflater.from(parent.context), parent, false)
         return NoteViewHolder(binding)
     }
 
@@ -31,7 +31,14 @@ class NoteListAdapter(private val items: ArrayList<RecordModel>) :
             val minute = cal.get(Calendar.MINUTE)
 
             binding.noteBody.text = record.note
-            binding.noteDate.text = binding.noteDate.context.getString(R.string.visualiser_note_from_date_time, day.toString(), Globals.getShortMonth(month), year.toString(), String.format("%02d", hour), String.format("%02d", minute))
+            binding.noteDate.text = binding.noteDate.context.getString(
+                R.string.visualiser_note_from_date_time,
+                day.toString(),
+                Globals.getShortMonth(month),
+                year.toString(),
+                String.format("%02d", hour),
+                String.format("%02d", minute)
+            )
 
         }
 
