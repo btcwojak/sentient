@@ -119,7 +119,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/open_sans_light"
-                android:text="DanielMartinus / Konfetti"
+                android:text="@string/danielmartinus_konfetti"
                 android:textColor="@android:color/black"
                 android:textSize="16sp" />
 
@@ -129,7 +129,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/open_sans_light"
-                android:text="Licensed under the ISC License"
+                android:text="@string/licensed_under_the_isc_license"
                 android:textSize="16sp" />
 
             <LinearLayout
