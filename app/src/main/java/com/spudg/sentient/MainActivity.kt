@@ -11,6 +11,9 @@ import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.spudg.sentient.databinding.*
 import nl.dionsegijn.konfetti.models.Shape
 import java.util.*
@@ -28,11 +31,16 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bindingViewNote: DialogViewNoteBinding
     private lateinit var bindingReminder: DialogReminderBinding
 
+    private lateinit var auth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bindingMain = ActivityMainBinding.inflate(layoutInflater)
         val view = bindingMain.root
         setContentView(view)
+
+        auth = Firebase.auth
+        bindingMain.currentUserEmail.text = auth.currentUser!!.email
 
         createNotificationChannel()
 
@@ -52,6 +60,11 @@ class MainActivity : AppCompatActivity() {
                 when (item.itemId) {
                     R.id.action_about -> {
                         val intent = Intent(this, AboutActivity::class.java)
+                        startActivity(intent)
+                    }
+                    R.id.action_logout -> {
+                        Firebase.auth.signOut()
+                        val intent = Intent(this, LandingActivity::class.java)
                         startActivity(intent)
                     }
                 }

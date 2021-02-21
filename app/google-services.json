@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "466683393716",
+    "project_id": "sentient-67d58",
+    "storage_bucket": "sentient-67d58.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:466683393716:android:a3636b0280896ce13449e1",
+        "android_client_info": {
+          "package_name": "com.spudg.sentient"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "466683393716-v5hp0hn55o3nnkoa311mho49amq2bbj2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnoYwiJ6Gezi_xXJmjpOsSn7znwtgW82E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "466683393716-v5hp0hn55o3nnkoa311mho49amq2bbj2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

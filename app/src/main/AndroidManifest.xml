@@ -8,20 +8,17 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Sentient">
-
+        android:theme="@style/Sentient"
+        android:fullBackupContent="@xml/backup_descriptor">
+        <activity android:name=".LogInActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Sentient"/>
         <activity
-            android:name=".AboutActivity"
+            android:name=".SignUpActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Sentient" />
-
         <activity
-            android:name=".VisualiserActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Sentient" />
-
-        <activity
-            android:name=".MainActivity"
+            android:name=".LandingActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Sentient">
             <intent-filter>
@@ -29,14 +26,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <receiver android:name="com.spudg.sentient.RecordReminder">
+        <activity
+            android:name=".AboutActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Sentient" />
+        <activity
+            android:name=".VisualiserActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Sentient" />
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Sentient" />
+        <receiver android:name=".RecordReminder">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
-
     </application>
 
 </manifest>

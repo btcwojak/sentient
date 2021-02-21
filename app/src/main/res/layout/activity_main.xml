@@ -70,6 +70,19 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/currentUserEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/open_sans_light"
+        android:gravity="center_horizontal"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text="@string/january_2021"
+        android:textColor="@android:color/black"
+        android:textSize="20sp" />
+
+    <TextView
         android:id="@+id/monthHeading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
