@@ -129,7 +129,7 @@ class VisualiserActivity : AppCompatActivity() {
 
         resetBarDataDaily()
 
-        val db = RecordHandler(this, null)
+        //val db = RecordHandler(this, null)
 
         daysInMonth = if (yearFilter % 4 == 0) {
             when (monthFilter) {
@@ -148,15 +148,15 @@ class VisualiserActivity : AppCompatActivity() {
         }
 
         for (day in daysInMonth) {
-            val averageForDay = db.getAveScoreForDayMonthYear(
-                day,
-                monthFilter,
-                yearFilter
-            )
-            averageScoresPerDay.add(averageForDay)
+            //val averageForDay = db.getAveScoreForDayMonthYear(
+            //    day,
+            //    monthFilter,
+            //    yearFilter
+            //)
+            //averageScoresPerDay.add(averageForDay)
         }
 
-        db.close()
+        //db.close()
     }
 
     private fun setUpBarChartDaily() {
@@ -260,9 +260,9 @@ class VisualiserActivity : AppCompatActivity() {
 
         resetPieData()
 
-        val db = RecordHandler(this, null)
+        //val db = RecordHandler(this, null)
 
-        val records = db.getRecordsForMonthYear(monthFilter, yearFilter)
+        //val records = db.getRecordsForMonthYear(monthFilter, yearFilter)
 
         var score0to9 = 0
         var score10to39 = 0
@@ -270,26 +270,26 @@ class VisualiserActivity : AppCompatActivity() {
         var score70to89 = 0
         var score90to100 = 0
 
-        for (record in records) {
-            when (record.score) {
-                in 0..9 -> {
-                    score0to9 += 1
-                }
-                in 10..39 -> {
-                    score10to39 += 1
-                }
-                in 40..69 -> {
-                    score40to69 += 1
-                }
-                in 70..89 -> {
-                    score70to89 += 1
-                }
-                in 90..100 -> {
-                    score90to100 += 1
-                }
-
-            }
-        }
+        //for (record in records) {
+        //    when (record.score) {
+        //        in 0..9 -> {
+        //            score0to9 += 1
+        //        }
+        //        in 10..39 -> {
+        //            score10to39 += 1
+        //        }
+        //        in 40..69 -> {
+        //            score40to69 += 1
+        //        }
+        //        in 70..89 -> {
+        //            score70to89 += 1
+        //        }
+        //        in 90..100 -> {
+        //            score90to100 += 1
+        //        }
+        //
+        //    }
+        //}
 
         if (score0to9 != 0) {
             scoreSplitPie.add(score0to9)
@@ -317,7 +317,7 @@ class VisualiserActivity : AppCompatActivity() {
             scoreColoursPie.add(-6881025)
         }
 
-        db.close()
+        //db.close()
 
     }
 
@@ -402,17 +402,17 @@ class VisualiserActivity : AppCompatActivity() {
 
         resetBarDataMonthly()
 
-        val db = RecordHandler(this, null)
+        //val db = RecordHandler(this, null)
 
-        repeat(12) {
-            val averageForMonth = db.getAveScoreForMonthYear(
-                it + 1,
-                yearFilter,
-            )
-            averageScoresPerMonth.add(averageForMonth)
-        }
+        //repeat(12) {
+        //    val averageForMonth = db.getAveScoreForMonthYear(
+        //        it + 1,
+        //        yearFilter,
+        //    )
+        //    averageScoresPerMonth.add(averageForMonth)
+        //}
 
-        db.close()
+        //db.close()
     }
 
     private fun setUpBarChartMonthly() {
@@ -523,10 +523,10 @@ class VisualiserActivity : AppCompatActivity() {
     }
 
     private fun getRecordListMonthYearWithNoteOnly(month: Int, year: Int): ArrayList<RecordModel> {
-        val dbHandler = RecordHandler(this, null)
-        val result = dbHandler.getRecordsForMonthYearWithNoteOnly(month, year)
-        dbHandler.close()
-        return result
+        //val dbHandler = RecordHandler(this, null)
+        //val result = dbHandler.getRecordsForMonthYearWithNoteOnly(month, year)
+        //dbHandler.close()
+        return ArrayList<RecordModel>()
     }
 
     private fun setUpScoreNumberText() {
@@ -555,8 +555,9 @@ class VisualiserActivity : AppCompatActivity() {
     }
 
     private fun getNumberScoresMonthYear(month: Int, year: Int): Int {
-        val db = RecordHandler(this, null)
-        return db.getRecordsForMonthYear(month, year).size
+        //val db = RecordHandler(this, null)
+        //return db.getRecordsForMonthYear(month, year).size
+        return 1
     }
 
 }

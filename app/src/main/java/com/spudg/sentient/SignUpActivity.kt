@@ -24,9 +24,19 @@ class SignUpActivity : AppCompatActivity() {
 
         auth = Firebase.auth
 
+        signUpBinding.btnBack.setOnClickListener {
+            val intent = Intent(this, LandingActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
         signUpBinding.btnSignUp.setOnClickListener {
             if (signUpBinding.email.text.toString().isNotEmpty() && signUpBinding.password.text.toString().isNotEmpty()) {
-                submitSignUpInfo(signUpBinding.email.text.toString(), signUpBinding.password.text.toString())
+                if (signUpBinding.password.text.toString() == signUpBinding.passwordConfirm.text.toString()) {
+                    submitSignUpInfo(signUpBinding.email.text.toString(), signUpBinding.password.text.toString())
+                } else {
+                    Toast.makeText(this, "Passwords don't match", Toast.LENGTH_SHORT).show()
+                }
             } else {
                 Toast.makeText(this, "Email or password can't be blank", Toast.LENGTH_SHORT).show()
             }

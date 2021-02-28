@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.PopupMenu
 import android.widget.Toast
@@ -13,10 +14,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.*
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.spudg.sentient.databinding.*
 import nl.dionsegijn.konfetti.models.Shape
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
 
 
@@ -32,6 +36,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bindingReminder: DialogReminderBinding
 
     private lateinit var auth: FirebaseAuth
+    private lateinit var database: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +46,8 @@ class MainActivity : AppCompatActivity() {
 
         auth = Firebase.auth
         bindingMain.currentUserEmail.text = auth.currentUser!!.email
+
+        database = Firebase.database.reference
 
         createNotificationChannel()
 
@@ -140,10 +147,10 @@ class MainActivity : AppCompatActivity() {
                     alarmManager.cancel(displayIntent)
 
                     alarmManager.setRepeating(
-                        AlarmManager.RTC_WAKEUP,
-                        db.getReminderTime().toLong(),
-                        86400000,
-                        displayIntent
+                            AlarmManager.RTC_WAKEUP,
+                            db.getReminderTime().toLong(),
+                            86400000,
+                            displayIntent
                     )
 
                     setButtonsForExistingReminder(timeHour, timeMinute)
@@ -217,10 +224,10 @@ class MainActivity : AppCompatActivity() {
                     alarmManager.cancel(displayIntent)
 
                     alarmManager.setRepeating(
-                        AlarmManager.RTC_WAKEUP,
-                        db.getReminderTime().toLong(),
-                        86400000,
-                        displayIntent
+                            AlarmManager.RTC_WAKEUP,
+                            db.getReminderTime().toLong(),
+                            86400000,
+                            displayIntent
                     )
 
                     setButtonsForExistingReminder(timeHour, timeMinute)
@@ -258,9 +265,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun setButtonsForExistingReminder(timeHour: Int, timeMinute: Int) {
         bindingReminder.currentTime.text = getString(
-            R.string.current_reminder_time,
-            String.format("%02d", timeHour),
-            String.format("%02d", timeMinute)
+                R.string.current_reminder_time,
+                String.format("%02d", timeHour),
+                String.format("%02d", timeMinute)
         )
         bindingReminder.btnAddUpdateReminder.text = getString(R.string.update_your_reminder)
         bindingReminder.btnRemoveReminder.visibility = View.VISIBLE
@@ -290,85 +297,129 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUpAverageMonthScore() {
-        val dbHandler = RecordHandler(this, null)
-        val allRecords = dbHandler.filterRecords()
+        val reference = database.ref.child("users").child(auth.currentUser!!.uid).child("records")
 
-        var runningTotal = 0
-        var numberOfRatings = 0
+        val snapshotRecords = ArrayList<DataSnapshot>()
 
-        val currentMonth = Calendar.getInstance().get(Calendar.MONTH) + 1
-        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
-        val currentDate = currentMonth.toString() + currentYear.toString()
+        reference.get().addOnSuccessListener { dataSnapshot ->
 
-        bindingMain.monthHeading.text = getString(
-            R.string.average_month_score_heading,
-            Globals.getLongMonth(currentMonth),
-            currentYear.toString()
-        )
+            val allRecords = ArrayList<RecordModel>()
 
-        val cal = Calendar.getInstance()
-
-        for (record in allRecords) {
-
-            cal.timeInMillis = record.time.toLong()
-            val recordMonth = cal.get(Calendar.MONTH) + 1
-            val recordYear = cal.get(Calendar.YEAR)
-            val recordDate = recordMonth.toString() + recordYear.toString()
-
-            if (recordDate == currentDate) {
-                numberOfRatings += 1
-                runningTotal += record.score
+            for (record in dataSnapshot.children) {
+                snapshotRecords.add(record)
             }
 
-        }
-
-        if (numberOfRatings > 0) {
-
-            val averageScore = (runningTotal / numberOfRatings)
-            bindingMain.averageScoreMonth.text = averageScore.toString()
-
-            when (averageScore) {
-                in 0..9 -> {
-                    bindingMain.averageScoreMonth.setTextColor(-65527)
-                }
-                in 10..39 -> {
-                    bindingMain.averageScoreMonth.setTextColor(-25088)
-                }
-                in 40..69 -> {
-                    bindingMain.averageScoreMonth.setTextColor(-16728577)
-                }
-                in 70..89 -> {
-                    bindingMain.averageScoreMonth.setTextColor(-16711896)
-                }
-                in 90..100 -> {
-                    bindingMain.averageScoreMonth.setTextColor(-6881025)
-                }
+            repeat(snapshotRecords.size) {
+                val id = snapshotRecords[it].key.toString()
+                val note = snapshotRecords[it].child("note").value.toString()
+                val score = snapshotRecords[it].child("score").value.toString().toInt()
+                val time = snapshotRecords[it].child("time").value.toString()
+                allRecords.add(RecordModel(id, score, time, note))
             }
-        } else {
-            bindingMain.averageScoreMonth.text = "n/a"
-            bindingMain.averageScoreMonth.setTextColor(Color.GRAY)
+
+            var runningTotal = 0
+            var numberOfRatings = 0
+
+            val currentMonth = Calendar.getInstance().get(Calendar.MONTH) + 1
+            val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+            val currentDate = currentMonth.toString() + currentYear.toString()
+
+            bindingMain.monthHeading.text = getString(
+                    R.string.average_month_score_heading,
+                    Globals.getLongMonth(currentMonth),
+                    currentYear.toString()
+            )
+
+            val cal = Calendar.getInstance()
+
+            for (record in allRecords) {
+
+                cal.timeInMillis = record.time.toLong()
+               val recordMonth = cal.get(Calendar.MONTH) + 1
+                val recordYear = cal.get(Calendar.YEAR)
+                val recordDate = recordMonth.toString() + recordYear.toString()
+
+               if (recordDate == currentDate) {
+                    numberOfRatings += 1
+                    runningTotal += record.score
+                }
+
+            }
+
+            if (numberOfRatings > 0) {
+
+                val averageScore = (runningTotal / numberOfRatings)
+                bindingMain.averageScoreMonth.text = averageScore.toString()
+
+                when (averageScore) {
+                    in 0..9 -> {
+                        bindingMain.averageScoreMonth.setTextColor(-65527)
+                    }
+                    in 10..39 -> {
+                        bindingMain.averageScoreMonth.setTextColor(-25088)
+                    }
+                    in 40..69 -> {
+                        bindingMain.averageScoreMonth.setTextColor(-16728577)
+                    }
+                    in 70..89 -> {
+                        bindingMain.averageScoreMonth.setTextColor(-16711896)
+                    }
+                    in 90..100 -> {
+                        bindingMain.averageScoreMonth.setTextColor(-6881025)
+                    }
+                }
+            } else {
+                bindingMain.averageScoreMonth.text = "n/a"
+                bindingMain.averageScoreMonth.setTextColor(Color.GRAY)
+            }
+
+
+
+        } .addOnFailureListener{
+            Log.e("test", "Error getting data", it)
         }
+
+
     }
 
     private fun setUpRecordList() {
-        if (getRecordList().size > 0) {
-            bindingMain.rvRecords.visibility = View.VISIBLE
-            bindingMain.tvNoRecords.visibility = View.GONE
-            val manager = LinearLayoutManager(this)
-            bindingMain.rvRecords.layoutManager = manager
-            val policyAdapter = RecordAdapter(this, getRecordList())
-            bindingMain.rvRecords.adapter = policyAdapter
-        } else {
-            bindingMain.rvRecords.visibility = View.GONE
-            bindingMain.tvNoRecords.visibility = View.VISIBLE
-        }
-    }
+        val reference = database.ref.child("users").child(auth.currentUser!!.uid).child("records")
 
-    private fun getRecordList(): ArrayList<RecordModel> {
-        val dbHandler = RecordHandler(this, null)
-        val result = dbHandler.filterRecords(-1)
-        dbHandler.close()
-        return result
+        val snapshotRecords = ArrayList<DataSnapshot>()
+
+        reference.get().addOnSuccessListener { dataSnapshot ->
+
+            val records = ArrayList<RecordModel>()
+
+            for (record in dataSnapshot.children) {
+                snapshotRecords.add(record)
+            }
+
+            repeat(snapshotRecords.size) {
+                val id = snapshotRecords[it].key.toString()
+                val note = snapshotRecords[it].child("note").value.toString()
+                val score = snapshotRecords[it].child("score").value.toString().toInt()
+                val time = snapshotRecords[it].child("time").value.toString()
+                records.add(RecordModel(id, score, time, note))
+            }
+
+            if (records.size > 0) {
+                bindingMain.rvRecords.visibility = View.VISIBLE
+                bindingMain.tvNoRecords.visibility = View.GONE
+                val manager = LinearLayoutManager(this)
+                bindingMain.rvRecords.layoutManager = manager
+                val policyAdapter = RecordAdapter(this, records)
+                bindingMain.rvRecords.adapter = policyAdapter
+            } else {
+                bindingMain.rvRecords.visibility = View.GONE
+                bindingMain.tvNoRecords.visibility = View.VISIBLE
+            }
+
+
+        }.addOnFailureListener{
+            Log.e("test", "Error getting data", it)
+        }
+
     }
 
     private fun addRecord() {
@@ -385,10 +436,10 @@ class MainActivity : AppCompatActivity() {
 
         bindingAddRecord.dateRecordPost.text =
             getString(
-                R.string.day_month_year,
-                dayPicked.toString(),
-                Globals.getShortMonth(monthPicked),
-                yearPicked.toString()
+                    R.string.day_month_year,
+                    dayPicked.toString(),
+                    Globals.getShortMonth(monthPicked),
+                    yearPicked.toString()
             )
 
         bindingAddRecord.dateRecordPost.setOnClickListener {
@@ -459,10 +510,10 @@ class MainActivity : AppCompatActivity() {
             bindingDMYP.submitDmy.setOnClickListener {
                 bindingAddRecord.dateRecordPost.text =
                     getString(
-                        R.string.day_month_year,
-                        dayPicked.toString(),
-                        Globals.getShortMonth(monthPicked),
-                        yearPicked.toString()
+                            R.string.day_month_year,
+                            dayPicked.toString(),
+                            Globals.getShortMonth(monthPicked),
+                            yearPicked.toString()
                     )
                 changeDateDialog.dismiss()
             }
@@ -480,9 +531,9 @@ class MainActivity : AppCompatActivity() {
 
         bindingAddRecord.timeRecordPost.text =
             getString(
-                R.string.hour_minute,
-                String.format("%02d", hourPicked),
-                String.format("%02d", minutePicked)
+                    R.string.hour_minute,
+                    String.format("%02d", hourPicked),
+                    String.format("%02d", minutePicked)
             )
 
         bindingAddRecord.timeRecordPost.setOnClickListener {
@@ -515,9 +566,9 @@ class MainActivity : AppCompatActivity() {
             bindingHMP.submitHm.setOnClickListener {
                 bindingAddRecord.timeRecordPost.text =
                     getString(
-                        R.string.hour_minute,
-                        String.format("%02d", hourPicked),
-                        String.format("%02d", minutePicked)
+                            R.string.hour_minute,
+                            String.format("%02d", hourPicked),
+                            String.format("%02d", minutePicked)
                     )
                 changeTimeDialog.dismiss()
             }
@@ -556,25 +607,23 @@ class MainActivity : AppCompatActivity() {
                 100F -> {
                     bindingAddRecord.currentScorePost.setTextColor(-6881025)
                     bindingAddRecord.viewKonfetti.build()
-                        .addColors(-6881025, -16711896)
-                        .setDirection(0.0, 360.0)
-                        .setSpeed(3f, 6f)
-                        .setFadeOutEnabled(true)
-                        .setTimeToLive(600L)
-                        .addShapes(Shape.Square, Shape.Circle)
-                        .addSizes(nl.dionsegijn.konfetti.models.Size(12))
-                        .setPosition(
-                            bindingAddRecord.viewKonfetti.x + bindingAddRecord.viewKonfetti.width / 2,
-                            bindingAddRecord.viewKonfetti.y + bindingAddRecord.viewKonfetti.height / 3
-                        )
-                        .burst(100)
+                            .addColors(-6881025, -16711896)
+                            .setDirection(0.0, 360.0)
+                            .setSpeed(3f, 6f)
+                            .setFadeOutEnabled(true)
+                            .setTimeToLive(600L)
+                            .addShapes(Shape.Square, Shape.Circle)
+                            .addSizes(nl.dionsegijn.konfetti.models.Size(12))
+                            .setPosition(
+                                    bindingAddRecord.viewKonfetti.x + bindingAddRecord.viewKonfetti.width / 2,
+                                    bindingAddRecord.viewKonfetti.y + bindingAddRecord.viewKonfetti.height / 3
+                            )
+                            .burst(100)
                 }
             }
         }
 
         bindingAddRecord.tvPostRecord.setOnClickListener {
-
-            val dbHandlerRecord = RecordHandler(this, null)
 
             val calendar = Calendar.getInstance()
             calendar.set(yearPicked, monthPicked - 1, dayPicked, hourPicked, minutePicked)
@@ -584,14 +633,11 @@ class MainActivity : AppCompatActivity() {
             val note = bindingAddRecord.etNotePostRecord.text.toString()
 
             if (score.toString().isNotEmpty() && time.isNotEmpty()) {
-                dbHandlerRecord.addRecord(
-                    RecordModel(
-                        0,
-                        score,
-                        time,
-                        note,
-                    )
-                )
+                val refPush = database.ref.child("users").child(auth.currentUser!!.uid).child("records")
+                val pushRefPush = refPush.push()
+                pushRefPush.child("note").setValue(note)
+                pushRefPush.child("score").setValue(score)
+                pushRefPush.child("time").setValue(time)
 
                 Toast.makeText(this, "Record posted.", Toast.LENGTH_LONG).show()
                 setUpRecordList()
@@ -602,8 +648,6 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Mood can't be blank.", Toast.LENGTH_LONG)
                     .show()
             }
-
-            dbHandlerRecord.close()
 
         }
         addDialog.show()
@@ -635,10 +679,10 @@ class MainActivity : AppCompatActivity() {
 
         bindingUpdateRecord.dateRecordUpdate.text =
             getString(
-                R.string.day_month_year,
-                dayPicked.toString(),
-                Globals.getShortMonth(monthPicked),
-                yearPicked.toString()
+                    R.string.day_month_year,
+                    dayPicked.toString(),
+                    Globals.getShortMonth(monthPicked),
+                    yearPicked.toString()
             )
 
         bindingUpdateRecord.dateRecordUpdate.setOnClickListener {
@@ -709,10 +753,10 @@ class MainActivity : AppCompatActivity() {
             bindingDMYP.submitDmy.setOnClickListener {
                 bindingUpdateRecord.dateRecordUpdate.text =
                     getString(
-                        R.string.day_month_year,
-                        dayPicked.toString(),
-                        Globals.getShortMonth(monthPicked),
-                        yearPicked.toString()
+                            R.string.day_month_year,
+                            dayPicked.toString(),
+                            Globals.getShortMonth(monthPicked),
+                            yearPicked.toString()
                     )
                 changeDateDialog.dismiss()
             }
@@ -730,9 +774,9 @@ class MainActivity : AppCompatActivity() {
 
         bindingUpdateRecord.timeRecordUpdate.text =
             getString(
-                R.string.hour_minute,
-                String.format("%02d", hourPicked),
-                String.format("%02d", minutePicked)
+                    R.string.hour_minute,
+                    String.format("%02d", hourPicked),
+                    String.format("%02d", minutePicked)
             )
 
         bindingUpdateRecord.timeRecordUpdate.setOnClickListener {
@@ -765,9 +809,9 @@ class MainActivity : AppCompatActivity() {
             bindingHMP.submitHm.setOnClickListener {
                 bindingUpdateRecord.timeRecordUpdate.text =
                     getString(
-                        R.string.hour_minute,
-                        String.format("%02d", hourPicked),
-                        String.format("%02d", minutePicked)
+                            R.string.hour_minute,
+                            String.format("%02d", hourPicked),
+                            String.format("%02d", minutePicked)
                     )
                 changeTimeDialog.dismiss()
             }
@@ -826,25 +870,23 @@ class MainActivity : AppCompatActivity() {
                 100F -> {
                     bindingUpdateRecord.currentScoreUpdate.setTextColor(-6881025)
                     bindingUpdateRecord.viewKonfetti.build()
-                        .addColors(-6881025, -16711896)
-                        .setDirection(0.0, 360.0)
-                        .setSpeed(3f, 6f)
-                        .setFadeOutEnabled(true)
-                        .setTimeToLive(600L)
-                        .addShapes(Shape.Square, Shape.Circle)
-                        .addSizes(nl.dionsegijn.konfetti.models.Size(12))
-                        .setPosition(
-                            bindingUpdateRecord.viewKonfetti.x + bindingUpdateRecord.viewKonfetti.width / 2,
-                            bindingUpdateRecord.viewKonfetti.y + bindingUpdateRecord.viewKonfetti.height / 3
-                        )
-                        .burst(100)
+                            .addColors(-6881025, -16711896)
+                            .setDirection(0.0, 360.0)
+                            .setSpeed(3f, 6f)
+                            .setFadeOutEnabled(true)
+                            .setTimeToLive(600L)
+                            .addShapes(Shape.Square, Shape.Circle)
+                            .addSizes(nl.dionsegijn.konfetti.models.Size(12))
+                            .setPosition(
+                                    bindingUpdateRecord.viewKonfetti.x + bindingUpdateRecord.viewKonfetti.width / 2,
+                                    bindingUpdateRecord.viewKonfetti.y + bindingUpdateRecord.viewKonfetti.height / 3
+                            )
+                            .burst(100)
                 }
             }
         }
 
         bindingUpdateRecord.tvUpdateRecord.setOnClickListener {
-
-            val dbHandlerRecord = RecordHandler(this, null)
 
             val calendar = Calendar.getInstance()
             calendar.set(yearPicked, monthPicked - 1, dayPicked, hourPicked, minutePicked)
@@ -854,14 +896,10 @@ class MainActivity : AppCompatActivity() {
             val note = bindingUpdateRecord.etNoteUpdateRecord.text.toString()
 
             if (score.toString().isNotEmpty() && time.isNotEmpty()) {
-                dbHandlerRecord.updateRecord(
-                    RecordModel(
-                        record.id,
-                        score,
-                        time,
-                        note,
-                    )
-                )
+                val refPush = database.ref.child("users").child(auth.currentUser!!.uid).child("records").child(record.id)
+                refPush.child("note").setValue(note)
+                refPush.child("score").setValue(score)
+                refPush.child("time").setValue(time)
 
                 Toast.makeText(this, "Record updated.", Toast.LENGTH_LONG).show()
                 setUpRecordList()
@@ -872,8 +910,6 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Mood can't be blank.", Toast.LENGTH_LONG)
                     .show()
             }
-
-            dbHandlerRecord.close()
 
         }
 
@@ -894,20 +930,14 @@ class MainActivity : AppCompatActivity() {
         deleteDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         bindingDeleteRecord.tvDeleteRecord.setOnClickListener {
-            val dbHandler = RecordHandler(this, null)
-            dbHandler.deleteRecord(
-                RecordModel(
-                    record.id,
-                    0,
-                    "",
-                    "",
-                )
-            )
+            val refPush = database.ref.child("users").child(auth.currentUser!!.uid).child("records").child(record.id)
+            refPush.child("note").removeValue()
+            refPush.child("score").removeValue()
+            refPush.child("time").removeValue()
 
             Toast.makeText(this, "Record deleted.", Toast.LENGTH_LONG).show()
             setUpRecordList()
             setUpAverageMonthScore()
-            dbHandler.close()
             deleteDialog.dismiss()
         }
 
@@ -919,7 +949,7 @@ class MainActivity : AppCompatActivity() {
         deleteDialog.show()
     }
 
-    fun viewNoteForRecordId(recordId: Int) {
+    fun viewNoteForRecordId(recordId: String) {
         val viewNoteDialog = Dialog(this, R.style.Theme_Dialog)
         viewNoteDialog.setCancelable(false)
         bindingViewNote = DialogViewNoteBinding.inflate(layoutInflater)
@@ -927,11 +957,19 @@ class MainActivity : AppCompatActivity() {
         viewNoteDialog.setContentView(view)
         viewNoteDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        val dbHandler = RecordHandler(this, null)
-        val noteBody = dbHandler.getNoteForId(recordId)
-        dbHandler.close()
+        var noteBody: String
 
-        bindingViewNote.tvNoteBody.text = noteBody
+        val reference = database.ref.child("users").child(auth.currentUser!!.uid).child("records").child(recordId)
+
+        reference.get().addOnSuccessListener { dataSnapshot ->
+
+            noteBody = dataSnapshot.child("note").value.toString()
+
+            bindingViewNote.tvNoteBody.text = noteBody
+
+        } .addOnFailureListener{
+            Log.e("test", "Error getting data", it)
+        }
 
         bindingViewNote.tvDoneViewNote.setOnClickListener {
             viewNoteDialog.dismiss()
@@ -950,14 +988,14 @@ class MainActivity : AppCompatActivity() {
         val month = cal.get(Calendar.MONTH) + 1
         val year = cal.get(Calendar.YEAR)
 
-        val db = RecordHandler(this, null)
-        val otherRecords = db.getRecordsForDayMonthYear(day, month, year)
+        //val db = RecordHandler(this, null)
+        //val otherRecords = db.getRecordsForDayMonthYear(day, month, year)
 
-        for (otherRecord in otherRecords) {
-            if (record.time < otherRecord.time) {
-                newerRecord = true
-            }
-        }
+        //for (otherRecord in otherRecords) {
+        //    if (record.time < otherRecord.time) {
+        //       newerRecord = true
+        //    }
+        //}
 
         return newerRecord
 

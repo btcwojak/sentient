@@ -3,6 +3,7 @@ package com.spudg.sentient
 class Globals {
 
     companion object {
+
         var monthsShortArray: Array<String> = arrayOf(
             "Jan",
             "Feb",

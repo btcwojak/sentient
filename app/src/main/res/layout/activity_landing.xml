@@ -1,31 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent"
     tools:context=".LandingActivity">
 
-    <TextView
-        android:id="@+id/btnSignUp"
+    <LinearLayout
+        android:id="@+id/llLogoTitle"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btnLogIn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="20dp"
-        android:text="Sign up"/>
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_height="0dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@drawable/logo_landing"
+        android:contentDescription="Sentient logo"
+        android:layout_gravity="center"/>
 
     <TextView
-        android:id="@+id/btnLogIn"
-        app:layout_constraintTop_toBottomOf="@id/btnSignUp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="20dp"
-        android:text="Log in"/>
+        android:text="Sentient"
+        android:layout_marginLeft="20dp"
+        android:layout_gravity="center"
+        android:fontFamily="@font/open_sans_light"
+        android:textSize="35sp"
+        android:textColor="#000000"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tagline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mood Tracker &amp; Visualiser"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:fontFamily="@font/open_sans_light"
+            android:textSize="20sp"
+            android:textColor="#000000"/>
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_weight="3"
+        android:layout_height="0dp">
+
+        <ImageView
+            android:id="@+id/lineTitleButtons"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="@drawable/record_row_line"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/btnSignIn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp"
+            android:background="@drawable/btn_custom_login"
+            android:fontFamily="@font/open_sans_light"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:padding="15dp"
+            android:text="Sign in"
+            android:layout_marginTop="75dp"
+            android:textColor="#000000"
+            app:layout_constraintBottom_toTopOf="@id/btnGoogleSignin"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lineTitleButtons" />
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/btnGoogleSignin"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp"
+            app:layout_constraintTop_toBottomOf="@id/btnSignIn"
+            app:layout_constraintBottom_toTopOf="@id/lineLogInSignUp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/lineLogInSignUp"
+            app:layout_constraintBottom_toTopOf="@id/btnSignUp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnGoogleSignin"
+            android:layout_marginBottom="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="@drawable/record_row_line" />
+
+        <TextView
+            android:id="@+id/btnSignUp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lineLogInSignUp"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp"
+            android:textColor="#FFFFFF"
+            android:fontFamily="@font/open_sans_light"
+            android:background="@drawable/btn_custom_signup"
+            android:layout_marginBottom="75dp"
+            android:layout_height="wrap_content"
+            android:foreground="?attr/selectableItemBackground"
+            android:padding="15dp"
+            android:text="Sign up"/>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

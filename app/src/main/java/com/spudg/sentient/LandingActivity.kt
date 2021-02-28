@@ -18,15 +18,13 @@ class LandingActivity : AppCompatActivity() {
         val view = bindingLanding.root
         setContentView(view)
 
-        if ()
-
         bindingLanding.btnSignUp.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
         }
 
-        bindingLanding.btnLogIn.setOnClickListener {
-            val intent = Intent(this, LogInActivity::class.java)
+        bindingLanding.btnSignIn.setOnClickListener {
+            val intent = Intent(this, SignInActivity::class.java)
             startActivity(intent)
         }
 

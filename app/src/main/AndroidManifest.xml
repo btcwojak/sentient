@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Sentient"
         android:fullBackupContent="@xml/backup_descriptor">
-        <activity android:name=".LogInActivity"
+        <activity android:name=".SignInActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Sentient"/>
         <activity

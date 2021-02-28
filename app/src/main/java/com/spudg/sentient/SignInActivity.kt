@@ -9,25 +9,31 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.spudg.sentient.databinding.ActivityLandingBinding
-import com.spudg.sentient.databinding.ActivityLogInBinding
+import com.spudg.sentient.databinding.ActivitySignInBinding
 
-class LogInActivity : AppCompatActivity() {
+class SignInActivity : AppCompatActivity() {
 
-    private lateinit var logInBinding: ActivityLogInBinding
+    private lateinit var signInBinding: ActivitySignInBinding
 
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        logInBinding = ActivityLogInBinding.inflate(layoutInflater)
-        val view = logInBinding.root
+        signInBinding = ActivitySignInBinding.inflate(layoutInflater)
+        val view = signInBinding.root
         setContentView(view)
 
         auth = Firebase.auth
 
-        logInBinding.btnLogIn.setOnClickListener {
-            if (logInBinding.email.text.toString().isNotEmpty() && logInBinding.password.text.toString().isNotEmpty()) {
-                submitLogInInfo(logInBinding.email.text.toString(), logInBinding.password.text.toString())
+        signInBinding.btnBack.setOnClickListener {
+            val intent = Intent(this, LandingActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+        signInBinding.btnSignIn.setOnClickListener {
+            if (signInBinding.email.text.toString().isNotEmpty() && signInBinding.password.text.toString().isNotEmpty()) {
+                submitLogInInfo(signInBinding.email.text.toString(), signInBinding.password.text.toString())
             } else {
                 Toast.makeText(this, "Email or password can't be blank", Toast.LENGTH_SHORT).show()
             }
