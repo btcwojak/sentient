@@ -6,12 +6,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.spudg.sentient.databinding.RecordRowBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
 class RecordAdapter(private val context: Context, private val items: ArrayList<RecordModel>) :
     RecyclerView.Adapter<RecordAdapter.RecordViewHolder>() {
+
+    private lateinit var database: DatabaseReference
+    private lateinit var auth: FirebaseAuth
 
     inner class RecordViewHolder(val binding: RecordRowBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -55,17 +64,38 @@ class RecordAdapter(private val context: Context, private val items: ArrayList<R
                 }
             }
 
-            if (context is MainActivity) {
-                try {
-                    if (context.newerRecordOnDay(record)) {
-                        binding.date.visibility = View.GONE
-                    } else {
-                        binding.date.visibility = View.VISIBLE
-                    }
-                } catch (e: Exception) {
-                    Log.v("RecordAdapter", e.message.toString())
+// TO FIX ================================================================================================================================
+
+            val cal = Calendar.getInstance()
+            cal.timeInMillis = record.time.toLong()
+
+            val day = cal.get(Calendar.DAY_OF_MONTH)
+            val month = cal.get(Calendar.MONTH) + 1
+            val year = cal.get(Calendar.YEAR)
+
+            val listForDayMonthYear = ArrayList<RecordModel>()
+
+            for (item in items) {
+                val recordTime = Calendar.getInstance()
+                recordTime.timeInMillis = item.time.toLong()
+                val recordDay = recordTime.get(Calendar.DAY_OF_MONTH)
+                val recordMonth = recordTime.get(Calendar.MONTH) + 1
+                val recordYear = recordTime.get(Calendar.YEAR)
+                if (recordDay == day && recordMonth == month && recordYear == year) {
+                    listForDayMonthYear.add(record)
                 }
             }
+
+            for (otherRecord in listForDayMonthYear) {
+                if (record.time < otherRecord.time) {
+                    binding.date.visibility = View.GONE
+                } else {
+                    binding.date.visibility = View.VISIBLE
+                }
+            }
+
+// TO FIX ================================================================================================================================
+
 
             binding.notesBtn.setOnClickListener {
                 if (context is MainActivity) {

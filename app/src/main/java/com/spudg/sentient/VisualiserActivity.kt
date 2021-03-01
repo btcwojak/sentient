@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
@@ -17,6 +18,12 @@ import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.spudg.sentient.databinding.ActivityVisualiserBinding
 import com.spudg.sentient.databinding.MonthYearPickerBinding
 import java.text.DecimalFormat
@@ -35,7 +42,7 @@ class VisualiserActivity : AppCompatActivity() {
 
     private var daysInMonth: ArrayList<Int> = ArrayList()
     private var averageScoresPerDay: ArrayList<Int> = ArrayList()
-    private var averageScoresPerMonth: ArrayList<Int> = ArrayList()
+    private var averageScoresPerMonth: Array<Int> = arrayOf(0,0,0,0,0,0,0,0,0,0,0,0)
 
     private var scoreSplitPie: ArrayList<Int> = arrayListOf()
     private var scoreTitlesPie: ArrayList<String> = arrayListOf()
@@ -44,20 +51,26 @@ class VisualiserActivity : AppCompatActivity() {
     private var monthFilter = Calendar.getInstance()[Calendar.MONTH] + 1
     private var yearFilter = Calendar.getInstance()[Calendar.YEAR]
 
+    private lateinit var auth: FirebaseAuth
+    private lateinit var database: DatabaseReference
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bindingVisualiser = ActivityVisualiserBinding.inflate(layoutInflater)
         val view = bindingVisualiser.root
         setContentView(view)
 
+        auth = Firebase.auth
+        database = Firebase.database.reference
+
         setMonthHeader(monthFilter, yearFilter)
         setMonthlyBarHeader(yearFilter)
         setUpScoreNumberText()
         makeBarDataDaily(monthFilter, yearFilter)
-        makePieData(monthFilter, yearFilter)
-        makeBarDataMonthly(yearFilter)
+        makePieChart(monthFilter, yearFilter)
+        makeBarChartMonthly(yearFilter)
         setUpBarChartDaily()
-        setUpPieChart()
+        //setUpPieChart()
         setUpBarChartMonthly()
         setUpNoteList()
 
@@ -93,10 +106,10 @@ class VisualiserActivity : AppCompatActivity() {
                 setMonthlyBarHeader(yearFilter)
                 setUpScoreNumberText()
                 makeBarDataDaily(monthFilter, yearFilter)
-                makePieData(monthFilter, yearFilter)
-                makeBarDataMonthly(yearFilter)
+                makePieChart(monthFilter, yearFilter)
+                makeBarChartMonthly(yearFilter)
                 setUpBarChartDaily()
-                setUpPieChart()
+                //setUpPieChart()
                 setUpBarChartMonthly()
                 setUpNoteList()
 
@@ -256,255 +269,181 @@ class VisualiserActivity : AppCompatActivity() {
         entriesPie = arrayListOf()
     }
 
-    private fun makePieData(monthFilter: Int, yearFilter: Int) {
+    private fun makePieChart(monthFilter: Int, yearFilter: Int) {
 
         resetPieData()
 
-        //val db = RecordHandler(this, null)
+        // MAKE DATA FOR PIE CHART
 
-        //val records = db.getRecordsForMonthYear(monthFilter, yearFilter)
+        val reference = database.ref.child("users").child(auth.currentUser!!.uid).child("records")
 
-        var score0to9 = 0
-        var score10to39 = 0
-        var score40to69 = 0
-        var score70to89 = 0
-        var score90to100 = 0
+        val snapshotRecords = ArrayList<DataSnapshot>()
 
-        //for (record in records) {
-        //    when (record.score) {
-        //        in 0..9 -> {
-        //            score0to9 += 1
-        //        }
-        //        in 10..39 -> {
-        //            score10to39 += 1
-        //        }
-        //        in 40..69 -> {
-        //            score40to69 += 1
-        //        }
-        //        in 70..89 -> {
-        //            score70to89 += 1
-        //        }
-        //        in 90..100 -> {
-        //            score90to100 += 1
-        //        }
-        //
-        //    }
-        //}
+        reference.get().addOnSuccessListener { dataSnapshot ->
 
-        if (score0to9 != 0) {
-            scoreSplitPie.add(score0to9)
-            scoreTitlesPie.add("0 to 9")
-            scoreColoursPie.add(-65527)
-        }
-        if (score10to39 != 0) {
-            scoreSplitPie.add(score10to39)
-            scoreTitlesPie.add("10 to 39")
-            scoreColoursPie.add(-25088)
-        }
-        if (score40to69 != 0) {
-            scoreSplitPie.add(score40to69)
-            scoreTitlesPie.add("40 to 69")
-            scoreColoursPie.add(-16728577)
-        }
-        if (score70to89 != 0) {
-            scoreSplitPie.add(score70to89)
-            scoreTitlesPie.add("70 to 89")
-            scoreColoursPie.add(-16711896)
-        }
-        if (score90to100 != 0) {
-            scoreSplitPie.add(score90to100)
-            scoreTitlesPie.add("90 to 100")
-            scoreColoursPie.add(-6881025)
-        }
+            val list = ArrayList<RecordModel>()
+            val listForMonthYear: ArrayList<RecordModel> = ArrayList()
 
-        //db.close()
-
-    }
-
-    private fun setUpPieChart() {
-
-        if (scoreSplitPie.size > 0) {
-            for (i in 0 until scoreSplitPie.size) {
-                entriesPie.add(PieEntry(scoreSplitPie[i].toFloat(), scoreTitlesPie[i]))
+            for (record in dataSnapshot.children) {
+                snapshotRecords.add(record)
             }
 
-            val dataSetPie = PieDataSet(entriesPie, "")
-            dataSetPie.colors = scoreColoursPie
-            val dataPie = PieData(dataSetPie)
-
-            val chartPie: PieChart = bindingVisualiser.chartSplitAveScore
-            if (entriesPie.size > 0) {
-                chartPie.data = dataPie
+            repeat(snapshotRecords.size) {
+                val id = snapshotRecords[it].key.toString()
+                val note = snapshotRecords[it].child("note").value.toString()
+                val score = snapshotRecords[it].child("score").value.toString().toInt()
+                val time = snapshotRecords[it].child("time").value.toString()
+                list.add(RecordModel(id, score, time, note))
             }
 
-            chartPie.animateY(800)
-            chartPie.setNoDataText("No records for the month and year selected.")
-            chartPie.setNoDataTextColor(0xff000000.toInt())
-            chartPie.setNoDataTextTypeface(ResourcesCompat.getFont(this, R.font.open_sans_light))
-            chartPie.setEntryLabelTypeface(ResourcesCompat.getFont(this, R.font.open_sans_light))
-            chartPie.dragDecelerationFrictionCoef = .95f
-            chartPie.setDrawEntryLabels(false)
+            var score0to9 = 0
+            var score10to39 = 0
+            var score40to69 = 0
+            var score70to89 = 0
+            var score90to100 = 0
 
-            chartPie.description.isEnabled = false
-
-            val l: Legend = chartPie.legend
-            l.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
-            l.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
-            l.orientation = Legend.LegendOrientation.HORIZONTAL
-            l.setDrawInside(false)
-            val l1 = LegendEntry("0 to 9", Legend.LegendForm.CIRCLE, 10f, 2f, null, -65527)
-            val l2 = LegendEntry("10 to 39", Legend.LegendForm.CIRCLE, 10f, 2f, null, -25088)
-            val l3 = LegendEntry("40 to 69", Legend.LegendForm.CIRCLE, 10f, 2f, null, -16728577)
-            val l4 = LegendEntry("70 to 89", Legend.LegendForm.CIRCLE, 10f, 2f, null, -16711896)
-            val l5 = LegendEntry("90 to 100", Legend.LegendForm.CIRCLE, 10f, 2f, null, -6881025)
-            l.setCustom(arrayOf(l1, l2, l3, l4, l5))
-
-            dataSetPie.valueLinePart1OffsetPercentage = 80f
-            dataSetPie.valueLinePart1Length = 0.4f
-            dataSetPie.valueLinePart2Length = 0.8f
-            dataSetPie.yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
-
-            dataPie.setValueFormatter(object : ValueFormatter() {
-                override fun getFormattedValue(value: Float): String {
-                    return if (value > 0) {
-                        val mFormat = DecimalFormat("###,###,##0 records")
-                        mFormat.format(super.getFormattedValue(value).toFloat())
-                    } else {
-                        ""
-                    }
+            for (record in list) {
+                val recordTime = Calendar.getInstance()
+                recordTime.timeInMillis = record.time.toLong()
+                val recordMonth = recordTime.get(Calendar.MONTH) + 1
+                val recordYear = recordTime.get(Calendar.YEAR)
+                if (recordMonth == monthFilter && recordYear == yearFilter) {
+                    listForMonthYear.add(record)
                 }
-            })
+            }
 
-            dataPie.setValueTextSize(11f)
-            dataPie.setValueTextColor(Color.BLACK)
 
-            chartPie.invalidate()
+            for (record in listForMonthYear) {
+                when (record.score) {
+                    in 0..9 -> {
+                        score0to9 += 1
+                    }
+                    in 10..39 -> {
+                        score10to39 += 1
+                    }
+                    in 40..69 -> {
+                        score40to69 += 1
+                    }
+                    in 70..89 -> {
+                        score70to89 += 1
+                    }
+                    in 90..100 -> {
+                        score90to100 += 1
+                    }
 
-        } else {
-            bindingVisualiser.chartSplitAveScore.clear()
-            bindingVisualiser.chartSplitAveScore.setNoDataText("No records for the month and year selected.")
-            bindingVisualiser.chartSplitAveScore.setNoDataTextColor(0xff000000.toInt())
-            bindingVisualiser.chartSplitAveScore.setNoDataTextTypeface(
-                ResourcesCompat.getFont(
-                    this,
-                    R.font.open_sans_light
+                }
+            }
+
+            if (score0to9 != 0) {
+                scoreSplitPie.add(score0to9)
+                scoreTitlesPie.add("0 to 9")
+                scoreColoursPie.add(-65527)
+            }
+            if (score10to39 != 0) {
+                scoreSplitPie.add(score10to39)
+                scoreTitlesPie.add("10 to 39")
+                scoreColoursPie.add(-25088)
+            }
+            if (score40to69 != 0) {
+                scoreSplitPie.add(score40to69)
+                scoreTitlesPie.add("40 to 69")
+                scoreColoursPie.add(-16728577)
+            }
+            if (score70to89 != 0) {
+                scoreSplitPie.add(score70to89)
+                scoreTitlesPie.add("70 to 89")
+                scoreColoursPie.add(-16711896)
+            }
+            if (score90to100 != 0) {
+                scoreSplitPie.add(score90to100)
+                scoreTitlesPie.add("90 to 100")
+                scoreColoursPie.add(-6881025)
+            }
+
+            // MAKE AND CONFIGURE PIE CHART
+
+            if (scoreSplitPie.size > 0) {
+                for (i in 0 until scoreSplitPie.size) {
+                    entriesPie.add(PieEntry(scoreSplitPie[0].toFloat(), scoreTitlesPie[0]))
+                }
+                val dataSetPie = PieDataSet(entriesPie, "")
+                dataSetPie.colors = scoreColoursPie
+                val dataPie = PieData(dataSetPie)
+
+                val chartPie: PieChart = bindingVisualiser.chartSplitAveScore
+                if (entriesPie.size > 0) {
+                    chartPie.data = dataPie
+                }
+
+                chartPie.animateY(800)
+                chartPie.setNoDataText("No records for the month and year selected.")
+                chartPie.setNoDataTextColor(0xff000000.toInt())
+                chartPie.setNoDataTextTypeface(ResourcesCompat.getFont(this, R.font.open_sans_light))
+                chartPie.setEntryLabelTypeface(ResourcesCompat.getFont(this, R.font.open_sans_light))
+                chartPie.dragDecelerationFrictionCoef = .95f
+                chartPie.setDrawEntryLabels(false)
+
+                chartPie.description.isEnabled = false
+
+                val l: Legend = chartPie.legend
+                l.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
+                l.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+                l.orientation = Legend.LegendOrientation.HORIZONTAL
+                l.setDrawInside(false)
+                val l1 = LegendEntry("0 to 9", Legend.LegendForm.CIRCLE, 10f, 2f, null, -65527)
+                val l2 = LegendEntry("10 to 39", Legend.LegendForm.CIRCLE, 10f, 2f, null, -25088)
+                val l3 = LegendEntry("40 to 69", Legend.LegendForm.CIRCLE, 10f, 2f, null, -16728577)
+                val l4 = LegendEntry("70 to 89", Legend.LegendForm.CIRCLE, 10f, 2f, null, -16711896)
+                val l5 = LegendEntry("90 to 100", Legend.LegendForm.CIRCLE, 10f, 2f, null, -6881025)
+                //l.setCustom(arrayOf(l1, l2, l3, l4, l5))    causing crashes with Firebase
+
+                dataSetPie.valueLinePart1OffsetPercentage = 80f
+                dataSetPie.valueLinePart1Length = 0.4f
+                dataSetPie.valueLinePart2Length = 0.8f
+                dataSetPie.yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
+
+                dataPie.setValueFormatter(object : ValueFormatter() {
+                    override fun getFormattedValue(value: Float): String {
+                        return if (value > 0) {
+                            val mFormat = DecimalFormat("###,###,##0 records")
+                            mFormat.format(super.getFormattedValue(value).toFloat())
+                        } else {
+                            ""
+                        }
+                    }
+                })
+
+                dataPie.setValueTextSize(11f)
+                dataPie.setValueTextColor(Color.BLACK)
+
+                chartPie.invalidate()
+
+            } else {
+                bindingVisualiser.chartSplitAveScore.clear()
+                bindingVisualiser.chartSplitAveScore.setNoDataText("No records for the month and year selected.")
+                bindingVisualiser.chartSplitAveScore.setNoDataTextColor(0xff000000.toInt())
+                bindingVisualiser.chartSplitAveScore.setNoDataTextTypeface(
+                        ResourcesCompat.getFont(
+                                this,
+                                R.font.open_sans_light
+                        )
                 )
-            )
+            }
+
+        }.addOnFailureListener{
+            Log.e("test", "Error getting data", it)
         }
+
     }
 
     private fun resetBarDataMonthly() {
         entriesBarMonthly = arrayListOf()
-        averageScoresPerMonth = arrayListOf()
-    }
-
-    private fun makeBarDataMonthly(yearFilter: Int) {
-
-        resetBarDataMonthly()
-
-        //val db = RecordHandler(this, null)
-
-        //repeat(12) {
-        //    val averageForMonth = db.getAveScoreForMonthYear(
-        //        it + 1,
-        //        yearFilter,
-        //    )
-        //    averageScoresPerMonth.add(averageForMonth)
-        //}
-
-        //db.close()
+        averageScoresPerMonth = arrayOf(0,0,0,0,0,0,0,0,0,0,0,0)
     }
 
     private fun setUpBarChartMonthly() {
 
-        var runningTotal = 0
-        val colours = ArrayList<Int>()
 
-        for (score in averageScoresPerMonth) {
-            runningTotal += score
-            when (score) {
-                in 0..9 -> {
-                    colours.add(-65527)
-                }
-                in 10..39 -> {
-                    colours.add(-25088)
-                }
-                in 40..69 -> {
-                    colours.add(-16728577)
-                }
-                in 70..89 -> {
-                    colours.add(-16711896)
-                }
-                in 90..100 -> {
-                    colours.add(-6881025)
-                }
-            }
-        }
-
-        if (runningTotal != 0) {
-
-            for (i in 1..12) {
-                entriesBarMonthly.add(
-                    BarEntry(
-                        (i).toFloat(),
-                        averageScoresPerMonth[i - 1].toFloat()
-                    )
-                )
-            }
-
-            val dataSetBarMonthly = BarDataSet(entriesBarMonthly, "")
-            val dataBarMonthly = BarData(dataSetBarMonthly)
-            dataSetBarMonthly.colors = colours
-
-            dataBarMonthly.setValueFormatter(object : ValueFormatter() {
-                override fun getFormattedValue(value: Float): String {
-                    return if (value > 0) {
-                        val mFormat = DecimalFormat("###,###,##0")
-                        mFormat.format(super.getFormattedValue(value).toFloat())
-                    } else {
-                        ""
-                    }
-                }
-            })
-
-            val chartBarMonthly: BarChart = bindingVisualiser.chartAverageMonthly
-            if (entriesBarMonthly.size > 0) {
-                chartBarMonthly.data = dataBarMonthly
-            }
-
-            chartBarMonthly.animateY(800)
-            chartBarMonthly.setNoDataText("No records for the month and year selected.")
-            chartBarMonthly.setNoDataTextColor(0xff000000.toInt())
-            chartBarMonthly.setNoDataTextTypeface(
-                ResourcesCompat.getFont(
-                    this,
-                    R.font.open_sans_light
-                )
-            )
-            chartBarMonthly.xAxis.setDrawGridLines(false)
-            chartBarMonthly.axisRight.isEnabled = false
-            chartBarMonthly.xAxis.position = XAxis.XAxisPosition.BOTTOM
-            chartBarMonthly.legend.isEnabled = false
-
-            chartBarMonthly.xAxis.valueFormatter =
-                IndexAxisValueFormatter(Globals.monthsShortArrayEmptyFirstEntry)
-            chartBarMonthly.xAxis.labelCount = 12
-
-            chartBarMonthly.description.isEnabled = false
-
-            chartBarMonthly.invalidate()
-
-        } else {
-            bindingVisualiser.chartAverageMonthly.clear()
-            bindingVisualiser.chartAverageMonthly.setNoDataText("No records for the month and year selected.")
-            bindingVisualiser.chartAverageMonthly.setNoDataTextColor(0xff000000.toInt())
-            bindingVisualiser.chartAverageMonthly.setNoDataTextTypeface(
-                ResourcesCompat.getFont(
-                    this,
-                    R.font.open_sans_light
-                )
-            )
-        }
     }
 
     private fun setUpNoteList() {
@@ -558,6 +497,150 @@ class VisualiserActivity : AppCompatActivity() {
         //val db = RecordHandler(this, null)
         //return db.getRecordsForMonthYear(month, year).size
         return 1
+    }
+
+    private fun makeBarChartMonthly(yearFilter: Int) {
+
+        resetBarDataMonthly()
+
+        val reference = database.ref.child("users").child(auth.currentUser!!.uid).child("records")
+
+        val snapshotRecords = ArrayList<DataSnapshot>()
+
+        reference.get().addOnSuccessListener { dataSnapshot ->
+
+            val allRecords = ArrayList<RecordModel>()
+
+            for (record in dataSnapshot.children) {
+                snapshotRecords.add(record)
+            }
+
+            repeat(snapshotRecords.size) {
+                val id = snapshotRecords[it].key.toString()
+                val note = snapshotRecords[it].child("note").value.toString()
+                val score = snapshotRecords[it].child("score").value.toString().toInt()
+                val time = snapshotRecords[it].child("time").value.toString()
+                allRecords.add(RecordModel(id, score, time, note))
+            }
+
+            val cal = Calendar.getInstance()
+
+            var numberOfRatings = 0
+            var runningTotal = 0
+
+            repeat (12) {
+                numberOfRatings = 0
+                runningTotal = 0
+                for (record in allRecords) {
+                    cal.timeInMillis = record.time.toLong()
+                    val recordMonth = cal.get(Calendar.MONTH) + 1
+                    val recordYear = cal.get(Calendar.YEAR)
+                    if (recordYear == yearFilter && recordMonth == (it+1)) {
+                        numberOfRatings += 1
+                        runningTotal += record.score
+                    }
+
+                }
+
+                if (numberOfRatings > 0) {
+                    averageScoresPerMonth[it] = (runningTotal / numberOfRatings)
+                }
+
+            }
+
+            var runningTotalChart = 0
+            val colours = ArrayList<Int>()
+
+            for (score in averageScoresPerMonth) {
+                runningTotalChart += score
+                when (score) {
+                    in 0..9 -> {
+                        colours.add(-65527)
+                    }
+                    in 10..39 -> {
+                        colours.add(-25088)
+                    }
+                    in 40..69 -> {
+                        colours.add(-16728577)
+                    }
+                    in 70..89 -> {
+                        colours.add(-16711896)
+                    }
+                    in 90..100 -> {
+                        colours.add(-6881025)
+                    }
+                }
+            }
+
+            if (runningTotalChart != 0) {
+
+                for (i in 1..12) {
+                    entriesBarMonthly.add(
+                            BarEntry(
+                                    (i).toFloat(),
+                                    averageScoresPerMonth[i - 1].toFloat()
+                            )
+                    )
+                }
+
+                val dataSetBarMonthly = BarDataSet(entriesBarMonthly, "")
+                val dataBarMonthly = BarData(dataSetBarMonthly)
+                dataSetBarMonthly.colors = colours
+
+                dataBarMonthly.setValueFormatter(object : ValueFormatter() {
+                    override fun getFormattedValue(value: Float): String {
+                        return if (value > 0) {
+                            val mFormat = DecimalFormat("###,###,##0")
+                            mFormat.format(super.getFormattedValue(value).toFloat())
+                        } else {
+                            ""
+                        }
+                    }
+                })
+
+                val chartBarMonthly: BarChart = bindingVisualiser.chartAverageMonthly
+                if (entriesBarMonthly.size > 0) {
+                    chartBarMonthly.data = dataBarMonthly
+                }
+
+                chartBarMonthly.animateY(800)
+                chartBarMonthly.setNoDataText("No records for the month and year selected.")
+                chartBarMonthly.setNoDataTextColor(0xff000000.toInt())
+                chartBarMonthly.setNoDataTextTypeface(
+                        ResourcesCompat.getFont(
+                                this,
+                                R.font.open_sans_light
+                        )
+                )
+                chartBarMonthly.xAxis.setDrawGridLines(false)
+                chartBarMonthly.axisRight.isEnabled = false
+                chartBarMonthly.xAxis.position = XAxis.XAxisPosition.BOTTOM
+                chartBarMonthly.legend.isEnabled = false
+
+                chartBarMonthly.xAxis.valueFormatter =
+                        IndexAxisValueFormatter(Globals.monthsShortArrayEmptyFirstEntry)
+                chartBarMonthly.xAxis.labelCount = 12
+
+                chartBarMonthly.description.isEnabled = false
+
+                chartBarMonthly.invalidate()
+
+            } else {
+                bindingVisualiser.chartAverageMonthly.clear()
+                bindingVisualiser.chartAverageMonthly.setNoDataText("No records for the month and year selected.")
+                bindingVisualiser.chartAverageMonthly.setNoDataTextColor(0xff000000.toInt())
+                bindingVisualiser.chartAverageMonthly.setNoDataTextTypeface(
+                        ResourcesCompat.getFont(
+                                this,
+                                R.font.open_sans_light
+                        )
+                )
+            }
+
+        } .addOnFailureListener{
+            Log.e("test", "Error getting data", it)
+        }
+
     }
 
 }
