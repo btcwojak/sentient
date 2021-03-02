@@ -62,6 +62,7 @@ class VisualiserActivity : AppCompatActivity() {
 
         auth = Firebase.auth
         database = Firebase.database.reference
+        database.keepSynced(true)
 
         setMonthHeader(monthFilter, yearFilter)
         setMonthlyBarHeader(yearFilter)

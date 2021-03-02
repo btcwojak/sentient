@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bindingMain = ActivityMainBinding.inflate(layoutInflater)
@@ -45,9 +46,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
 
         auth = Firebase.auth
-        bindingMain.currentUserEmail.text = auth.currentUser!!.email
 
         database = Firebase.database.reference
+        database.keepSynced(true)
 
         createNotificationChannel()
 
@@ -65,6 +66,10 @@ class MainActivity : AppCompatActivity() {
             popupMenu.menuInflater.inflate(R.menu.menu_popup, popupMenu.menu)
             popupMenu.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
+                    R.id.action_account -> {
+                        val intent = Intent(this, AccountActivity::class.java)
+                        startActivity(intent)
+                    }
                     R.id.action_about -> {
                         val intent = Intent(this, AboutActivity::class.java)
                         startActivity(intent)
@@ -967,7 +972,9 @@ class MainActivity : AppCompatActivity() {
 
             noteBody = dataSnapshot.child("note").value.toString()
 
-            bindingViewNote.tvNoteBody.text = noteBody
+            if (noteBody.isNotEmpty()) {
+                bindingViewNote.tvNoteBody.text = noteBody
+            }
 
         } .addOnFailureListener{
             Log.e("test", "Error getting data", it)

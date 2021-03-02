@@ -1,14 +1,16 @@
 package com.spudg.sentient
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.spudg.sentient.databinding.ActivitySignUpBinding
+
 
 class SignUpActivity : AppCompatActivity() {
 
@@ -57,8 +59,8 @@ class SignUpActivity : AppCompatActivity() {
                 } else {
                     Log.w("SignUp", "createUserWithEmail:failure", task.exception)
                     Toast.makeText(
-                        baseContext, "Authentication failed.",
-                        Toast.LENGTH_SHORT
+                            baseContext, "Authentication failed.",
+                            Toast.LENGTH_SHORT
                     ).show()
                     //updateUI(null)
                 }

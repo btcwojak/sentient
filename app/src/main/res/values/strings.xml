@@ -73,4 +73,6 @@
     <string name="average_monthly_scores_visualiser_heading">Average monthly scores\nfor %1$s</string>
     <string name="danielmartinus_konfetti">DanielMartinus / Konfetti</string>
     <string name="licensed_under_the_isc_license">Licensed under the ISC License</string>
+    <string name="logout">Logout</string>
+    <string name="account">Account</string>
 </resources>
