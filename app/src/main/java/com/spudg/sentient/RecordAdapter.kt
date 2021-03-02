@@ -64,7 +64,6 @@ class RecordAdapter(private val context: Context, private val items: ArrayList<R
                 }
             }
 
-// TO FIX ================================================================================================================================
 
             val cal = Calendar.getInstance()
             cal.timeInMillis = record.time.toLong()
@@ -82,19 +81,18 @@ class RecordAdapter(private val context: Context, private val items: ArrayList<R
                 val recordMonth = recordTime.get(Calendar.MONTH) + 1
                 val recordYear = recordTime.get(Calendar.YEAR)
                 if (recordDay == day && recordMonth == month && recordYear == year) {
-                    listForDayMonthYear.add(record)
+                    listForDayMonthYear.add(item)
                 }
             }
 
             for (otherRecord in listForDayMonthYear) {
-                if (record.time < otherRecord.time) {
-                    binding.date.visibility = View.GONE
-                } else {
-                    binding.date.visibility = View.VISIBLE
+                if (record.id != otherRecord.id) {
+                    if (record.time.toLong() < otherRecord.time.toLong()) {
+                        binding.date.visibility = View.GONE
+                    }
                 }
             }
 
-// TO FIX ================================================================================================================================
 
 
             binding.notesBtn.setOnClickListener {

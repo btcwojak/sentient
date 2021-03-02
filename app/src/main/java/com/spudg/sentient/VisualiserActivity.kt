@@ -41,7 +41,7 @@ class VisualiserActivity : AppCompatActivity() {
     private lateinit var bindingMonthYearPicker: MonthYearPickerBinding
 
     private var daysInMonth: ArrayList<Int> = ArrayList()
-    private var averageScoresPerDay: ArrayList<Int> = ArrayList()
+    private var averageScoresPerDay: Array<Int> = arrayOf(0,0,0,0,0,0,0,0,0,0,0,0)
     private var averageScoresPerMonth: Array<Int> = arrayOf(0,0,0,0,0,0,0,0,0,0,0,0)
 
     private var scoreSplitPie: ArrayList<Int> = arrayListOf()
@@ -66,12 +66,9 @@ class VisualiserActivity : AppCompatActivity() {
         setMonthHeader(monthFilter, yearFilter)
         setMonthlyBarHeader(yearFilter)
         setUpScoreNumberText()
-        makeBarDataDaily(monthFilter, yearFilter)
+        makeBarChartDaily(monthFilter, yearFilter)
         makePieChart(monthFilter, yearFilter)
         makeBarChartMonthly(yearFilter)
-        setUpBarChartDaily()
-        //setUpPieChart()
-        setUpBarChartMonthly()
         setUpNoteList()
 
         bindingVisualiser.selectNewMonthHeader.setOnClickListener {
@@ -105,12 +102,9 @@ class VisualiserActivity : AppCompatActivity() {
                 setMonthHeader(monthFilter, yearFilter)
                 setMonthlyBarHeader(yearFilter)
                 setUpScoreNumberText()
-                makeBarDataDaily(monthFilter, yearFilter)
+                makeBarChartDaily(monthFilter, yearFilter)
                 makePieChart(monthFilter, yearFilter)
                 makeBarChartMonthly(yearFilter)
-                setUpBarChartDaily()
-                //setUpPieChart()
-                setUpBarChartMonthly()
                 setUpNoteList()
 
                 filterDialog.dismiss()
@@ -135,130 +129,166 @@ class VisualiserActivity : AppCompatActivity() {
     private fun resetBarDataDaily() {
         entriesBarDaily = arrayListOf()
         daysInMonth = arrayListOf()
-        averageScoresPerDay = arrayListOf()
+        averageScoresPerDay = arrayOf()
     }
 
-    private fun makeBarDataDaily(monthFilter: Int, yearFilter: Int) {
+    private fun makeBarChartDaily(monthFilter: Int, yearFilter: Int) {
 
         resetBarDataDaily()
 
-        //val db = RecordHandler(this, null)
+        val reference = database.ref.child("users").child(auth.currentUser!!.uid).child("records")
 
-        daysInMonth = if (yearFilter % 4 == 0) {
-            when (monthFilter) {
-                1, 3, 5, 7, 8, 10, 12 -> Globals.DAYS31
-                4, 6, 9, 11 -> Globals.DAYS30
-                2 -> Globals.DAYS29
-                else -> arrayListOf(0)
-            }
-        } else {
-            when (monthFilter) {
-                1, 3, 5, 7, 8, 10, 12 -> Globals.DAYS31
-                4, 6, 9, 11 -> Globals.DAYS30
-                2 -> Globals.DAYS28
-                else -> arrayListOf(0)
-            }
-        }
+        val snapshotRecords = ArrayList<DataSnapshot>()
 
-        for (day in daysInMonth) {
-            //val averageForDay = db.getAveScoreForDayMonthYear(
-            //    day,
-            //    monthFilter,
-            //    yearFilter
-            //)
-            //averageScoresPerDay.add(averageForDay)
-        }
+        reference.get().addOnSuccessListener { dataSnapshot ->
 
-        //db.close()
-    }
-
-    private fun setUpBarChartDaily() {
-
-        var runningTotal = 0
-        val colours = ArrayList<Int>()
-
-        for (score in averageScoresPerDay) {
-            runningTotal += score
-            when (score) {
-                in 0..9 -> {
-                    colours.add(-65527)
+            daysInMonth = if (yearFilter % 4 == 0) {
+                when (monthFilter) {
+                    1, 3, 5, 7, 8, 10, 12 -> Globals.DAYS31
+                    4, 6, 9, 11 -> Globals.DAYS30
+                    2 -> Globals.DAYS29
+                    else -> arrayListOf(0)
                 }
-                in 10..39 -> {
-                    colours.add(-25088)
-                }
-                in 40..69 -> {
-                    colours.add(-16728577)
-                }
-                in 70..89 -> {
-                    colours.add(-16711896)
-                }
-                in 90..100 -> {
-                    colours.add(-6881025)
+            } else {
+                when (monthFilter) {
+                    1, 3, 5, 7, 8, 10, 12 -> Globals.DAYS31
+                    4, 6, 9, 11 -> Globals.DAYS30
+                    2 -> Globals.DAYS28
+                    else -> arrayListOf(0)
                 }
             }
-        }
 
-        if (runningTotal != 0) {
-            for (i in 0 until daysInMonth.size) {
-                entriesBarDaily.add(
-                    BarEntry(
-                        daysInMonth[i].toFloat(),
-                        averageScoresPerDay[i].toFloat()
-                    )
-                )
+            averageScoresPerDay = Array(daysInMonth.size) { 0 }
 
+            val allRecords = ArrayList<RecordModel>()
 
-                val dataSetBarDaily = BarDataSet(entriesBarDaily, "")
-                val dataBarDaily = BarData(dataSetBarDaily)
-                dataSetBarDaily.colors = colours
+            for (record in dataSnapshot.children) {
+                snapshotRecords.add(record)
+            }
 
-                dataBarDaily.setValueFormatter(object : ValueFormatter() {
-                    override fun getFormattedValue(value: Float): String {
-                        return if (value > 0) {
-                            val mFormat = DecimalFormat("###,###,##0")
-                            mFormat.format(super.getFormattedValue(value).toFloat())
-                        } else {
-                            ""
-                        }
+            repeat(snapshotRecords.size) {
+                val id = snapshotRecords[it].key.toString()
+                val note = snapshotRecords[it].child("note").value.toString()
+                val score = snapshotRecords[it].child("score").value.toString().toInt()
+                val time = snapshotRecords[it].child("time").value.toString()
+                allRecords.add(RecordModel(id, score, time, note))
+            }
+
+            val cal = Calendar.getInstance()
+
+            var numberOfRatings = 0
+            var runningTotal = 0
+
+            repeat(daysInMonth.size) {
+                numberOfRatings = 0
+                runningTotal = 0
+                for (record in allRecords) {
+                    cal.timeInMillis = record.time.toLong()
+                    val recordDay = cal.get(Calendar.DAY_OF_MONTH)
+                    val recordMonth = cal.get(Calendar.MONTH) + 1
+                    val recordYear = cal.get(Calendar.YEAR)
+                    if (recordYear == yearFilter && recordMonth == monthFilter && recordDay == it) {
+                        numberOfRatings += 1
+                        runningTotal += record.score
                     }
-                })
 
-                val chartBarDaily: BarChart = bindingVisualiser.chartAverageDaily
-                if (entriesBarDaily.size > 0) {
-                    chartBarDaily.data = dataBarDaily
                 }
 
-                chartBarDaily.animateY(800)
-                chartBarDaily.setNoDataText("No records for the month and year selected.")
-                chartBarDaily.setNoDataTextColor(0xff000000.toInt())
-                chartBarDaily.setNoDataTextTypeface(
-                    ResourcesCompat.getFont(
-                        this,
-                        R.font.open_sans_light
-                    )
-                )
-                chartBarDaily.xAxis.setDrawGridLines(false)
-                chartBarDaily.axisRight.isEnabled = false
-                chartBarDaily.xAxis.position = XAxis.XAxisPosition.BOTTOM
-                chartBarDaily.legend.isEnabled = false
-                chartBarDaily.axisRight.setDrawLabels(true)
+                if (numberOfRatings > 0) {
+                    averageScoresPerDay[it] = (runningTotal / numberOfRatings)
+                }
 
-                chartBarDaily.xAxis.labelCount = 15
-
-                chartBarDaily.description.isEnabled = false
-
-                chartBarDaily.invalidate()
             }
-        } else {
-            bindingVisualiser.chartAverageDaily.clear()
-            bindingVisualiser.chartAverageDaily.setNoDataText("No data for the month and year selected.")
-            bindingVisualiser.chartAverageDaily.setNoDataTextColor(0xff000000.toInt())
-            bindingVisualiser.chartAverageDaily.setNoDataTextTypeface(
-                ResourcesCompat.getFont(
-                    this,
-                    R.font.open_sans_light
+
+            var runningTotalChart = 0
+            val colours = ArrayList<Int>()
+
+            for (score in averageScoresPerDay) {
+                runningTotalChart += score
+                when (score) {
+                    in 0..9 -> {
+                        colours.add(-65527)
+                    }
+                    in 10..39 -> {
+                        colours.add(-25088)
+                    }
+                    in 40..69 -> {
+                        colours.add(-16728577)
+                    }
+                    in 70..89 -> {
+                        colours.add(-16711896)
+                    }
+                    in 90..100 -> {
+                        colours.add(-6881025)
+                    }
+                }
+            }
+
+            if (runningTotalChart != 0) {
+                for (i in 0 until daysInMonth.size) {
+                    entriesBarDaily.add(
+                            BarEntry(
+                                    daysInMonth[i].toFloat(),
+                                    averageScoresPerDay[i].toFloat()
+                            )
+                    )
+
+
+                    val dataSetBarDaily = BarDataSet(entriesBarDaily, "")
+                    val dataBarDaily = BarData(dataSetBarDaily)
+                    dataSetBarDaily.colors = colours
+
+                    dataBarDaily.setValueFormatter(object : ValueFormatter() {
+                        override fun getFormattedValue(value: Float): String {
+                            return if (value > 0) {
+                                val mFormat = DecimalFormat("###,###,##0")
+                                mFormat.format(super.getFormattedValue(value).toFloat())
+                            } else {
+                                ""
+                            }
+                        }
+                    })
+
+                    val chartBarDaily: BarChart = bindingVisualiser.chartAverageDaily
+                    if (entriesBarDaily.size > 0) {
+                        chartBarDaily.data = dataBarDaily
+                    }
+
+                    chartBarDaily.animateY(800)
+                    chartBarDaily.setNoDataText("No records for the month and year selected.")
+                    chartBarDaily.setNoDataTextColor(0xff000000.toInt())
+                    chartBarDaily.setNoDataTextTypeface(
+                            ResourcesCompat.getFont(
+                                    this,
+                                    R.font.open_sans_light
+                            )
+                    )
+                    chartBarDaily.xAxis.setDrawGridLines(false)
+                    chartBarDaily.axisRight.isEnabled = false
+                    chartBarDaily.xAxis.position = XAxis.XAxisPosition.BOTTOM
+                    chartBarDaily.legend.isEnabled = false
+                    chartBarDaily.axisRight.setDrawLabels(true)
+
+                    chartBarDaily.xAxis.labelCount = 15
+
+                    chartBarDaily.description.isEnabled = false
+
+                    chartBarDaily.invalidate()
+                }
+            } else {
+                bindingVisualiser.chartAverageDaily.clear()
+                bindingVisualiser.chartAverageDaily.setNoDataText("No data for the month and year selected.")
+                bindingVisualiser.chartAverageDaily.setNoDataTextColor(0xff000000.toInt())
+                bindingVisualiser.chartAverageDaily.setNoDataTextTypeface(
+                        ResourcesCompat.getFont(
+                                this,
+                                R.font.open_sans_light
+                        )
                 )
-            )
+            }
+
+        }.addOnFailureListener {
+            Log.e("test", "Error getting data", it)
         }
     }
 
@@ -441,46 +471,126 @@ class VisualiserActivity : AppCompatActivity() {
         averageScoresPerMonth = arrayOf(0,0,0,0,0,0,0,0,0,0,0,0)
     }
 
-    private fun setUpBarChartMonthly() {
-
-
-    }
-
     private fun setUpNoteList() {
-        if (getRecordListMonthYearWithNoteOnly(monthFilter, yearFilter).size > 0) {
-            bindingVisualiser.rvNotes.visibility = View.VISIBLE
-            bindingVisualiser.tvNoNotes.visibility = View.GONE
-            val manager = LinearLayoutManager(this)
-            bindingVisualiser.rvNotes.layoutManager = manager
-            val noteAdapter =
-                NoteListAdapter(getRecordListMonthYearWithNoteOnly(monthFilter, yearFilter))
-            bindingVisualiser.rvNotes.adapter = noteAdapter
-        } else {
-            bindingVisualiser.rvNotes.visibility = View.GONE
-            bindingVisualiser.tvNoNotes.visibility = View.VISIBLE
-        }
-    }
+        val reference = database.ref.child("users").child(auth.currentUser!!.uid).child("records")
 
-    private fun getRecordListMonthYearWithNoteOnly(month: Int, year: Int): ArrayList<RecordModel> {
-        //val dbHandler = RecordHandler(this, null)
-        //val result = dbHandler.getRecordsForMonthYearWithNoteOnly(month, year)
-        //dbHandler.close()
-        return ArrayList<RecordModel>()
+        val snapshotRecords = ArrayList<DataSnapshot>()
+
+        reference.get().addOnSuccessListener { dataSnapshot ->
+
+            daysInMonth = if (yearFilter % 4 == 0) {
+                when (monthFilter) {
+                    1, 3, 5, 7, 8, 10, 12 -> Globals.DAYS31
+                    4, 6, 9, 11 -> Globals.DAYS30
+                    2 -> Globals.DAYS29
+                    else -> arrayListOf(0)
+                }
+            } else {
+                when (monthFilter) {
+                    1, 3, 5, 7, 8, 10, 12 -> Globals.DAYS31
+                    4, 6, 9, 11 -> Globals.DAYS30
+                    2 -> Globals.DAYS28
+                    else -> arrayListOf(0)
+                }
+            }
+
+            averageScoresPerDay = Array(daysInMonth.size) { 0 }
+
+            val allRecords = ArrayList<RecordModel>()
+
+            for (record in dataSnapshot.children) {
+                snapshotRecords.add(record)
+            }
+
+            repeat(snapshotRecords.size) {
+                val id = snapshotRecords[it].key.toString()
+                val note = snapshotRecords[it].child("note").value.toString()
+                val score = snapshotRecords[it].child("score").value.toString().toInt()
+                val time = snapshotRecords[it].child("time").value.toString()
+                allRecords.add(RecordModel(id, score, time, note))
+            }
+
+            val cal = Calendar.getInstance()
+
+            val listForDayMonthYear: ArrayList<RecordModel> = arrayListOf()
+
+            for (record in allRecords) {
+                cal.timeInMillis = record.time.toLong()
+                val recordMonth = cal.get(Calendar.MONTH) + 1
+                val recordYear = cal.get(Calendar.YEAR)
+                if (recordYear == yearFilter && recordMonth == monthFilter && record.note.isNotEmpty()) {
+                    listForDayMonthYear.add(record)
+                }
+
+
+            }
+
+            if (listForDayMonthYear.size > 0) {
+                bindingVisualiser.rvNotes.visibility = View.VISIBLE
+                bindingVisualiser.tvNoNotes.visibility = View.GONE
+                val manager = LinearLayoutManager(this)
+                bindingVisualiser.rvNotes.layoutManager = manager
+                val noteAdapter = NoteListAdapter(listForDayMonthYear)
+                bindingVisualiser.rvNotes.adapter = noteAdapter
+            } else {
+                bindingVisualiser.rvNotes.visibility = View.GONE
+                bindingVisualiser.tvNoNotes.visibility = View.VISIBLE
+            }
+
+        }.addOnFailureListener {
+            Log.e("test", "Error getting data", it)
+        }
     }
 
     private fun setUpScoreNumberText() {
-        when (val numberScores = getNumberScoresMonthYear(monthFilter, yearFilter)) {
-            0 -> {
-                bindingVisualiser.numberScoresMonth.text = getString(R.string.no_scores_posted)
+        val reference = database.ref.child("users").child(auth.currentUser!!.uid).child("records")
+
+        val snapshotRecords = ArrayList<DataSnapshot>()
+
+        reference.get().addOnSuccessListener { dataSnapshot ->
+
+            val list = ArrayList<RecordModel>()
+            val listForMonthYear: ArrayList<RecordModel> = ArrayList()
+
+            for (record in dataSnapshot.children) {
+                snapshotRecords.add(record)
             }
-            1 -> {
-                bindingVisualiser.numberScoresMonth.text = getString(R.string.one_score_posted)
+
+            repeat(snapshotRecords.size) {
+                val id = snapshotRecords[it].key.toString()
+                val note = snapshotRecords[it].child("note").value.toString()
+                val score = snapshotRecords[it].child("score").value.toString().toInt()
+                val time = snapshotRecords[it].child("time").value.toString()
+                list.add(RecordModel(id, score, time, note))
             }
-            else -> {
-                bindingVisualiser.numberScoresMonth.text =
-                    getString(R.string.number_scores_posted, numberScores.toString())
+
+            for (record in list) {
+                val recordTime = Calendar.getInstance()
+                recordTime.timeInMillis = record.time.toLong()
+                val recordMonth = recordTime.get(Calendar.MONTH) + 1
+                val recordYear = recordTime.get(Calendar.YEAR)
+                if (recordMonth == monthFilter && recordYear == yearFilter) {
+                    listForMonthYear.add(record)
+                }
             }
+
+            when (val numberScores = listForMonthYear.size) {
+                0 -> {
+                    bindingVisualiser.numberScoresMonth.text = getString(R.string.no_scores_posted)
+                }
+                1 -> {
+                    bindingVisualiser.numberScoresMonth.text = getString(R.string.one_score_posted)
+                }
+                else -> {
+                    bindingVisualiser.numberScoresMonth.text =
+                            getString(R.string.number_scores_posted, numberScores.toString())
+                }
+            }
+
+        } .addOnFailureListener{
+            Log.e("test", "Error getting data", it)
         }
+
     }
 
     private fun setMonthHeader(month: Int, year: Int) {
@@ -491,12 +601,6 @@ class VisualiserActivity : AppCompatActivity() {
     private fun setMonthlyBarHeader(year: Int) {
         bindingVisualiser.averageMonthlyScoresHeading.text =
             getString(R.string.average_monthly_scores_visualiser_heading, year.toString())
-    }
-
-    private fun getNumberScoresMonthYear(month: Int, year: Int): Int {
-        //val db = RecordHandler(this, null)
-        //return db.getRecordsForMonthYear(month, year).size
-        return 1
     }
 
     private fun makeBarChartMonthly(yearFilter: Int) {

@@ -86,7 +86,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         setUpRecordList()
-        Log.e("test","test")
         setUpAverageMonthScore()
 
     }
@@ -403,6 +402,8 @@ class MainActivity : AppCompatActivity() {
                 val time = snapshotRecords[it].child("time").value.toString()
                 records.add(RecordModel(id, score, time, note))
             }
+
+            records.sortByDescending { it.time }
 
             if (records.size > 0) {
                 bindingMain.rvRecords.visibility = View.VISIBLE
