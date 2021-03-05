@@ -10,7 +10,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Sentient">
-        <activity android:name=".AccountActivity"></activity>
+        <activity
+            android:name=".AccountActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Sentient" />
         <activity
             android:name=".SignInActivity"
             android:screenOrientation="portrait"

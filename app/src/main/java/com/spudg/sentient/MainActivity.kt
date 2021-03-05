@@ -45,6 +45,10 @@ class MainActivity : AppCompatActivity() {
         val view = bindingMain.root
         setContentView(view)
 
+        bindingMain.shimmerFrameLayout.visibility = View.VISIBLE
+        bindingMain.shimmerFrameLayout.startShimmerAnimation()
+        bindingMain.rvRecords.visibility = View.GONE
+
         auth = Firebase.auth
         database = Firebase.database.reference
 
@@ -412,6 +416,8 @@ class MainActivity : AppCompatActivity() {
             if (records.size > 0) {
                 bindingMain.rvRecords.visibility = View.VISIBLE
                 bindingMain.tvNoRecords.visibility = View.GONE
+                bindingMain.shimmerFrameLayout.visibility = View.GONE
+                bindingMain.shimmerFrameLayout.stopShimmerAnimation()
                 val manager = LinearLayoutManager(this)
                 bindingMain.rvRecords.layoutManager = manager
                 val policyAdapter = RecordAdapter(this, records)
@@ -419,8 +425,9 @@ class MainActivity : AppCompatActivity() {
             } else {
                 bindingMain.rvRecords.visibility = View.GONE
                 bindingMain.tvNoRecords.visibility = View.VISIBLE
+                bindingMain.shimmerFrameLayout.visibility = View.GONE
+                bindingMain.shimmerFrameLayout.stopShimmerAnimation()
             }
-
 
         }.addOnFailureListener{
             Log.e("test", "Error getting data", it)

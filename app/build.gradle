@@ -49,6 +49,7 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation 'com.larswerkman:HoloColorPicker:1.5'
     implementation 'nl.dionsegijn:konfetti:1.2.6'
+    implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'
     debugImplementation 'im.dino:dbinspector:3.4.1@aar'
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.5'
     testImplementation 'junit:junit:4.13.1'
