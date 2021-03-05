@@ -62,8 +62,60 @@ class VisualiserActivity : AppCompatActivity() {
 
         auth = Firebase.auth
         database = Firebase.database.reference
-        database.keepSynced(true)
+
+        setUpCharts()
+
+        bindingVisualiser.selectNewMonthHeader.setOnClickListener {
+
+            val filterDialog = Dialog(this, R.style.Theme_Dialog)
+            filterDialog.setCancelable(false)
+            bindingMonthYearPicker = MonthYearPickerBinding.inflate(layoutInflater)
+            val viewMonthYearPicker = bindingMonthYearPicker.root
+            filterDialog.setContentView(viewMonthYearPicker)
+            filterDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            bindingMonthYearPicker.mypYear.minValue = 1000
+            bindingMonthYearPicker.mypYear.maxValue = 2999
+            bindingMonthYearPicker.mypMonth.minValue = 1
+            bindingMonthYearPicker.mypMonth.maxValue = 12
+            bindingMonthYearPicker.mypMonth.displayedValues = Globals.monthsShortArray
+
+            bindingMonthYearPicker.mypYear.wrapSelectorWheel = true
+            bindingMonthYearPicker.mypMonth.wrapSelectorWheel = true
+            bindingMonthYearPicker.mypYear.value = yearFilter
+            bindingMonthYearPicker.mypMonth.value = monthFilter
+
+            bindingMonthYearPicker.mypMonth.setOnValueChangedListener { _, _, newVal ->
+                monthFilter = newVal
+            }
+
+            bindingMonthYearPicker.mypYear.setOnValueChangedListener { _, _, newVal ->
+                yearFilter = newVal
+            }
+
+            bindingMonthYearPicker.submitMy.setOnClickListener {
+                setUpCharts()
+                filterDialog.dismiss()
+            }
+
+            bindingMonthYearPicker.cancelMy.setOnClickListener {
+                filterDialog.dismiss()
+            }
+
+            filterDialog.show()
+
+        }
+
+        bindingVisualiser.backToRecordsFromVisualiser.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+    }
+
+    private fun setUpCharts() {
         val reference = database.ref.child("users").child(auth.currentUser!!.uid).child("records")
+        reference.keepSynced(true)
 
         val snapshotRecords = ArrayList<DataSnapshot>()
 
@@ -94,60 +146,6 @@ class VisualiserActivity : AppCompatActivity() {
         } .addOnFailureListener{
             Log.e("test", "Error getting data", it)
         }
-
-        bindingVisualiser.selectNewMonthHeader.setOnClickListener {
-
-            val filterDialog = Dialog(this, R.style.Theme_Dialog)
-            filterDialog.setCancelable(false)
-            bindingMonthYearPicker = MonthYearPickerBinding.inflate(layoutInflater)
-            val viewMonthYearPicker = bindingMonthYearPicker.root
-            filterDialog.setContentView(viewMonthYearPicker)
-            filterDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            bindingMonthYearPicker.mypYear.minValue = 1000
-            bindingMonthYearPicker.mypYear.maxValue = 2999
-            bindingMonthYearPicker.mypMonth.minValue = 1
-            bindingMonthYearPicker.mypMonth.maxValue = 12
-            bindingMonthYearPicker.mypMonth.displayedValues = Globals.monthsShortArray
-
-            bindingMonthYearPicker.mypYear.wrapSelectorWheel = true
-            bindingMonthYearPicker.mypMonth.wrapSelectorWheel = true
-            bindingMonthYearPicker.mypYear.value = yearFilter
-            bindingMonthYearPicker.mypMonth.value = monthFilter
-
-            bindingMonthYearPicker.mypMonth.setOnValueChangedListener { _, _, newVal ->
-                monthFilter = newVal
-            }
-
-            bindingMonthYearPicker.mypYear.setOnValueChangedListener { _, _, newVal ->
-                yearFilter = newVal
-            }
-
-            bindingMonthYearPicker.submitMy.setOnClickListener {
-                //setMonthHeader(monthFilter, yearFilter)
-                //setMonthlyBarHeader(yearFilter)
-                //setUpScoreNumberText(list)
-                //makeBarChartDaily(list, monthFilter, yearFilter)
-                //makePieChart(list, monthFilter, yearFilter)                // FIND WAY TO USE LIST HERE
-                //makeBarChartMonthly(list, yearFilter)
-                //setUpNoteList()
-
-                filterDialog.dismiss()
-            }
-
-            bindingMonthYearPicker.cancelMy.setOnClickListener {
-                filterDialog.dismiss()
-            }
-
-            filterDialog.show()
-
-        }
-
-        bindingVisualiser.backToRecordsFromVisualiser.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
-
     }
 
     private fun resetBarDataDaily() {

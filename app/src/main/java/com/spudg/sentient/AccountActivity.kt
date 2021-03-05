@@ -30,7 +30,6 @@ class AccountActivity : AppCompatActivity() {
         auth = Firebase.auth
 
         database = Firebase.database.reference
-        database.keepSynced(true)
 
         bindingAccount.backToRecordsFromAccount.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
@@ -49,6 +48,7 @@ class AccountActivity : AppCompatActivity() {
         bindingAccount.userEmail.text = auth.currentUser?.email
 
         val reference = database.ref.child("users").child(auth.currentUser!!.uid).child("records")
+        reference.keepSynced(true)
         reference.get().addOnSuccessListener { dataSnapshot ->
             bindingAccount.totalRecordsPosted.text = "Total records posted: " + dataSnapshot.childrenCount.toString()
         } .addOnFailureListener{

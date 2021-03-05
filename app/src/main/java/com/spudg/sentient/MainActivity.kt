@@ -46,9 +46,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
 
         auth = Firebase.auth
-
         database = Firebase.database.reference
-        database.keepSynced(true)
 
         createNotificationChannel()
 
@@ -389,6 +387,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setUpRecordList() {
         val reference = database.ref.child("users").child(auth.currentUser!!.uid).child("records")
+        reference.keepSynced(true)
 
         val snapshotRecords = ArrayList<DataSnapshot>()
 
