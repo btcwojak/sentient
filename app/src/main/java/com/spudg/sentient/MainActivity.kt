@@ -421,12 +421,17 @@ class MainActivity : AppCompatActivity() {
             if (records.size > 0) {
                 bindingMain.rvRecords.visibility = View.VISIBLE
                 bindingMain.tvNoRecords.visibility = View.GONE
+
                 bindingMain.averageScoreMonth.visibility = View.VISIBLE
                 bindingMain.averageScoreMonthText.visibility = View.VISIBLE
                 bindingMain.monthHeading.visibility = View.VISIBLE
+
                 bindingMain.recordRowShimmer.visibility = View.GONE
                 bindingMain.topSectionShimmer.visibility = View.GONE
+
                 bindingMain.recordRowShimmer.stopShimmerAnimation()
+                bindingMain.topSectionShimmer.stopShimmerAnimation()
+
                 val manager = LinearLayoutManager(this)
                 bindingMain.rvRecords.layoutManager = manager
                 val policyAdapter = RecordAdapter(this, records)
@@ -434,12 +439,17 @@ class MainActivity : AppCompatActivity() {
             } else {
                 bindingMain.rvRecords.visibility = View.GONE
                 bindingMain.tvNoRecords.visibility = View.VISIBLE
+
                 bindingMain.averageScoreMonth.visibility = View.VISIBLE
-                bindingMain.recordRowShimmer.visibility = View.GONE
-                bindingMain.monthHeading.visibility = View.VISIBLE
-                bindingMain.topSectionShimmer.visibility = View.GONE
                 bindingMain.averageScoreMonthText.visibility = View.VISIBLE
+                bindingMain.monthHeading.visibility = View.VISIBLE
+
+                bindingMain.recordRowShimmer.visibility = View.GONE
+                bindingMain.topSectionShimmer.visibility = View.GONE
+
                 bindingMain.recordRowShimmer.stopShimmerAnimation()
+                bindingMain.topSectionShimmer.stopShimmerAnimation()
+
             }
 
         }.addOnFailureListener{
