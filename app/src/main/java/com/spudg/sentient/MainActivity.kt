@@ -45,9 +45,14 @@ class MainActivity : AppCompatActivity() {
         val view = bindingMain.root
         setContentView(view)
 
-        bindingMain.shimmerFrameLayout.visibility = View.VISIBLE
-        bindingMain.shimmerFrameLayout.startShimmerAnimation()
+        bindingMain.recordRowShimmer.visibility = View.VISIBLE
+        bindingMain.topSectionShimmer.visibility = View.VISIBLE
+        bindingMain.recordRowShimmer.startShimmerAnimation()
+        bindingMain.topSectionShimmer.startShimmerAnimation()
         bindingMain.rvRecords.visibility = View.GONE
+        bindingMain.averageScoreMonth.visibility = View.GONE
+        bindingMain.monthHeading.visibility = View.GONE
+        bindingMain.averageScoreMonthText.visibility = View.GONE
 
         auth = Firebase.auth
         database = Firebase.database.reference
@@ -416,8 +421,12 @@ class MainActivity : AppCompatActivity() {
             if (records.size > 0) {
                 bindingMain.rvRecords.visibility = View.VISIBLE
                 bindingMain.tvNoRecords.visibility = View.GONE
-                bindingMain.shimmerFrameLayout.visibility = View.GONE
-                bindingMain.shimmerFrameLayout.stopShimmerAnimation()
+                bindingMain.averageScoreMonth.visibility = View.VISIBLE
+                bindingMain.averageScoreMonthText.visibility = View.VISIBLE
+                bindingMain.monthHeading.visibility = View.VISIBLE
+                bindingMain.recordRowShimmer.visibility = View.GONE
+                bindingMain.topSectionShimmer.visibility = View.GONE
+                bindingMain.recordRowShimmer.stopShimmerAnimation()
                 val manager = LinearLayoutManager(this)
                 bindingMain.rvRecords.layoutManager = manager
                 val policyAdapter = RecordAdapter(this, records)
@@ -425,8 +434,12 @@ class MainActivity : AppCompatActivity() {
             } else {
                 bindingMain.rvRecords.visibility = View.GONE
                 bindingMain.tvNoRecords.visibility = View.VISIBLE
-                bindingMain.shimmerFrameLayout.visibility = View.GONE
-                bindingMain.shimmerFrameLayout.stopShimmerAnimation()
+                bindingMain.averageScoreMonth.visibility = View.VISIBLE
+                bindingMain.recordRowShimmer.visibility = View.GONE
+                bindingMain.monthHeading.visibility = View.VISIBLE
+                bindingMain.topSectionShimmer.visibility = View.GONE
+                bindingMain.averageScoreMonthText.visibility = View.VISIBLE
+                bindingMain.recordRowShimmer.stopShimmerAnimation()
             }
 
         }.addOnFailureListener{
@@ -970,6 +983,10 @@ class MainActivity : AppCompatActivity() {
         viewNoteDialog.setContentView(view)
         viewNoteDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
+        bindingViewNote.tvNoteBody.visibility = View.GONE
+        bindingViewNote.noteShimmer.visibility = View.VISIBLE
+        bindingViewNote.noteShimmer.startShimmerAnimation()
+
         var noteBody: String
 
         val reference = database.ref.child("users").child(auth.currentUser!!.uid).child("records").child(recordId)
@@ -981,6 +998,10 @@ class MainActivity : AppCompatActivity() {
             if (noteBody.isNotEmpty()) {
                 bindingViewNote.tvNoteBody.text = noteBody
             }
+
+            bindingViewNote.tvNoteBody.visibility = View.VISIBLE
+            bindingViewNote.noteShimmer.visibility = View.GONE
+            bindingViewNote.noteShimmer.stopShimmerAnimation()
 
         } .addOnFailureListener{
             Log.e("test", "Error getting data", it)

@@ -63,6 +63,18 @@ class VisualiserActivity : AppCompatActivity() {
         auth = Firebase.auth
         database = Firebase.database.reference
 
+        bindingVisualiser.chartAverageDailyShimmer.visibility = View.VISIBLE
+        bindingVisualiser.chartSplitAveScoreShimmer.visibility = View.VISIBLE
+        bindingVisualiser.chartAverageMonthlyShimmer.visibility = View.VISIBLE
+
+        bindingVisualiser.chartAverageDaily.visibility = View.GONE
+        bindingVisualiser.chartSplitAveScore.visibility = View.GONE
+        bindingVisualiser.chartAverageMonthly.visibility = View.GONE
+
+        bindingVisualiser.chartAverageDailyShimmer.startShimmerAnimation()
+        bindingVisualiser.chartSplitAveScoreShimmer.startShimmerAnimation()
+        bindingVisualiser.chartAverageMonthlyShimmer.startShimmerAnimation()
+
         setUpCharts()
 
         bindingVisualiser.selectNewMonthHeader.setOnClickListener {
@@ -142,6 +154,18 @@ class VisualiserActivity : AppCompatActivity() {
             makePieChart(list, monthFilter, yearFilter)
             makeBarChartMonthly(list, yearFilter)
             setUpNoteList()
+
+            bindingVisualiser.chartAverageDailyShimmer.visibility = View.GONE
+            bindingVisualiser.chartSplitAveScoreShimmer.visibility = View.GONE
+            bindingVisualiser.chartAverageMonthlyShimmer.visibility = View.GONE
+
+            bindingVisualiser.chartAverageDaily.visibility = View.VISIBLE
+            bindingVisualiser.chartSplitAveScore.visibility = View.VISIBLE
+            bindingVisualiser.chartAverageMonthly.visibility = View.VISIBLE
+
+            bindingVisualiser.chartAverageDailyShimmer.stopShimmerAnimation()
+            bindingVisualiser.chartSplitAveScoreShimmer.stopShimmerAnimation()
+            bindingVisualiser.chartAverageMonthlyShimmer.stopShimmerAnimation()
 
         } .addOnFailureListener{
             Log.e("test", "Error getting data", it)
