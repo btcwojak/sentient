@@ -9,15 +9,14 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.spudg.sentient.databinding.ActivityAccountBinding
-import com.spudg.sentient.databinding.DialogChangePasswordSuccessBinding
-import com.spudg.sentient.databinding.DialogForgotPasswordBinding
-import com.spudg.sentient.databinding.DialogResentEmailVerificationBinding
+import com.spudg.sentient.databinding.*
 
 class AccountActivity : AppCompatActivity() {
 
@@ -26,7 +25,8 @@ class AccountActivity : AppCompatActivity() {
 
     private lateinit var bindingAccount: ActivityAccountBinding
     private lateinit var bindingEmailVerification: DialogResentEmailVerificationBinding
-    private lateinit var bindingChangePassword: DialogChangePasswordSuccessBinding
+    private lateinit var bindingReAuthenticate: DialogReauthenticateBinding
+    private lateinit var bindingChangeName: DialogChangeNameBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +43,7 @@ class AccountActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+
         setAccountInfo()
 
 
@@ -73,26 +74,89 @@ class AccountActivity : AppCompatActivity() {
             }
         }
 
-        bindingAccount.btnChangePassword.setOnClickListener {
-            auth.sendPasswordResetEmail(auth.currentUser!!.email.toString()).addOnSuccessListener {
-                bindingAccount.btnChangePassword.setOnClickListener {
-                    val changePasswordSuccessDialog = Dialog(this, R.style.Theme_Dialog)
-                    changePasswordSuccessDialog.setCancelable(false)
-                    bindingChangePassword = DialogChangePasswordSuccessBinding.inflate(layoutInflater)
-                    val view = bindingChangePassword.root
-                    changePasswordSuccessDialog.setContentView(view)
-                    changePasswordSuccessDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                    bindingChangePassword.tvDoneTU.setOnClickListener {
-                        changePasswordSuccessDialog.dismiss()
-                    }
-                    changePasswordSuccessDialog.show()
+        bindingAccount.btnChangeName.setOnClickListener {
+            val changeNameDialog = Dialog(this, R.style.Theme_Dialog)
+            changeNameDialog.setCancelable(false)
+            bindingChangeName = DialogChangeNameBinding.inflate(layoutInflater)
+            val view = bindingChangeName.root
+            changeNameDialog.setContentView(view)
+            changeNameDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            bindingChangeName.tvChangeNameSubmit.setOnClickListener {
+                if (bindingChangeName.etNewName.text.toString().isNotEmpty()) {
+                    val profileUpdates = UserProfileChangeRequest.Builder().setDisplayName(bindingChangeName.etNewName.text.toString()).build()
+                    auth.currentUser!!.updateProfile(profileUpdates)
+                    Toast.makeText(this, "All done - reload this page for your name to update.", Toast.LENGTH_SHORT).show()
+                    changeNameDialog.dismiss()
+                } else {
+                    Toast.makeText(this, "Your new name can't be blank.", Toast.LENGTH_SHORT).show()
                 }
-            } .addOnFailureListener {
-                Toast.makeText(this, "Sorry, an error has occurred.", Toast.LENGTH_SHORT).show()
+
             }
+            bindingChangeName.tvCancelChangeName.setOnClickListener {
+                changeNameDialog.dismiss()
+            }
+            changeNameDialog.show()
         }
 
-        bindingAccount.userEmail.text = auth.currentUser?.email
+        bindingAccount.btnChangeEmail.setOnClickListener {
+            val reAuthenticateDialog = Dialog(this, R.style.Theme_Dialog)
+            reAuthenticateDialog.setCancelable(false)
+            bindingReAuthenticate = DialogReauthenticateBinding.inflate(layoutInflater)
+            val view = bindingReAuthenticate.root
+            reAuthenticateDialog.setContentView(view)
+            reAuthenticateDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+            bindingReAuthenticate.tvSubmit.setOnClickListener {
+                val user = Firebase.auth.currentUser!!
+                val credential = EmailAuthProvider
+                        .getCredential(bindingReAuthenticate.etEmail.text.toString(), bindingReAuthenticate.etPassword.text.toString())
+                user.reauthenticate(credential)
+                        .addOnSuccessListener {
+                            Log.e("re-auth", "User re-authenticated.")
+
+                            }
+
+                        .addOnFailureListener {
+                            Log.e("re-auth", "User not re-authenticated.")}
+            }
+
+            bindingReAuthenticate.tvCancel.setOnClickListener {
+                reAuthenticateDialog.dismiss()
+            }
+
+            reAuthenticateDialog.show()
+        }
+
+        bindingAccount.btnChangePassword.setOnClickListener {
+            val reAuthenticateDialog = Dialog(this, R.style.Theme_Dialog)
+            reAuthenticateDialog.setCancelable(false)
+            bindingReAuthenticate = DialogReauthenticateBinding.inflate(layoutInflater)
+            val view = bindingReAuthenticate.root
+            reAuthenticateDialog.setContentView(view)
+            reAuthenticateDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+            bindingReAuthenticate.tvSubmit.setOnClickListener {
+                val user = Firebase.auth.currentUser!!
+                val credential = EmailAuthProvider
+                        .getCredential(bindingReAuthenticate.etEmail.text.toString(), bindingReAuthenticate.etPassword.text.toString())
+                user.reauthenticate(credential)
+                        .addOnSuccessListener {
+                            Log.e("re-auth", "User re-authenticated.")
+
+                        }
+
+                        .addOnFailureListener {
+                            Log.e("re-auth", "User not re-authenticated.")}
+            }
+
+            bindingReAuthenticate.tvCancel.setOnClickListener {
+                reAuthenticateDialog.dismiss()
+            }
+
+            reAuthenticateDialog.show()
+        }
+
+        bindingAccount.userEmail.text = "Email: ${auth.currentUser?.email}"
 
         val reference = database.ref.child("users").child(auth.currentUser!!.uid).child("records")
         reference.keepSynced(true)

@@ -20,12 +20,12 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="5dp"
             android:fontFamily="@font/open_sans_light"
-            android:text="@string/forgot_password"
+            android:text="Please re-sign in"
             android:textColor="@android:color/black"
             android:textSize="24sp" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/etLayoutForgotPassword"
+            android:id="@+id/etLayoutEmail"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -34,12 +34,34 @@
             android:layout_marginEnd="10dp">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etForgotPassword"
+                android:id="@+id/etEmail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fontFamily="@font/open_sans_light"
                 android:hint="Email"
+                android:maxLines="1"
                 android:inputType="textEmailAddress" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/etLayoutPassword"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="10dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etPassword"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/open_sans_light"
+                android:hint="Password"
+                android:maxLines="1"
+                android:maxLength="16"
+                android:inputType="textPassword" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -51,18 +73,18 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/tvSendResetEmail"
+                android:id="@+id/tvSubmit"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:fontFamily="@font/open_sans_light"
                 android:foreground="?attr/selectableItemBackground"
                 android:gravity="center"
                 android:padding="10dp"
-                android:text="Send reset email"
+                android:text="Sign in"
                 android:textColor="@color/colorAccent" />
 
             <TextView
-                android:id="@+id/tvCancelResetPassword"
+                android:id="@+id/tvCancel"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:fontFamily="@font/open_sans_light"

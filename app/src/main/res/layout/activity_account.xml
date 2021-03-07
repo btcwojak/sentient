@@ -87,11 +87,22 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="start"
+                        android:layout_marginBottom="20dp"
                         android:fontFamily="@font/open_sans_light"
                         android:padding="6dp"
-                        android:text="Username"
+                        android:text="Hi, Test User"
                         android:textColor="@android:color/black"
                         android:textSize="24sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:fontFamily="@font/open_sans_light"
+                        android:padding="6dp"
+                        android:text="Account details"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/userEmail"
@@ -102,7 +113,7 @@
                         android:padding="6dp"
                         android:text="Email: example@test.com"
                         android:textColor="@android:color/black"
-                        android:textSize="20sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/emailVerified"
@@ -110,7 +121,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="start"
                         android:fontFamily="@font/open_sans_light"
-                        android:paddingStart="10dp"
+                        android:paddingStart="20dp"
+                        android:padding="5dp"
                         android:paddingEnd="10dp"
                         android:text="Email not verified"
                         android:textColor="@android:color/black"
@@ -120,8 +132,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="start"
+                        android:padding="5dp"
                         android:fontFamily="@font/open_sans_light"
-                        android:paddingStart="10dp"
+                        android:paddingStart="20dp"
                         android:paddingEnd="10dp"
                         android:foreground="?attr/selectableItemBackground"
                         android:text="Re-send verification email"
@@ -143,16 +156,57 @@
                         android:textSize="16sp" />
 
                     <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_marginTop="80dp"
+                        android:fontFamily="@font/open_sans_light"
+                        android:padding="6dp"
+                        android:text="Edit account"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/btnChangeName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:fontFamily="@font/open_sans_light"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:padding="5dp"
+                        android:text="Change name"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/btnChangeEmail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:fontFamily="@font/open_sans_light"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:text="Change email"
+                        android:padding="5dp"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="16sp" />
+
+
+                    <TextView
                         android:id="@+id/btnChangePassword"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="start"
-                        android:layout_marginTop="20dp"
                         android:foreground="?attr/selectableItemBackground"
                         android:fontFamily="@font/open_sans_light"
                         android:paddingStart="10dp"
                         android:paddingEnd="10dp"
                         android:text="Change password"
+                        android:padding="5dp"
+                        android:layout_marginBottom="30dp"
                         android:textColor="@color/colorAccent"
                         android:textSize="16sp" />
 
