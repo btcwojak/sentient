@@ -26,7 +26,8 @@
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/back_btn_padding"
-            android:foreground="?attr/selectableItemBackground" />
+            android:foreground="?attr/selectableItemBackground"
+            android:contentDescription="@string/back" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -45,7 +46,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="30dp"
                 android:fontFamily="@font/open_sans_light"
-                android:text="Sign in to"
+                android:text="@string/sign_in_to"
                 android:textColor="#000000"
                 android:textSize="20sp" />
 
@@ -61,7 +62,7 @@
                     android:layout_height="60dp"
                     android:layout_gravity="center"
                     android:background="@drawable/logo_landing"
-                    android:contentDescription="Sentient logo" />
+                    android:contentDescription="@string/sentient_logo" />
 
                 <TextView
                     android:id="@+id/title"
@@ -71,7 +72,7 @@
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="30dp"
                     android:fontFamily="@font/open_sans_light"
-                    android:text="Sentient"
+                    android:text="@string/sentient"
                     android:textColor="#000000"
                     android:textSize="28sp" />
 
@@ -88,7 +89,8 @@
         android:background="@drawable/record_row_line"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/divider" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -106,7 +108,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
                 android:fontFamily="@font/open_sans_light"
-                android:text="Email" />
+                android:text="@string/email" />
 
             <EditText
                 android:id="@+id/email"
@@ -126,7 +128,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
                 android:fontFamily="@font/open_sans_light"
-                android:text="Password" />
+                android:text="@string/password" />
 
             <EditText
                 android:id="@+id/password"
@@ -155,7 +157,7 @@
                 android:foreground="?attr/selectableItemBackground"
                 android:gravity="center"
                 android:padding="15dp"
-                android:text="Sign in"
+                android:text="@string/sign_in"
                 android:textColor="#000000" />
 
         </LinearLayout>

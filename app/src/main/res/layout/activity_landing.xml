@@ -30,16 +30,16 @@
                 android:layout_height="80dp"
                 android:layout_gravity="center"
                 android:background="@drawable/logo_landing"
-                android:contentDescription="Sentient logo" />
+                android:contentDescription="@string/sentient_logo" />
 
             <TextView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
                 android:fontFamily="@font/open_sans_light"
-                android:text="Sentient"
+                android:text="@string/sentient"
                 android:textColor="#000000"
                 android:textSize="35sp" />
 
@@ -52,7 +52,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
             android:fontFamily="@font/open_sans_light"
-            android:text="Mood Tracker &amp; Visualiser"
+            android:text="@string/mood_tracker_amp_visualiser"
             android:textColor="#000000"
             android:textSize="20sp" />
 
@@ -70,7 +70,8 @@
             android:background="@drawable/record_row_line"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/divider" />
 
         <TextView
             android:id="@+id/btnSignIn"
@@ -84,7 +85,7 @@
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
             android:padding="15dp"
-            android:text="Sign in"
+            android:text="@string/sign_in"
             android:textColor="#000000"
             app:layout_constraintBottom_toTopOf="@id/btnGoogleSignin"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -111,7 +112,8 @@
             app:layout_constraintBottom_toTopOf="@id/btnSignUp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btnGoogleSignin" />
+            app:layout_constraintTop_toBottomOf="@id/btnGoogleSignin"
+            android:contentDescription="@string/divider" />
 
         <TextView
             android:id="@+id/btnSignUp"
@@ -125,7 +127,7 @@
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
             android:padding="15dp"
-            android:text="Sign up"
+            android:text="@string/sign_up"
             android:textColor="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"

@@ -75,4 +75,16 @@
     <string name="logout">Logout</string>
     <string name="account">Account</string>
     <string name="no_scores_posted_yet_this_month">No scores posted yet this month.</string>
+    <string name="back">Back</string>
+    <string name="sign_up_to">Sign up to</string>
+    <string name="sentient_logo">Sentient logo</string>
+    <string name="divider">Divider</string>
+    <string name="username">Username</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="sign_up">Sign up</string>
+    <string name="sign_in_to">Sign in to</string>
+    <string name="sign_in">Sign in</string>
+    <string name="mood_tracker_amp_visualiser"><![CDATA[Mood Tracker & Visualiser]]></string>
 </resources>
