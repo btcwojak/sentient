@@ -87,4 +87,5 @@
     <string name="sign_in_to">Sign in to</string>
     <string name="sign_in">Sign in</string>
     <string name="mood_tracker_amp_visualiser"><![CDATA[Mood Tracker & Visualiser]]></string>
+    <string name="forgot_password">Forgot password?</string>
 </resources>

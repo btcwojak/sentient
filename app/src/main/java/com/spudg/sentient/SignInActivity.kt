@@ -1,6 +1,9 @@
 package com.spudg.sentient
 
+import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -9,10 +12,13 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.spudg.sentient.databinding.ActivitySignInBinding
+import com.spudg.sentient.databinding.DialogForgotPasswordBinding
+import com.spudg.sentient.databinding.DialogReminderBinding
 
 class SignInActivity : AppCompatActivity() {
 
     private lateinit var signInBinding: ActivitySignInBinding
+    private lateinit var forgotPasswordBinding: DialogForgotPasswordBinding
 
     private lateinit var auth: FirebaseAuth
 
@@ -23,6 +29,10 @@ class SignInActivity : AppCompatActivity() {
         setContentView(view)
 
         auth = Firebase.auth
+
+        signInBinding.btnForgotPassword.setOnClickListener {
+            forgotPassword()
+        }
 
         signInBinding.btnBack.setOnClickListener {
             val intent = Intent(this, LandingActivity::class.java)
@@ -39,6 +49,32 @@ class SignInActivity : AppCompatActivity() {
 
         }
 
+    }
+
+    private fun forgotPassword() {
+        val forgotPasswordDialog = Dialog(this, R.style.Theme_Dialog)
+        forgotPasswordDialog.setCancelable(false)
+        forgotPasswordBinding = DialogForgotPasswordBinding.inflate(layoutInflater)
+        val view = forgotPasswordBinding.root
+        forgotPasswordDialog.setContentView(view)
+        forgotPasswordDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        forgotPasswordBinding.tvSendResetEmail.setOnClickListener {
+            val email = forgotPasswordBinding.etForgotPassword.text.toString()
+
+            auth.sendPasswordResetEmail(email).addOnSuccessListener {
+                Toast.makeText(this, "An email has been sent to reset your password.", Toast.LENGTH_SHORT).show()
+                forgotPasswordDialog.dismiss()
+            } .addOnFailureListener {
+                Toast.makeText(this, "That email is not recognised. Try signing up for a new account.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        forgotPasswordBinding.tvCancelResetPassword.setOnClickListener {
+            forgotPasswordDialog.dismiss()
+        }
+
+        forgotPasswordDialog.show()
     }
 
     private fun submitLogInInfo(email: String, password: String) {

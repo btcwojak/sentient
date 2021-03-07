@@ -50,6 +50,7 @@ class SignUpActivity : AppCompatActivity() {
     private fun submitSignUpInfo(email: String, password: String, name: String) {
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
+                    auth.currentUser!!.sendEmailVerification()
                     val profileUpdates = UserProfileChangeRequest.Builder().setDisplayName(signUpBinding.name.text.toString()).build()
                     auth.currentUser!!.updateProfile(profileUpdates)
                     if (task.isSuccessful) {

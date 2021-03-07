@@ -3,6 +3,8 @@ package com.spudg.sentient
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -40,8 +42,28 @@ class AccountActivity : AppCompatActivity() {
     }
 
     private fun setAccountInfo() {
-        bindingAccount.userName.text = auth.currentUser?.displayName
-        bindingAccount.emailVerified.text = "Email verified?" + auth.currentUser?.isEmailVerified.toString()
+        bindingAccount.userName.text = "Hi, " + auth.currentUser?.displayName
+
+        if (auth.currentUser!!.isEmailVerified) {
+            bindingAccount.emailVerified.text = "Email is verified."
+            bindingAccount.btnSendEmailVerification.visibility = View.GONE
+        } else {
+            bindingAccount.emailVerified.text = "Email not verified."
+            bindingAccount.btnSendEmailVerification.visibility = View.VISIBLE
+            bindingAccount.btnSendEmailVerification.setOnClickListener {
+                auth.currentUser!!.sendEmailVerification()
+                Toast.makeText(this, "Verification email sent", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        bindingAccount.btnChangePassword.setOnClickListener {
+            auth.sendPasswordResetEmail(auth.currentUser!!.email.toString()).addOnSuccessListener {
+                Toast.makeText(this, "An email has been sent to reset your password.", Toast.LENGTH_SHORT).show()
+            } .addOnFailureListener {
+                Toast.makeText(this, "Sorry, an error has occurred.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         bindingAccount.userEmail.text = auth.currentUser?.email
 
         val reference = database.ref.child("users").child(auth.currentUser!!.uid).child("records")
