@@ -1,6 +1,9 @@
 package com.spudg.sentient
 
+import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -12,6 +15,9 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.spudg.sentient.databinding.ActivityAccountBinding
+import com.spudg.sentient.databinding.DialogChangePasswordSuccessBinding
+import com.spudg.sentient.databinding.DialogForgotPasswordBinding
+import com.spudg.sentient.databinding.DialogResentEmailVerificationBinding
 
 class AccountActivity : AppCompatActivity() {
 
@@ -19,6 +25,8 @@ class AccountActivity : AppCompatActivity() {
     private lateinit var database: DatabaseReference
 
     private lateinit var bindingAccount: ActivityAccountBinding
+    private lateinit var bindingEmailVerification: DialogResentEmailVerificationBinding
+    private lateinit var bindingChangePassword: DialogChangePasswordSuccessBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +43,6 @@ class AccountActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-
         setAccountInfo()
 
 
@@ -43,7 +50,6 @@ class AccountActivity : AppCompatActivity() {
 
     private fun setAccountInfo() {
         bindingAccount.userName.text = "Hi, " + auth.currentUser?.displayName
-
         if (auth.currentUser!!.isEmailVerified) {
             bindingAccount.emailVerified.text = "Email is verified."
             bindingAccount.btnSendEmailVerification.visibility = View.GONE
@@ -51,14 +57,36 @@ class AccountActivity : AppCompatActivity() {
             bindingAccount.emailVerified.text = "Email not verified."
             bindingAccount.btnSendEmailVerification.visibility = View.VISIBLE
             bindingAccount.btnSendEmailVerification.setOnClickListener {
+
                 auth.currentUser!!.sendEmailVerification()
-                Toast.makeText(this, "Verification email sent", Toast.LENGTH_SHORT).show()
+
+                val resentEmailVerificationDialog = Dialog(this, R.style.Theme_Dialog)
+                resentEmailVerificationDialog.setCancelable(false)
+                bindingEmailVerification = DialogResentEmailVerificationBinding.inflate(layoutInflater)
+                val view = bindingEmailVerification.root
+                resentEmailVerificationDialog.setContentView(view)
+                resentEmailVerificationDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                bindingEmailVerification.tvDoneTU.setOnClickListener {
+                    resentEmailVerificationDialog.dismiss()
+                }
+                resentEmailVerificationDialog.show()
             }
         }
 
         bindingAccount.btnChangePassword.setOnClickListener {
             auth.sendPasswordResetEmail(auth.currentUser!!.email.toString()).addOnSuccessListener {
-                Toast.makeText(this, "An email has been sent to reset your password.", Toast.LENGTH_SHORT).show()
+                bindingAccount.btnChangePassword.setOnClickListener {
+                    val changePasswordSuccessDialog = Dialog(this, R.style.Theme_Dialog)
+                    changePasswordSuccessDialog.setCancelable(false)
+                    bindingChangePassword = DialogChangePasswordSuccessBinding.inflate(layoutInflater)
+                    val view = bindingChangePassword.root
+                    changePasswordSuccessDialog.setContentView(view)
+                    changePasswordSuccessDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                    bindingChangePassword.tvDoneTU.setOnClickListener {
+                        changePasswordSuccessDialog.dismiss()
+                    }
+                    changePasswordSuccessDialog.show()
+                }
             } .addOnFailureListener {
                 Toast.makeText(this, "Sorry, an error has occurred.", Toast.LENGTH_SHORT).show()
             }
