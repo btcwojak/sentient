@@ -22,7 +22,6 @@
     <string name="change">change</string>
     <string name="right_bracket">)</string>
     <string name="average_daily_scores">Average daily scores</string>
-    <string name="_57_scores_posted_this_month">57 scores posted this month</string>
     <string name="split_of_average_scores">Split of average scores</string>
     <string name="notes_from_this_month">Notes from this month</string>
     <string name="no_notes_posted_yet_this_month">No notes posted yet this month</string>
@@ -75,4 +74,5 @@
     <string name="licensed_under_the_isc_license">Licensed under the ISC License</string>
     <string name="logout">Logout</string>
     <string name="account">Account</string>
+    <string name="no_scores_posted_yet_this_month">No scores posted yet this month.</string>
 </resources>

@@ -33,27 +33,27 @@ class SignUpActivity : AppCompatActivity() {
         }
 
         signUpBinding.btnSignUp.setOnClickListener {
-            if (signUpBinding.email.text.toString().isNotEmpty() && signUpBinding.password.text.toString().isNotEmpty()) {
+            if (signUpBinding.email.text.toString().isNotEmpty() && signUpBinding.password.text.toString().isNotEmpty() && signUpBinding.name.text.toString().isNotEmpty()) {
                 if (signUpBinding.password.text.toString() == signUpBinding.passwordConfirm.text.toString()) {
-                    submitSignUpInfo(signUpBinding.email.text.toString(), signUpBinding.password.text.toString())
+                    submitSignUpInfo(signUpBinding.email.text.toString(), signUpBinding.password.text.toString(), signUpBinding.name.text.toString())
                 } else {
                     Toast.makeText(this, "Passwords don't match", Toast.LENGTH_SHORT).show()
                 }
             } else {
-                Toast.makeText(this, "Email or password can't be blank", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Name, email or password can't be blank", Toast.LENGTH_SHORT).show()
             }
 
         }
 
     }
 
-    private fun submitSignUpInfo(email: String, password: String) {
+    private fun submitSignUpInfo(email: String, password: String, name: String) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
+                val profileUpdates = UserProfileChangeRequest.Builder().setDisplayName(signUpBinding.name.text.toString()).build()
+                auth.currentUser!!.updateProfile(profileUpdates)
                 if (task.isSuccessful) {
                     Log.d("SignUp", "createUserWithEmail:success")
-                    //val user = auth.currentUser
-                    //updateUI(user)
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                 } else {
@@ -62,7 +62,6 @@ class SignUpActivity : AppCompatActivity() {
                             baseContext, "Authentication failed.",
                             Toast.LENGTH_SHORT
                     ).show()
-                    //updateUI(null)
                 }
             }
 
