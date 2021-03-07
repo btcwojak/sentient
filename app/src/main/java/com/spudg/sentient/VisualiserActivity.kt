@@ -167,7 +167,7 @@ class VisualiserActivity : AppCompatActivity() {
             bindingVisualiser.chartSplitAveScoreShimmer.stopShimmerAnimation()
             bindingVisualiser.chartAverageMonthlyShimmer.stopShimmerAnimation()
 
-        } .addOnFailureListener{
+        }.addOnFailureListener {
             Log.e("test", "Error getting data", it)
         }
     }
@@ -572,12 +572,12 @@ class VisualiserActivity : AppCompatActivity() {
 
     private fun setMonthHeader(month: Int, year: Int) {
         bindingVisualiser.monthSelectedHeader.text =
-            getString(R.string.month_year, Globals.monthsShortArray[month - 1], year.toString())
+                getString(R.string.month_year, Globals.monthsShortArray[month - 1], year.toString())
     }
 
     private fun setMonthlyBarHeader(year: Int) {
         bindingVisualiser.averageMonthlyScoresHeading.text =
-            getString(R.string.average_monthly_scores_visualiser_heading, year.toString())
+                getString(R.string.average_monthly_scores_visualiser_heading, year.toString())
     }
 
     private fun makeBarChartMonthly(list: ArrayList<RecordModel>, yearFilter: Int) {
@@ -589,14 +589,14 @@ class VisualiserActivity : AppCompatActivity() {
         var numberOfRatings = 0
         var runningTotal = 0
 
-        repeat (12) {
+        repeat(12) {
             numberOfRatings = 0
             runningTotal = 0
             for (record in list) {
                 cal.timeInMillis = record.time.toLong()
                 val recordMonth = cal.get(Calendar.MONTH) + 1
                 val recordYear = cal.get(Calendar.YEAR)
-                if (recordYear == yearFilter && recordMonth == (it+1)) {
+                if (recordYear == yearFilter && recordMonth == (it + 1)) {
                     numberOfRatings += 1
                     runningTotal += record.score
                 }

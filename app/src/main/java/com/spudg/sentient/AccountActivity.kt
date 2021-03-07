@@ -1,18 +1,15 @@
 package com.spudg.sentient
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.spudg.sentient.databinding.ActivityAccountBinding
-import com.spudg.sentient.databinding.ActivityMainBinding
-import com.spudg.sentient.databinding.ActivityVisualiserBinding
 
 class AccountActivity : AppCompatActivity() {
 
@@ -51,7 +48,7 @@ class AccountActivity : AppCompatActivity() {
         reference.keepSynced(true)
         reference.get().addOnSuccessListener { dataSnapshot ->
             bindingAccount.totalRecordsPosted.text = "Total records posted: " + dataSnapshot.childrenCount.toString()
-        } .addOnFailureListener{
+        }.addOnFailureListener {
             Log.e("test", "Error getting data", it)
         }
 

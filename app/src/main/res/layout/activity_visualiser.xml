@@ -196,12 +196,12 @@
 
                 <com.facebook.shimmer.ShimmerFrameLayout
                     android:id="@+id/chartAverageDailyShimmer"
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
                     android:layout_gravity="center"
-                    android:orientation="vertical">
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -241,12 +241,12 @@
 
                 <com.facebook.shimmer.ShimmerFrameLayout
                     android:id="@+id/chartSplitAveScoreShimmer"
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
                     android:layout_gravity="center"
-                    android:orientation="vertical">
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -331,13 +331,13 @@
 
                 <com.facebook.shimmer.ShimmerFrameLayout
                     android:id="@+id/chartAverageMonthlyShimmer"
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="20dp"
-                    android:layout_gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:layout_width="match_parent"

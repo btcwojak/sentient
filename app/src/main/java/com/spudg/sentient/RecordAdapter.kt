@@ -1,33 +1,28 @@
 package com.spudg.sentient
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 import com.spudg.sentient.databinding.RecordRowBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
 class RecordAdapter(private val context: Context, private val items: ArrayList<RecordModel>) :
-    RecyclerView.Adapter<RecordAdapter.RecordViewHolder>() {
+        RecyclerView.Adapter<RecordAdapter.RecordViewHolder>() {
 
     private lateinit var database: DatabaseReference
     private lateinit var auth: FirebaseAuth
 
     inner class RecordViewHolder(val binding: RecordRowBinding) :
-        RecyclerView.ViewHolder(binding.root)
+            RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecordViewHolder {
         val binding = RecordRowBinding
-            .inflate(LayoutInflater.from(parent.context), parent, false)
+                .inflate(LayoutInflater.from(parent.context), parent, false)
         return RecordViewHolder(binding)
     }
 

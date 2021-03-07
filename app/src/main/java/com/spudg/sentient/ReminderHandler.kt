@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import java.util.*
 
 class ReminderHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) :
-    SQLiteOpenHelper(context, DATABASE_NAME, factory, DATABASE_VERSION) {
+        SQLiteOpenHelper(context, DATABASE_NAME, factory, DATABASE_VERSION) {
 
     companion object {
         private const val DATABASE_VERSION = 1
@@ -20,7 +20,7 @@ class ReminderHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) 
 
     override fun onCreate(db: SQLiteDatabase?) {
         val createAccountsTable =
-            ("CREATE TABLE $TABLE_REMINDER_TIME($KEY_ID INTEGER PRIMARY KEY,$KEY_TIME_MS TEXT)")
+                ("CREATE TABLE $TABLE_REMINDER_TIME($KEY_ID INTEGER PRIMARY KEY,$KEY_TIME_MS TEXT)")
         db?.execSQL(createAccountsTable)
     }
 
@@ -61,8 +61,8 @@ class ReminderHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) 
     fun getReminderTime(): String {
         val db = this.writableDatabase
         val cursor = db.rawQuery(
-            "SELECT * FROM $TABLE_REMINDER_TIME",
-            null
+                "SELECT * FROM $TABLE_REMINDER_TIME",
+                null
         )
         var date = ""
 
@@ -81,8 +81,8 @@ class ReminderHandler(context: Context, factory: SQLiteDatabase.CursorFactory?) 
     fun timeExists(): Boolean {
         val db = this.writableDatabase
         val cursor = db.rawQuery(
-            "SELECT * FROM $TABLE_REMINDER_TIME",
-            null
+                "SELECT * FROM $TABLE_REMINDER_TIME",
+                null
         )
 
         val exists = cursor.moveToFirst()

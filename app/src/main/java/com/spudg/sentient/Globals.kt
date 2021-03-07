@@ -1,9 +1,5 @@
 package com.spudg.sentient
 
-import com.google.firebase.database.FirebaseDatabase
-
-
-
 
 class Globals {
 

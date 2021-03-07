@@ -78,9 +78,9 @@
         android:gravity="center_horizontal"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        tools:text="@string/january_2021"
         android:textColor="@android:color/black"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        tools:text="@string/january_2021" />
 
     <TextView
         android:id="@+id/averageScoreMonth"
@@ -95,12 +95,12 @@
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/topSectionShimmer"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:layout_gravity="center"
-        android:orientation="vertical">
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -166,12 +166,12 @@
 
             <com.facebook.shimmer.ShimmerFrameLayout
                 android:id="@+id/recordRowShimmer"
-                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
                 android:layout_gravity="center"
-                android:orientation="vertical">
+                android:layout_marginTop="20dp"
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"

@@ -49,21 +49,21 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun submitSignUpInfo(email: String, password: String, name: String) {
         auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                val profileUpdates = UserProfileChangeRequest.Builder().setDisplayName(signUpBinding.name.text.toString()).build()
-                auth.currentUser!!.updateProfile(profileUpdates)
-                if (task.isSuccessful) {
-                    Log.d("SignUp", "createUserWithEmail:success")
-                    val intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
-                } else {
-                    Log.w("SignUp", "createUserWithEmail:failure", task.exception)
-                    Toast.makeText(
-                            baseContext, "Authentication failed.",
-                            Toast.LENGTH_SHORT
-                    ).show()
+                .addOnCompleteListener(this) { task ->
+                    val profileUpdates = UserProfileChangeRequest.Builder().setDisplayName(signUpBinding.name.text.toString()).build()
+                    auth.currentUser!!.updateProfile(profileUpdates)
+                    if (task.isSuccessful) {
+                        Log.d("SignUp", "createUserWithEmail:success")
+                        val intent = Intent(this, MainActivity::class.java)
+                        startActivity(intent)
+                    } else {
+                        Log.w("SignUp", "createUserWithEmail:failure", task.exception)
+                        Toast.makeText(
+                                baseContext, "Authentication failed.",
+                                Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
-            }
 
     }
 

@@ -14,7 +14,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.spudg.sentient.databinding.*
@@ -155,7 +156,7 @@ class MainActivity : AppCompatActivity() {
                     val alarmIntent = Intent(applicationContext, RecordReminder::class.java)
                     val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
                     val displayIntent =
-                        PendingIntent.getBroadcast(applicationContext, 1, alarmIntent, 0)
+                            PendingIntent.getBroadcast(applicationContext, 1, alarmIntent, 0)
                     alarmManager.cancel(displayIntent)
 
                     alarmManager.setRepeating(
@@ -180,7 +181,7 @@ class MainActivity : AppCompatActivity() {
                 val alarmIntent = Intent(applicationContext, RecordReminder::class.java)
                 val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
                 val displayIntent =
-                    PendingIntent.getBroadcast(applicationContext, 1, alarmIntent, 0)
+                        PendingIntent.getBroadcast(applicationContext, 1, alarmIntent, 0)
                 alarmManager.cancel(displayIntent)
 
                 db.removeReminder()
@@ -232,7 +233,7 @@ class MainActivity : AppCompatActivity() {
                     val alarmIntent = Intent(applicationContext, RecordReminder::class.java)
                     val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
                     val displayIntent =
-                        PendingIntent.getBroadcast(applicationContext, 1, alarmIntent, 0)
+                            PendingIntent.getBroadcast(applicationContext, 1, alarmIntent, 0)
                     alarmManager.cancel(displayIntent)
 
                     alarmManager.setRepeating(
@@ -257,7 +258,7 @@ class MainActivity : AppCompatActivity() {
                 val alarmIntent = Intent(applicationContext, RecordReminder::class.java)
                 val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
                 val displayIntent =
-                    PendingIntent.getBroadcast(applicationContext, 1, alarmIntent, 0)
+                        PendingIntent.getBroadcast(applicationContext, 1, alarmIntent, 0)
                 alarmManager.cancel(displayIntent)
 
                 db.removeReminder()
@@ -297,7 +298,7 @@ class MainActivity : AppCompatActivity() {
 
             val name = "Daily Record Reminder"
             val description =
-                "Channel to remind users to post a record for the day"
+                    "Channel to remind users to post a record for the day"
             val importance = NotificationManager.IMPORTANCE_DEFAULT
             val channel = NotificationChannel("recordReminder", name, importance)
             channel.description = description
@@ -347,11 +348,11 @@ class MainActivity : AppCompatActivity() {
             for (record in allRecords) {
 
                 cal.timeInMillis = record.time.toLong()
-               val recordMonth = cal.get(Calendar.MONTH) + 1
+                val recordMonth = cal.get(Calendar.MONTH) + 1
                 val recordYear = cal.get(Calendar.YEAR)
                 val recordDate = recordMonth.toString() + recordYear.toString()
 
-               if (recordDate == currentDate) {
+                if (recordDate == currentDate) {
                     numberOfRatings += 1
                     runningTotal += record.score
                 }
@@ -386,8 +387,7 @@ class MainActivity : AppCompatActivity() {
             }
 
 
-
-        } .addOnFailureListener{
+        }.addOnFailureListener {
             Log.e("test", "Error getting data", it)
         }
 
@@ -452,7 +452,7 @@ class MainActivity : AppCompatActivity() {
 
             }
 
-        }.addOnFailureListener{
+        }.addOnFailureListener {
             Log.e("test", "Error getting data", it)
         }
 
@@ -471,12 +471,12 @@ class MainActivity : AppCompatActivity() {
         var yearPicked = Calendar.getInstance()[Calendar.YEAR]
 
         bindingAddRecord.dateRecordPost.text =
-            getString(
-                    R.string.day_month_year,
-                    dayPicked.toString(),
-                    Globals.getShortMonth(monthPicked),
-                    yearPicked.toString()
-            )
+                getString(
+                        R.string.day_month_year,
+                        dayPicked.toString(),
+                        Globals.getShortMonth(monthPicked),
+                        yearPicked.toString()
+                )
 
         bindingAddRecord.dateRecordPost.setOnClickListener {
             val changeDateDialog = Dialog(this, R.style.Theme_Dialog)
@@ -545,12 +545,12 @@ class MainActivity : AppCompatActivity() {
 
             bindingDMYP.submitDmy.setOnClickListener {
                 bindingAddRecord.dateRecordPost.text =
-                    getString(
-                            R.string.day_month_year,
-                            dayPicked.toString(),
-                            Globals.getShortMonth(monthPicked),
-                            yearPicked.toString()
-                    )
+                        getString(
+                                R.string.day_month_year,
+                                dayPicked.toString(),
+                                Globals.getShortMonth(monthPicked),
+                                yearPicked.toString()
+                        )
                 changeDateDialog.dismiss()
             }
 
@@ -566,11 +566,11 @@ class MainActivity : AppCompatActivity() {
         var minutePicked = Calendar.getInstance()[Calendar.MINUTE]
 
         bindingAddRecord.timeRecordPost.text =
-            getString(
-                    R.string.hour_minute,
-                    String.format("%02d", hourPicked),
-                    String.format("%02d", minutePicked)
-            )
+                getString(
+                        R.string.hour_minute,
+                        String.format("%02d", hourPicked),
+                        String.format("%02d", minutePicked)
+                )
 
         bindingAddRecord.timeRecordPost.setOnClickListener {
             val changeTimeDialog = Dialog(this, R.style.Theme_Dialog)
@@ -601,11 +601,11 @@ class MainActivity : AppCompatActivity() {
 
             bindingHMP.submitHm.setOnClickListener {
                 bindingAddRecord.timeRecordPost.text =
-                    getString(
-                            R.string.hour_minute,
-                            String.format("%02d", hourPicked),
-                            String.format("%02d", minutePicked)
-                    )
+                        getString(
+                                R.string.hour_minute,
+                                String.format("%02d", hourPicked),
+                                String.format("%02d", minutePicked)
+                        )
                 changeTimeDialog.dismiss()
             }
 
@@ -618,7 +618,7 @@ class MainActivity : AppCompatActivity() {
 
         bindingAddRecord.scoreSliderPost.value = 50F
         bindingAddRecord.currentScorePost.text =
-            bindingAddRecord.scoreSliderPost.value.roundToInt().toString()
+                bindingAddRecord.scoreSliderPost.value.roundToInt().toString()
         bindingAddRecord.currentScorePost.setTextColor(-16728577)
 
         bindingAddRecord.scoreSliderPost.addOnChangeListener { slider, value, _ ->
@@ -682,7 +682,7 @@ class MainActivity : AppCompatActivity() {
 
             } else {
                 Toast.makeText(this, "Mood can't be blank.", Toast.LENGTH_LONG)
-                    .show()
+                        .show()
             }
 
         }
@@ -714,12 +714,12 @@ class MainActivity : AppCompatActivity() {
         var yearPicked = oldYear
 
         bindingUpdateRecord.dateRecordUpdate.text =
-            getString(
-                    R.string.day_month_year,
-                    dayPicked.toString(),
-                    Globals.getShortMonth(monthPicked),
-                    yearPicked.toString()
-            )
+                getString(
+                        R.string.day_month_year,
+                        dayPicked.toString(),
+                        Globals.getShortMonth(monthPicked),
+                        yearPicked.toString()
+                )
 
         bindingUpdateRecord.dateRecordUpdate.setOnClickListener {
             val changeDateDialog = Dialog(this, R.style.Theme_Dialog)
@@ -788,12 +788,12 @@ class MainActivity : AppCompatActivity() {
 
             bindingDMYP.submitDmy.setOnClickListener {
                 bindingUpdateRecord.dateRecordUpdate.text =
-                    getString(
-                            R.string.day_month_year,
-                            dayPicked.toString(),
-                            Globals.getShortMonth(monthPicked),
-                            yearPicked.toString()
-                    )
+                        getString(
+                                R.string.day_month_year,
+                                dayPicked.toString(),
+                                Globals.getShortMonth(monthPicked),
+                                yearPicked.toString()
+                        )
                 changeDateDialog.dismiss()
             }
 
@@ -809,11 +809,11 @@ class MainActivity : AppCompatActivity() {
         var minutePicked = oldMinute
 
         bindingUpdateRecord.timeRecordUpdate.text =
-            getString(
-                    R.string.hour_minute,
-                    String.format("%02d", hourPicked),
-                    String.format("%02d", minutePicked)
-            )
+                getString(
+                        R.string.hour_minute,
+                        String.format("%02d", hourPicked),
+                        String.format("%02d", minutePicked)
+                )
 
         bindingUpdateRecord.timeRecordUpdate.setOnClickListener {
             val changeTimeDialog = Dialog(this, R.style.Theme_Dialog)
@@ -844,11 +844,11 @@ class MainActivity : AppCompatActivity() {
 
             bindingHMP.submitHm.setOnClickListener {
                 bindingUpdateRecord.timeRecordUpdate.text =
-                    getString(
-                            R.string.hour_minute,
-                            String.format("%02d", hourPicked),
-                            String.format("%02d", minutePicked)
-                    )
+                        getString(
+                                R.string.hour_minute,
+                                String.format("%02d", hourPicked),
+                                String.format("%02d", minutePicked)
+                        )
                 changeTimeDialog.dismiss()
             }
 
@@ -944,7 +944,7 @@ class MainActivity : AppCompatActivity() {
 
             } else {
                 Toast.makeText(this, "Mood can't be blank.", Toast.LENGTH_LONG)
-                    .show()
+                        .show()
             }
 
         }
@@ -1013,7 +1013,7 @@ class MainActivity : AppCompatActivity() {
             bindingViewNote.noteShimmer.visibility = View.GONE
             bindingViewNote.noteShimmer.stopShimmerAnimation()
 
-        } .addOnFailureListener{
+        }.addOnFailureListener {
             Log.e("test", "Error getting data", it)
         }
 
