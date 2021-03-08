@@ -15,7 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.spudg.sentient.databinding.*
@@ -312,149 +314,154 @@ class MainActivity : AppCompatActivity() {
     private fun setUpAverageMonthScore() {
         val reference = database.ref.child("users").child(auth.currentUser!!.uid).child("records")
 
-        val snapshotRecords = ArrayList<DataSnapshot>()
+        val averageScoreListener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val snapshotRecords = ArrayList<DataSnapshot>()
 
-        reference.get().addOnSuccessListener { dataSnapshot ->
+                val allRecords = ArrayList<RecordModel>()
 
-            val allRecords = ArrayList<RecordModel>()
-
-            for (record in dataSnapshot.children) {
-                snapshotRecords.add(record)
-            }
-
-            repeat(snapshotRecords.size) {
-                val id = snapshotRecords[it].key.toString()
-                val note = snapshotRecords[it].child("note").value.toString()
-                val score = snapshotRecords[it].child("score").value.toString().toInt()
-                val time = snapshotRecords[it].child("time").value.toString()
-                allRecords.add(RecordModel(id, score, time, note))
-            }
-
-            var runningTotal = 0
-            var numberOfRatings = 0
-
-            val currentMonth = Calendar.getInstance().get(Calendar.MONTH) + 1
-            val currentYear = Calendar.getInstance().get(Calendar.YEAR)
-            val currentDate = currentMonth.toString() + currentYear.toString()
-
-            bindingMain.monthHeading.text = getString(
-                    R.string.average_month_score_heading,
-                    Globals.getLongMonth(currentMonth),
-                    currentYear.toString()
-            )
-
-            val cal = Calendar.getInstance()
-
-            for (record in allRecords) {
-
-                cal.timeInMillis = record.time.toLong()
-                val recordMonth = cal.get(Calendar.MONTH) + 1
-                val recordYear = cal.get(Calendar.YEAR)
-                val recordDate = recordMonth.toString() + recordYear.toString()
-
-                if (recordDate == currentDate) {
-                    numberOfRatings += 1
-                    runningTotal += record.score
+                for (record in snapshot.children) {
+                    snapshotRecords.add(record)
                 }
 
-            }
-
-            if (numberOfRatings > 0) {
-
-                val averageScore = (runningTotal / numberOfRatings)
-                bindingMain.averageScoreMonth.text = averageScore.toString()
-
-                when (averageScore) {
-                    in 0..9 -> {
-                        bindingMain.averageScoreMonth.setTextColor(-65527)
-                    }
-                    in 10..39 -> {
-                        bindingMain.averageScoreMonth.setTextColor(-25088)
-                    }
-                    in 40..69 -> {
-                        bindingMain.averageScoreMonth.setTextColor(-16728577)
-                    }
-                    in 70..89 -> {
-                        bindingMain.averageScoreMonth.setTextColor(-16711896)
-                    }
-                    in 90..100 -> {
-                        bindingMain.averageScoreMonth.setTextColor(-6881025)
-                    }
+                repeat(snapshotRecords.size) {
+                    val id = snapshotRecords[it].key.toString()
+                    val note = snapshotRecords[it].child("note").value.toString()
+                    val score = snapshotRecords[it].child("score").value.toString().toInt()
+                    val time = snapshotRecords[it].child("time").value.toString()
+                    allRecords.add(RecordModel(id, score, time, note))
                 }
-            } else {
-                bindingMain.averageScoreMonth.text = "n/a"
-                bindingMain.averageScoreMonth.setTextColor(Color.GRAY)
+
+                var runningTotal = 0
+                var numberOfRatings = 0
+
+                val currentMonth = Calendar.getInstance().get(Calendar.MONTH) + 1
+                val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+                val currentDate = currentMonth.toString() + currentYear.toString()
+
+                bindingMain.monthHeading.text = getString(
+                        R.string.average_month_score_heading,
+                        Globals.getLongMonth(currentMonth),
+                        currentYear.toString()
+                )
+
+                val cal = Calendar.getInstance()
+
+                for (record in allRecords) {
+
+                    cal.timeInMillis = record.time.toLong()
+                    val recordMonth = cal.get(Calendar.MONTH) + 1
+                    val recordYear = cal.get(Calendar.YEAR)
+                    val recordDate = recordMonth.toString() + recordYear.toString()
+
+                    if (recordDate == currentDate) {
+                        numberOfRatings += 1
+                        runningTotal += record.score
+                    }
+
+                }
+
+                if (numberOfRatings > 0) {
+
+                    val averageScore = (runningTotal / numberOfRatings)
+                    bindingMain.averageScoreMonth.text = averageScore.toString()
+
+                    when (averageScore) {
+                        in 0..9 -> {
+                            bindingMain.averageScoreMonth.setTextColor(-65527)
+                        }
+                        in 10..39 -> {
+                            bindingMain.averageScoreMonth.setTextColor(-25088)
+                        }
+                        in 40..69 -> {
+                            bindingMain.averageScoreMonth.setTextColor(-16728577)
+                        }
+                        in 70..89 -> {
+                            bindingMain.averageScoreMonth.setTextColor(-16711896)
+                        }
+                        in 90..100 -> {
+                            bindingMain.averageScoreMonth.setTextColor(-6881025)
+                        }
+                    }
+                } else {
+                    bindingMain.averageScoreMonth.text = "n/a"
+                    bindingMain.averageScoreMonth.setTextColor(Color.GRAY)
+                }
             }
 
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("test", "Error getting data", error.toException())
+            }
 
-        }.addOnFailureListener {
-            Log.e("test", "Error getting data", it)
         }
-
 
     }
 
     private fun setUpRecordList() {
         val reference = database.ref.child("users").child(auth.currentUser!!.uid).child("records")
-        reference.keepSynced(true)
 
-        val snapshotRecords = ArrayList<DataSnapshot>()
+        val allRecordsListener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
 
-        reference.get().addOnSuccessListener { dataSnapshot ->
+                val snapshotRecords = ArrayList<DataSnapshot>()
+                val records = ArrayList<RecordModel>()
 
-            val records = ArrayList<RecordModel>()
+                for (record in snapshot.children) {
+                    snapshotRecords.add(record)
+                }
 
-            for (record in dataSnapshot.children) {
-                snapshotRecords.add(record)
+                repeat(snapshotRecords.size) {
+                    val id = snapshotRecords[it].key.toString()
+                    val note = snapshotRecords[it].child("note").value.toString()
+                    val score = snapshotRecords[it].child("score").value.toString().toInt()
+                    val time = snapshotRecords[it].child("time").value.toString()
+                    records.add(RecordModel(id, score, time, note))
+                }
+
+                records.sortByDescending { it.time }
+
+                if (records.size > 0) {
+                    bindingMain.rvRecords.visibility = View.VISIBLE
+                    bindingMain.tvNoRecords.visibility = View.GONE
+
+                    bindingMain.averageScoreMonth.visibility = View.VISIBLE
+                    bindingMain.averageScoreMonthText.visibility = View.VISIBLE
+                    bindingMain.monthHeading.visibility = View.VISIBLE
+
+                    bindingMain.recordRowShimmer.visibility = View.GONE
+                    bindingMain.topSectionShimmer.visibility = View.GONE
+
+                    bindingMain.recordRowShimmer.stopShimmerAnimation()
+                    bindingMain.topSectionShimmer.stopShimmerAnimation()
+
+                    val manager = LinearLayoutManager(this@MainActivity)
+                    bindingMain.rvRecords.layoutManager = manager
+                    val policyAdapter = RecordAdapter(this@MainActivity, records)
+                    bindingMain.rvRecords.adapter = policyAdapter
+                } else {
+                    bindingMain.rvRecords.visibility = View.GONE
+                    bindingMain.tvNoRecords.visibility = View.VISIBLE
+
+                    bindingMain.averageScoreMonth.visibility = View.VISIBLE
+                    bindingMain.averageScoreMonthText.visibility = View.VISIBLE
+                    bindingMain.monthHeading.visibility = View.VISIBLE
+
+                    bindingMain.recordRowShimmer.visibility = View.GONE
+                    bindingMain.topSectionShimmer.visibility = View.GONE
+
+                    bindingMain.recordRowShimmer.stopShimmerAnimation()
+                    bindingMain.topSectionShimmer.stopShimmerAnimation()
+                }
+
             }
 
-            repeat(snapshotRecords.size) {
-                val id = snapshotRecords[it].key.toString()
-                val note = snapshotRecords[it].child("note").value.toString()
-                val score = snapshotRecords[it].child("score").value.toString().toInt()
-                val time = snapshotRecords[it].child("time").value.toString()
-                records.add(RecordModel(id, score, time, note))
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("test", "Error getting data", error.toException())
             }
 
-            records.sortByDescending { it.time }
-
-            if (records.size > 0) {
-                bindingMain.rvRecords.visibility = View.VISIBLE
-                bindingMain.tvNoRecords.visibility = View.GONE
-
-                bindingMain.averageScoreMonth.visibility = View.VISIBLE
-                bindingMain.averageScoreMonthText.visibility = View.VISIBLE
-                bindingMain.monthHeading.visibility = View.VISIBLE
-
-                bindingMain.recordRowShimmer.visibility = View.GONE
-                bindingMain.topSectionShimmer.visibility = View.GONE
-
-                bindingMain.recordRowShimmer.stopShimmerAnimation()
-                bindingMain.topSectionShimmer.stopShimmerAnimation()
-
-                val manager = LinearLayoutManager(this)
-                bindingMain.rvRecords.layoutManager = manager
-                val policyAdapter = RecordAdapter(this, records)
-                bindingMain.rvRecords.adapter = policyAdapter
-            } else {
-                bindingMain.rvRecords.visibility = View.GONE
-                bindingMain.tvNoRecords.visibility = View.VISIBLE
-
-                bindingMain.averageScoreMonth.visibility = View.VISIBLE
-                bindingMain.averageScoreMonthText.visibility = View.VISIBLE
-                bindingMain.monthHeading.visibility = View.VISIBLE
-
-                bindingMain.recordRowShimmer.visibility = View.GONE
-                bindingMain.topSectionShimmer.visibility = View.GONE
-
-                bindingMain.recordRowShimmer.stopShimmerAnimation()
-                bindingMain.topSectionShimmer.stopShimmerAnimation()
-
-            }
-
-        }.addOnFailureListener {
-            Log.e("test", "Error getting data", it)
         }
+
+        reference.addValueEventListener(allRecordsListener)
 
     }
 
@@ -1001,27 +1008,34 @@ class MainActivity : AppCompatActivity() {
 
         val reference = database.ref.child("users").child(auth.currentUser!!.uid).child("records").child(recordId)
 
-        reference.get().addOnSuccessListener { dataSnapshot ->
+        val recordNoteListener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                noteBody = snapshot.child("note").value.toString()
 
-            noteBody = dataSnapshot.child("note").value.toString()
+                if (noteBody.isNotEmpty()) {
+                    bindingViewNote.tvNoteBody.text = noteBody
+                }
 
-            if (noteBody.isNotEmpty()) {
-                bindingViewNote.tvNoteBody.text = noteBody
+                bindingViewNote.tvNoteBody.visibility = View.VISIBLE
+                bindingViewNote.noteShimmer.visibility = View.GONE
+                bindingViewNote.noteShimmer.stopShimmerAnimation()
+
             }
 
-            bindingViewNote.tvNoteBody.visibility = View.VISIBLE
-            bindingViewNote.noteShimmer.visibility = View.GONE
-            bindingViewNote.noteShimmer.stopShimmerAnimation()
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("test", "Error getting data", error.toException())
+            }
 
-        }.addOnFailureListener {
-            Log.e("test", "Error getting data", it)
         }
 
         bindingViewNote.tvDoneViewNote.setOnClickListener {
             viewNoteDialog.dismiss()
         }
 
+        reference.addValueEventListener(recordNoteListener)
+
         viewNoteDialog.show()
+
     }
 
 }

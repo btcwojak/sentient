@@ -21,7 +21,9 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.spudg.sentient.databinding.ActivityVisualiserBinding
@@ -127,49 +129,52 @@ class VisualiserActivity : AppCompatActivity() {
 
     private fun setUpCharts() {
         val reference = database.ref.child("users").child(auth.currentUser!!.uid).child("records")
-        reference.keepSynced(true)
 
-        val snapshotRecords = ArrayList<DataSnapshot>()
+        val chartDataListener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
 
-        reference.get().addOnSuccessListener { dataSnapshot ->
+                val snapshotRecords = ArrayList<DataSnapshot>()
+                val list = ArrayList<RecordModel>()
 
-            val list = ArrayList<RecordModel>()
+                for (record in snapshot.children) {
+                    snapshotRecords.add(record)
+                }
 
-            for (record in dataSnapshot.children) {
-                snapshotRecords.add(record)
+                repeat(snapshotRecords.size) {
+                    val id = snapshotRecords[it].key.toString()
+                    val note = snapshotRecords[it].child("note").value.toString()
+                    val score = snapshotRecords[it].child("score").value.toString().toInt()
+                    val time = snapshotRecords[it].child("time").value.toString()
+                    list.add(RecordModel(id, score, time, note))
+                }
+
+                setMonthHeader(monthFilter, yearFilter)
+                setMonthlyBarHeader(yearFilter)
+                setUpScoreNumberText(list)
+                makeBarChartDaily(list, monthFilter, yearFilter)
+                makePieChart(list, monthFilter, yearFilter)
+                makeBarChartMonthly(list, yearFilter)
+                setUpNoteList()
+
+                bindingVisualiser.chartAverageDailyShimmer.visibility = View.GONE
+                bindingVisualiser.chartSplitAveScoreShimmer.visibility = View.GONE
+                bindingVisualiser.chartAverageMonthlyShimmer.visibility = View.GONE
+
+                bindingVisualiser.chartAverageDaily.visibility = View.VISIBLE
+                bindingVisualiser.chartSplitAveScore.visibility = View.VISIBLE
+                bindingVisualiser.chartAverageMonthly.visibility = View.VISIBLE
+
+                bindingVisualiser.chartAverageDailyShimmer.stopShimmerAnimation()
+                bindingVisualiser.chartSplitAveScoreShimmer.stopShimmerAnimation()
+                bindingVisualiser.chartAverageMonthlyShimmer.stopShimmerAnimation()
             }
-
-            repeat(snapshotRecords.size) {
-                val id = snapshotRecords[it].key.toString()
-                val note = snapshotRecords[it].child("note").value.toString()
-                val score = snapshotRecords[it].child("score").value.toString().toInt()
-                val time = snapshotRecords[it].child("time").value.toString()
-                list.add(RecordModel(id, score, time, note))
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("test", "Error getting data", error.toException())
             }
-
-            setMonthHeader(monthFilter, yearFilter)
-            setMonthlyBarHeader(yearFilter)
-            setUpScoreNumberText(list)
-            makeBarChartDaily(list, monthFilter, yearFilter)
-            makePieChart(list, monthFilter, yearFilter)
-            makeBarChartMonthly(list, yearFilter)
-            setUpNoteList()
-
-            bindingVisualiser.chartAverageDailyShimmer.visibility = View.GONE
-            bindingVisualiser.chartSplitAveScoreShimmer.visibility = View.GONE
-            bindingVisualiser.chartAverageMonthlyShimmer.visibility = View.GONE
-
-            bindingVisualiser.chartAverageDaily.visibility = View.VISIBLE
-            bindingVisualiser.chartSplitAveScore.visibility = View.VISIBLE
-            bindingVisualiser.chartAverageMonthly.visibility = View.VISIBLE
-
-            bindingVisualiser.chartAverageDailyShimmer.stopShimmerAnimation()
-            bindingVisualiser.chartSplitAveScoreShimmer.stopShimmerAnimation()
-            bindingVisualiser.chartAverageMonthlyShimmer.stopShimmerAnimation()
-
-        }.addOnFailureListener {
-            Log.e("test", "Error getting data", it)
         }
+
+        reference.addValueEventListener(chartDataListener)
+
     }
 
     private fun resetBarDataDaily() {
@@ -475,70 +480,75 @@ class VisualiserActivity : AppCompatActivity() {
 
         val snapshotRecords = ArrayList<DataSnapshot>()
 
-        reference.get().addOnSuccessListener { dataSnapshot ->
-
-            daysInMonth = if (yearFilter % 4 == 0) {
-                when (monthFilter) {
-                    1, 3, 5, 7, 8, 10, 12 -> Globals.DAYS31
-                    4, 6, 9, 11 -> Globals.DAYS30
-                    2 -> Globals.DAYS29
-                    else -> arrayListOf(0)
-                }
-            } else {
-                when (monthFilter) {
-                    1, 3, 5, 7, 8, 10, 12 -> Globals.DAYS31
-                    4, 6, 9, 11 -> Globals.DAYS30
-                    2 -> Globals.DAYS28
-                    else -> arrayListOf(0)
-                }
-            }
-
-            averageScoresPerDay = Array(daysInMonth.size) { 0 }
-
-            val allRecords = ArrayList<RecordModel>()
-
-            for (record in dataSnapshot.children) {
-                snapshotRecords.add(record)
-            }
-
-            repeat(snapshotRecords.size) {
-                val id = snapshotRecords[it].key.toString()
-                val note = snapshotRecords[it].child("note").value.toString()
-                val score = snapshotRecords[it].child("score").value.toString().toInt()
-                val time = snapshotRecords[it].child("time").value.toString()
-                allRecords.add(RecordModel(id, score, time, note))
-            }
-
-            val cal = Calendar.getInstance()
-
-            val listForDayMonthYear: ArrayList<RecordModel> = arrayListOf()
-
-            for (record in allRecords) {
-                cal.timeInMillis = record.time.toLong()
-                val recordMonth = cal.get(Calendar.MONTH) + 1
-                val recordYear = cal.get(Calendar.YEAR)
-                if (recordYear == yearFilter && recordMonth == monthFilter && record.note.isNotEmpty()) {
-                    listForDayMonthYear.add(record)
+        val noteListListener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                daysInMonth = if (yearFilter % 4 == 0) {
+                    when (monthFilter) {
+                        1, 3, 5, 7, 8, 10, 12 -> Globals.DAYS31
+                        4, 6, 9, 11 -> Globals.DAYS30
+                        2 -> Globals.DAYS29
+                        else -> arrayListOf(0)
+                    }
+                } else {
+                    when (monthFilter) {
+                        1, 3, 5, 7, 8, 10, 12 -> Globals.DAYS31
+                        4, 6, 9, 11 -> Globals.DAYS30
+                        2 -> Globals.DAYS28
+                        else -> arrayListOf(0)
+                    }
                 }
 
+                averageScoresPerDay = Array(daysInMonth.size) { 0 }
 
+                val allRecords = ArrayList<RecordModel>()
+
+                for (record in snapshot.children) {
+                    snapshotRecords.add(record)
+                }
+
+                repeat(snapshotRecords.size) {
+                    val id = snapshotRecords[it].key.toString()
+                    val note = snapshotRecords[it].child("note").value.toString()
+                    val score = snapshotRecords[it].child("score").value.toString().toInt()
+                    val time = snapshotRecords[it].child("time").value.toString()
+                    allRecords.add(RecordModel(id, score, time, note))
+                }
+
+                val cal = Calendar.getInstance()
+
+                val listForDayMonthYear: ArrayList<RecordModel> = arrayListOf()
+
+                for (record in allRecords) {
+                    cal.timeInMillis = record.time.toLong()
+                    val recordMonth = cal.get(Calendar.MONTH) + 1
+                    val recordYear = cal.get(Calendar.YEAR)
+                    if (recordYear == yearFilter && recordMonth == monthFilter && record.note.isNotEmpty()) {
+                        listForDayMonthYear.add(record)
+                    }
+
+
+                }
+
+                if (listForDayMonthYear.size > 0) {
+                    bindingVisualiser.rvNotes.visibility = View.VISIBLE
+                    bindingVisualiser.tvNoNotes.visibility = View.GONE
+                    val manager = LinearLayoutManager(this@VisualiserActivity)
+                    bindingVisualiser.rvNotes.layoutManager = manager
+                    val noteAdapter = NoteListAdapter(listForDayMonthYear)
+                    bindingVisualiser.rvNotes.adapter = noteAdapter
+                } else {
+                    bindingVisualiser.rvNotes.visibility = View.GONE
+                    bindingVisualiser.tvNoNotes.visibility = View.VISIBLE
+                }
             }
 
-            if (listForDayMonthYear.size > 0) {
-                bindingVisualiser.rvNotes.visibility = View.VISIBLE
-                bindingVisualiser.tvNoNotes.visibility = View.GONE
-                val manager = LinearLayoutManager(this)
-                bindingVisualiser.rvNotes.layoutManager = manager
-                val noteAdapter = NoteListAdapter(listForDayMonthYear)
-                bindingVisualiser.rvNotes.adapter = noteAdapter
-            } else {
-                bindingVisualiser.rvNotes.visibility = View.GONE
-                bindingVisualiser.tvNoNotes.visibility = View.VISIBLE
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("test", "Error getting data", error.toException())
             }
-
-        }.addOnFailureListener {
-            Log.e("test", "Error getting data", it)
         }
+
+        reference.addValueEventListener(noteListListener)
+
     }
 
     private fun setUpScoreNumberText(list: ArrayList<RecordModel>) {

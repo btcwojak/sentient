@@ -60,7 +60,6 @@
                 android:fontFamily="@font/open_sans_light"
                 android:hint="Password"
                 android:maxLines="1"
-                android:maxLength="16"
                 android:inputType="textPassword" />
 
         </com.google.android.material.textfield.TextInputLayout>
