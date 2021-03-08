@@ -27,6 +27,8 @@ class AccountActivity : AppCompatActivity() {
     private lateinit var bindingEmailVerification: DialogResentEmailVerificationBinding
     private lateinit var bindingReAuthenticate: DialogReauthenticateBinding
     private lateinit var bindingChangeName: DialogChangeNameBinding
+    private lateinit var bindingChangeEmail: DialogChangeEmailBinding
+    private lateinit var bindingChangePassword: DialogChangePasswordBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -113,10 +115,31 @@ class AccountActivity : AppCompatActivity() {
                 user.reauthenticate(credential)
                         .addOnSuccessListener {
                             Log.e("re-auth", "User re-authenticated.")
-
+                            val changeEmailBinding = Dialog(this, R.style.Theme_Dialog)
+                            changeEmailBinding.setCancelable(false)
+                            bindingChangeEmail = DialogChangeEmailBinding.inflate(layoutInflater)
+                            val viewCE = bindingChangeEmail.root
+                            changeEmailBinding.setContentView(viewCE)
+                            changeEmailBinding.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                            bindingChangeEmail.tvChangeEmail.setOnClickListener {
+                                user.updatePassword(bindingChangeEmail.etNewEmail.text.toString()).addOnSuccessListener {
+                                    Toast.makeText(this, "Email changed successfully.", Toast.LENGTH_SHORT).show()
+                                    changeEmailBinding.dismiss()
+                                    reAuthenticateDialog.dismiss()
+                                } .addOnFailureListener {
+                                    Toast.makeText(this, "An error occurred.", Toast.LENGTH_SHORT).show()
+                                    changeEmailBinding.dismiss()
+                                    reAuthenticateDialog.dismiss()
+                                }
+                            }
+                            bindingChangeEmail.tvCancelChangeEmail.setOnClickListener {
+                                changeEmailBinding.dismiss()
+                            }
+                            changeEmailBinding.show()
                             }
 
                         .addOnFailureListener {
+                            Toast.makeText(this, "Incorrect sign in details.", Toast.LENGTH_SHORT).show()
                             Log.e("re-auth", "User not re-authenticated.")}
             }
 
@@ -142,10 +165,31 @@ class AccountActivity : AppCompatActivity() {
                 user.reauthenticate(credential)
                         .addOnSuccessListener {
                             Log.e("re-auth", "User re-authenticated.")
-
+                            val changePasswordDialog = Dialog(this, R.style.Theme_Dialog)
+                            changePasswordDialog.setCancelable(false)
+                            bindingChangePassword = DialogChangePasswordBinding.inflate(layoutInflater)
+                            val viewCP = bindingChangePassword.root
+                            changePasswordDialog.setContentView(viewCP)
+                            changePasswordDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                            bindingChangePassword.tvChangePassword.setOnClickListener {
+                                user.updatePassword(bindingChangePassword.etNewPassword.text.toString()).addOnSuccessListener {
+                                    Toast.makeText(this, "Password changed successfully.", Toast.LENGTH_SHORT).show()
+                                    changePasswordDialog.dismiss()
+                                    reAuthenticateDialog.dismiss()
+                                } .addOnFailureListener {
+                                    Toast.makeText(this, "An error occurred.", Toast.LENGTH_SHORT).show()
+                                    changePasswordDialog.dismiss()
+                                    reAuthenticateDialog.dismiss()
+                                }
+                            }
+                            bindingChangePassword.tvCancelChangePassword.setOnClickListener {
+                                changePasswordDialog.dismiss()
+                            }
+                            changePasswordDialog.show()
                         }
 
                         .addOnFailureListener {
+                            Toast.makeText(this, "Incorrect sign in details.", Toast.LENGTH_SHORT).show()
                             Log.e("re-auth", "User not re-authenticated.")}
             }
 
