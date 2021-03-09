@@ -1,5 +1,6 @@
 package com.spudg.sentient
 
+import android.R.attr.key
 import android.app.*
 import android.content.Intent
 import android.graphics.Color
@@ -403,18 +404,13 @@ class MainActivity : AppCompatActivity() {
         val allRecordsListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
 
-                val snapshotRecords = ArrayList<DataSnapshot>()
                 val records = ArrayList<RecordModel>()
 
                 for (record in snapshot.children) {
-                    snapshotRecords.add(record)
-                }
-
-                repeat(snapshotRecords.size) {
-                    val id = snapshotRecords[it].key.toString()
-                    val note = snapshotRecords[it].child("note").value.toString()
-                    val score = snapshotRecords[it].child("score").value.toString().toInt()
-                    val time = snapshotRecords[it].child("time").value.toString()
+                    val id = record.key.toString()
+                    val note = record.child("note").value.toString()
+                    val score = record.child("score").value.toString().toInt()
+                    val time = record.child("time").value.toString()
                     records.add(RecordModel(id, score, time, note))
                 }
 
@@ -676,11 +672,21 @@ class MainActivity : AppCompatActivity() {
             val note = bindingAddRecord.etNotePostRecord.text.toString()
 
             if (score.toString().isNotEmpty() && time.isNotEmpty()) {
-                val refPush = database.ref.child("users").child(auth.currentUser!!.uid).child("records")
-                val pushRefPush = refPush.push()
-                pushRefPush.child("note").setValue(note)
-                pushRefPush.child("score").setValue(score)
-                pushRefPush.child("time").setValue(time)
+                val refPush = database.ref.child("users").child(auth.currentUser!!.uid).child("records").push()
+
+                val key = database.child("posts").push().key
+                if (key == null) {
+                    Log.w("AddRecord", "Couldn't get push key for record")
+                }
+
+                val record = RecordModel(key.toString(), score, time, note)
+                val recordValues = record.toMap()
+
+                val childUpdates = hashMapOf<String, Any>(
+                        "/users/${auth.currentUser!!.uid}/records/$key" to recordValues
+                )
+
+                database.updateChildren(childUpdates)
 
                 Toast.makeText(this, "Record posted.", Toast.LENGTH_LONG).show()
                 setUpRecordList()
