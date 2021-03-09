@@ -133,27 +133,22 @@ class VisualiserActivity : AppCompatActivity() {
         val chartDataListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
 
-                val snapshotRecords = ArrayList<DataSnapshot>()
-                val list = ArrayList<RecordModel>()
+                val records = ArrayList<RecordModel>()
 
                 for (record in snapshot.children) {
-                    snapshotRecords.add(record)
-                }
-
-                repeat(snapshotRecords.size) {
-                    val id = snapshotRecords[it].key.toString()
-                    val note = snapshotRecords[it].child("note").value.toString()
-                    val score = snapshotRecords[it].child("score").value.toString().toInt()
-                    val time = snapshotRecords[it].child("time").value.toString()
-                    list.add(RecordModel(id, score, time, note))
+                    val id = record.key.toString()
+                    val note = record.child("note").value.toString()
+                    val score = record.child("score").value.toString().toInt()
+                    val time = record.child("time").value.toString()
+                    records.add(RecordModel(id, score, time, note))
                 }
 
                 setMonthHeader(monthFilter, yearFilter)
                 setMonthlyBarHeader(yearFilter)
-                setUpScoreNumberText(list)
-                makeBarChartDaily(list, monthFilter, yearFilter)
-                makePieChart(list, monthFilter, yearFilter)
-                makeBarChartMonthly(list, yearFilter)
+                setUpScoreNumberText(records)
+                makeBarChartDaily(records, monthFilter, yearFilter)
+                makePieChart(records, monthFilter, yearFilter)
+                makeBarChartMonthly(records, yearFilter)
                 setUpNoteList()
 
                 bindingVisualiser.chartAverageDailyShimmer.visibility = View.GONE

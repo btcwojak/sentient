@@ -396,6 +396,8 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+        reference.addValueEventListener(averageScoreListener)
+
     }
 
     private fun setUpRecordList() {
@@ -672,15 +674,14 @@ class MainActivity : AppCompatActivity() {
             val note = bindingAddRecord.etNotePostRecord.text.toString()
 
             if (score.toString().isNotEmpty() && time.isNotEmpty()) {
-                val refPush = database.ref.child("users").child(auth.currentUser!!.uid).child("records").push()
 
                 val key = database.child("posts").push().key
                 if (key == null) {
                     Log.w("AddRecord", "Couldn't get push key for record")
                 }
 
-                val record = RecordModel(key.toString(), score, time, note)
-                val recordValues = record.toMap()
+                val recordAdd = RecordModel(key.toString(), score, time, note)
+                val recordValues = recordAdd.toMap()
 
                 val childUpdates = hashMapOf<String, Any>(
                         "/users/${auth.currentUser!!.uid}/records/$key" to recordValues
@@ -945,10 +946,17 @@ class MainActivity : AppCompatActivity() {
             val note = bindingUpdateRecord.etNoteUpdateRecord.text.toString()
 
             if (score.toString().isNotEmpty() && time.isNotEmpty()) {
-                val refPush = database.ref.child("users").child(auth.currentUser!!.uid).child("records").child(record.id)
-                refPush.child("note").setValue(note)
-                refPush.child("score").setValue(score)
-                refPush.child("time").setValue(time)
+
+                val key = record.id
+
+                val recordUpdate = RecordModel(key, score, time, note)
+                val recordValues = recordUpdate.toMap()
+
+                val childUpdates = hashMapOf<String, Any>(
+                        "/users/${auth.currentUser!!.uid}/records/$key" to recordValues
+                )
+
+                database.updateChildren(childUpdates)
 
                 Toast.makeText(this, "Record updated.", Toast.LENGTH_LONG).show()
                 setUpRecordList()
@@ -979,10 +987,8 @@ class MainActivity : AppCompatActivity() {
         deleteDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         bindingDeleteRecord.tvDeleteRecord.setOnClickListener {
-            val refPush = database.ref.child("users").child(auth.currentUser!!.uid).child("records").child(record.id)
-            refPush.child("note").removeValue()
-            refPush.child("score").removeValue()
-            refPush.child("time").removeValue()
+
+            database.ref.child("users").child(auth.currentUser!!.uid).child("records").child(record.id).removeValue()
 
             Toast.makeText(this, "Record deleted.", Toast.LENGTH_LONG).show()
             setUpRecordList()
