@@ -215,8 +215,8 @@ class AccountActivity : AppCompatActivity() {
 
         bindingAccount.userEmail.text = "Email: ${auth.currentUser?.email}"
 
+
         val reference = database.ref.child("users").child(auth.currentUser!!.uid).child("records")
-        reference.keepSynced(true)
 
         val numberRecordsListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -232,5 +232,7 @@ class AccountActivity : AppCompatActivity() {
         reference.addValueEventListener(numberRecordsListener)
 
     }
+
+
 
 }

@@ -10,6 +10,7 @@ import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.spudg.sentient.databinding.ActivitySignUpBinding
+import java.lang.Exception
 
 
 class SignUpActivity : AppCompatActivity() {
@@ -49,21 +50,20 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun submitSignUpInfo(email: String, password: String, name: String) {
         auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this) { task ->
-                    auth.currentUser!!.sendEmailVerification()
-                    val profileUpdates = UserProfileChangeRequest.Builder().setDisplayName(signUpBinding.name.text.toString()).build()
-                    auth.currentUser!!.updateProfile(profileUpdates)
-                    if (task.isSuccessful) {
+                .addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        auth.currentUser!!.sendEmailVerification()
+                        val profileUpdates = UserProfileChangeRequest.Builder().setDisplayName(name).build()
+                        auth.currentUser!!.updateProfile(profileUpdates)
                         Log.d("SignUp", "createUserWithEmail:success")
                         val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)
                     } else {
-                        Log.w("SignUp", "createUserWithEmail:failure", task.exception)
-                        Toast.makeText(
-                                baseContext, "Authentication failed.",
-                                Toast.LENGTH_SHORT
-                        ).show()
+                        Log.w("SignUp", "createUserWithEmail:failure", it.exception)
+                        Toast.makeText(baseContext, it.exception.toString(),
+                                Toast.LENGTH_LONG).show()
                     }
+
                 }
 
     }
