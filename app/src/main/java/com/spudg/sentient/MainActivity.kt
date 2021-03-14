@@ -1,12 +1,14 @@
 package com.spudg.sentient
 
 import android.R.attr.key
+import android.R.attr.listPreferredItemPaddingEnd
 import android.app.*
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.util.Log
 import android.view.View
 import android.widget.PopupMenu
@@ -42,6 +44,19 @@ class MainActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
 
+    var reference: DatabaseReference? = null
+    var referenceNote: DatabaseReference? = null
+    var allRecordsListener: ValueEventListener? = null
+    var recordNoteListener: ValueEventListener? = null
+    var averageScoreListener: ValueEventListener? = null
+
+    override fun onDestroy() {
+        super.onDestroy()
+        reference!!.removeEventListener(allRecordsListener!!)
+        reference!!.removeEventListener(averageScoreListener!!)
+        referenceNote!!.removeEventListener(recordNoteListener!!)
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +75,8 @@ class MainActivity : AppCompatActivity() {
 
         auth = Firebase.auth
         database = Firebase.database.reference
+
+        reference = database.ref.child("users").child(auth.currentUser!!.uid).child("records")
 
         createNotificationChannel()
 
@@ -313,9 +330,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUpAverageMonthScore() {
-        val reference = database.ref.child("users").child(auth.currentUser!!.uid).child("records")
 
-        val averageScoreListener = object : ValueEventListener {
+        averageScoreListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val snapshotRecords = ArrayList<DataSnapshot>()
 
@@ -396,14 +412,13 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        reference.addValueEventListener(averageScoreListener)
+        reference!!.addValueEventListener(averageScoreListener as ValueEventListener)
 
     }
 
     private fun setUpRecordList() {
-        val reference = database.ref.child("users").child(auth.currentUser!!.uid).child("records")
 
-        val allRecordsListener = object : ValueEventListener {
+        allRecordsListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
 
                 val records = ArrayList<RecordModel>()
@@ -459,7 +474,7 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        reference.addValueEventListener(allRecordsListener)
+        reference!!.addValueEventListener(allRecordsListener as ValueEventListener)
 
     }
 
@@ -1018,9 +1033,9 @@ class MainActivity : AppCompatActivity() {
 
         var noteBody: String
 
-        val reference = database.ref.child("users").child(auth.currentUser!!.uid).child("records").child(recordId)
+        referenceNote = database.ref.child("users").child(auth.currentUser!!.uid).child("records").child(recordId)
 
-        val recordNoteListener = object : ValueEventListener {
+        recordNoteListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 noteBody = snapshot.child("note").value.toString()
 
@@ -1044,7 +1059,7 @@ class MainActivity : AppCompatActivity() {
             viewNoteDialog.dismiss()
         }
 
-        reference.addValueEventListener(recordNoteListener)
+        referenceNote!!.addValueEventListener(recordNoteListener as ValueEventListener)
 
         viewNoteDialog.show()
 

@@ -118,6 +118,7 @@
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="50dp"
                 android:maxLines="1"
+                android:maxLength="10"
                 android:padding="15dp" />
 
             <TextView

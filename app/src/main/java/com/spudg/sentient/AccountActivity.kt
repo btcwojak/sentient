@@ -33,6 +33,14 @@ class AccountActivity : AppCompatActivity() {
     private lateinit var bindingChangeEmail: DialogChangeEmailBinding
     private lateinit var bindingChangePassword: DialogChangePasswordBinding
 
+    var reference: DatabaseReference? = null
+    var numberRecordsListener: ValueEventListener? = null
+
+    override fun onDestroy() {
+        super.onDestroy()
+        reference!!.removeEventListener(numberRecordsListener!!)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bindingAccount = ActivityAccountBinding.inflate(layoutInflater)
@@ -43,6 +51,8 @@ class AccountActivity : AppCompatActivity() {
 
         database = Firebase.database.reference
 
+        reference = database.ref.child("users").child(auth.currentUser!!.uid).child("records")
+
         bindingAccount.backToRecordsFromAccount.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
@@ -50,8 +60,6 @@ class AccountActivity : AppCompatActivity() {
         }
 
         setAccountInfo()
-
-
     }
 
     private fun setAccountInfo() {
@@ -215,10 +223,7 @@ class AccountActivity : AppCompatActivity() {
 
         bindingAccount.userEmail.text = "Email: ${auth.currentUser?.email}"
 
-
-        val reference = database.ref.child("users").child(auth.currentUser!!.uid).child("records")
-
-        val numberRecordsListener = object : ValueEventListener {
+        numberRecordsListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 bindingAccount.totalRecordsPosted.text = "Total records posted: " + snapshot.childrenCount.toString()
             }
@@ -229,7 +234,7 @@ class AccountActivity : AppCompatActivity() {
 
         }
 
-        reference.addValueEventListener(numberRecordsListener)
+        reference!!.addValueEventListener(numberRecordsListener as ValueEventListener)
 
     }
 

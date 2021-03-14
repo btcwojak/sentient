@@ -56,6 +56,16 @@ class VisualiserActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
 
+    var reference: DatabaseReference? = null
+    var chartDataListener: ValueEventListener? = null
+    var noteListListener: ValueEventListener? = null
+
+    override fun onDestroy() {
+        super.onDestroy()
+        reference!!.removeEventListener(chartDataListener!!)
+        reference!!.removeEventListener(noteListListener!!)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bindingVisualiser = ActivityVisualiserBinding.inflate(layoutInflater)
@@ -64,6 +74,8 @@ class VisualiserActivity : AppCompatActivity() {
 
         auth = Firebase.auth
         database = Firebase.database.reference
+
+        reference = database.ref.child("users").child(auth.currentUser!!.uid).child("records")
 
         bindingVisualiser.chartAverageDailyShimmer.visibility = View.VISIBLE
         bindingVisualiser.chartSplitAveScoreShimmer.visibility = View.VISIBLE
@@ -128,9 +140,8 @@ class VisualiserActivity : AppCompatActivity() {
     }
 
     private fun setUpCharts() {
-        val reference = database.ref.child("users").child(auth.currentUser!!.uid).child("records")
 
-        val chartDataListener = object : ValueEventListener {
+        chartDataListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
 
                 val records = ArrayList<RecordModel>()
@@ -168,7 +179,7 @@ class VisualiserActivity : AppCompatActivity() {
             }
         }
 
-        reference.addValueEventListener(chartDataListener)
+        reference!!.addValueEventListener(chartDataListener as ValueEventListener)
 
     }
 
@@ -471,11 +482,10 @@ class VisualiserActivity : AppCompatActivity() {
     }
 
     private fun setUpNoteList() {
-        val reference = database.ref.child("users").child(auth.currentUser!!.uid).child("records")
 
         val snapshotRecords = ArrayList<DataSnapshot>()
 
-        val noteListListener = object : ValueEventListener {
+        noteListListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 daysInMonth = if (yearFilter % 4 == 0) {
                     when (monthFilter) {
@@ -542,7 +552,7 @@ class VisualiserActivity : AppCompatActivity() {
             }
         }
 
-        reference.addValueEventListener(noteListListener)
+        reference!!.addValueEventListener(noteListListener as ValueEventListener)
 
     }
 
