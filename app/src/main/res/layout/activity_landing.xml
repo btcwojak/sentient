@@ -78,7 +78,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="60dp"
-            android:layout_marginTop="75dp"
             android:layout_marginRight="60dp"
             android:background="@drawable/btn_custom_login"
             android:fontFamily="@font/open_sans_light"
@@ -87,32 +86,22 @@
             android:padding="15dp"
             android:text="@string/sign_in"
             android:textColor="#000000"
-            app:layout_constraintBottom_toTopOf="@id/btnGoogleSignin"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lineTitleButtons" />
-
-        <com.google.android.gms.common.SignInButton
-            android:id="@+id/btnGoogleSignin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="60dp"
-            android:layout_marginRight="60dp"
+            android:layout_marginBottom="50dp"
             app:layout_constraintBottom_toTopOf="@id/lineLogInSignUp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btnSignIn" />
+            app:layout_constraintRight_toRightOf="parent" />
 
         <ImageView
             android:id="@+id/lineLogInSignUp"
             android:layout_width="match_parent"
             android:layout_height="10dp"
             android:layout_marginBottom="20dp"
+            android:layout_marginTop="50dp"
             android:background="@drawable/record_row_line"
-            app:layout_constraintBottom_toTopOf="@id/btnSignUp"
+            app:layout_constraintBottom_toTopOf="@id/btnTOU"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btnGoogleSignin"
+            app:layout_constraintTop_toTopOf="parent"
             android:contentDescription="@string/divider" />
 
         <TextView
@@ -121,7 +110,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="60dp"
             android:layout_marginRight="60dp"
-            android:layout_marginBottom="75dp"
             android:background="@drawable/btn_custom_signup"
             android:fontFamily="@font/open_sans_light"
             android:foreground="?attr/selectableItemBackground"
@@ -129,10 +117,42 @@
             android:padding="15dp"
             android:text="@string/sign_up"
             android:textColor="#FFFFFF"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginTop="50dp"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/lineLogInSignUp" />
+
+        <TextView
+            android:id="@+id/btnTOU"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/open_sans_light"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/btnPP"
+            android:padding="5dp"
+            android:text="Terms of Use"
+            android:foreground="?attr/selectableItemBackground"
+            android:layout_marginBottom="15dp"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/btnPP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:padding="5dp"
+            android:fontFamily="@font/open_sans_light"
+            android:text="Privacy Policy"
+            android:foreground="?attr/selectableItemBackground"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginBottom="15dp"
+            app:layout_constraintLeft_toRightOf="@id/btnTOU"
+            android:textSize="14sp" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
