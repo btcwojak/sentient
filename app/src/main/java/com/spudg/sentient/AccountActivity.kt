@@ -43,8 +43,8 @@ class AccountActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        reference!!.removeEventListener(numberRecordsListener!!)
-        referenceForConsent!!.removeEventListener(consentListener!!)
+        reference?.removeEventListener(numberRecordsListener!!)
+        referenceForConsent?.removeEventListener(consentListener!!)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -165,12 +165,12 @@ class AccountActivity : AppCompatActivity() {
             reAuthenticateDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
             bindingReAuthenticate.tvSubmit.setOnClickListener {
-                val user = Firebase.auth.currentUser!!
+                val user = Firebase.auth.currentUser
                 if (bindingReAuthenticate.etEmail.text.toString().isNotEmpty() && bindingReAuthenticate.etPassword.text.toString().isNotEmpty()) {
                     val credential = EmailAuthProvider
                             .getCredential(bindingReAuthenticate.etEmail.text.toString(), bindingReAuthenticate.etPassword.text.toString())
-                    user.reauthenticate(credential)
-                            .addOnSuccessListener {
+                    user?.reauthenticate(credential)
+                            ?.addOnSuccessListener {
                                 Log.e("re-auth", "User re-authenticated.")
                                 val changeEmailBinding = Dialog(this, R.style.Theme_Dialog)
                                 changeEmailBinding.setCancelable(false)
@@ -195,7 +195,7 @@ class AccountActivity : AppCompatActivity() {
                                 changeEmailBinding.show()
                             }
 
-                            .addOnFailureListener {
+                            ?.addOnFailureListener {
                                 Toast.makeText(this, it.toString(), Toast.LENGTH_SHORT).show()
                                 Log.e("re-auth", "User not re-authenticated.")}
                 } else {
@@ -221,11 +221,11 @@ class AccountActivity : AppCompatActivity() {
 
             bindingReAuthenticate.tvSubmit.setOnClickListener {
                 if (bindingReAuthenticate.etEmail.text.toString().isNotEmpty() && bindingReAuthenticate.etPassword.text.toString().isNotEmpty()) {
-                    val user = Firebase.auth.currentUser!!
+                    val user = Firebase.auth.currentUser
                     val credential = EmailAuthProvider
                             .getCredential(bindingReAuthenticate.etEmail.text.toString(), bindingReAuthenticate.etPassword.text.toString())
-                    user.reauthenticate(credential)
-                            .addOnSuccessListener {
+                    user?.reauthenticate(credential)
+                            ?.addOnSuccessListener {
                                 Log.e("re-auth", "User re-authenticated.")
                                 val changePasswordDialog = Dialog(this, R.style.Theme_Dialog)
                                 changePasswordDialog.setCancelable(false)
@@ -250,7 +250,7 @@ class AccountActivity : AppCompatActivity() {
                                 changePasswordDialog.show()
                             }
 
-                            .addOnFailureListener {
+                            ?.addOnFailureListener {
                                 Toast.makeText(this, it.toString(), Toast.LENGTH_SHORT).show()
                                 Log.e("re-auth", "User not re-authenticated.")
                             }

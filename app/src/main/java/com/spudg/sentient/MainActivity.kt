@@ -53,9 +53,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        reference!!.removeEventListener(allRecordsListener!!)
-        reference!!.removeEventListener(averageScoreListener!!)
-        referenceNote!!.removeEventListener(recordNoteListener!!)
+        reference?.removeEventListener(allRecordsListener!!)
+        reference?.removeEventListener(averageScoreListener!!)
+        referenceNote?.removeEventListener(recordNoteListener!!)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -110,6 +110,7 @@ class MainActivity : AppCompatActivity() {
         bindingMain.visualiserBtn.setOnClickListener {
             val intent = Intent(this, VisualiserActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
         bindingMain.reminderBtn.setOnClickListener {
@@ -124,15 +125,18 @@ class MainActivity : AppCompatActivity() {
                     R.id.action_account -> {
                         val intent = Intent(this, AccountActivity::class.java)
                         startActivity(intent)
+                        finish()
                     }
                     R.id.action_about -> {
                         val intent = Intent(this, AboutActivity::class.java)
                         startActivity(intent)
+                        finish()
                     }
                     R.id.action_logout -> {
                         Firebase.auth.signOut()
                         val intent = Intent(this, LandingActivity::class.java)
                         startActivity(intent)
+                        finish()
                     }
                 }
                 true

@@ -62,8 +62,8 @@ class VisualiserActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        reference!!.removeEventListener(chartDataListener!!)
-        reference!!.removeEventListener(noteListListener!!)
+        reference?.removeEventListener(chartDataListener!!)
+        reference?.removeEventListener(noteListListener!!)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
