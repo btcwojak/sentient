@@ -36,11 +36,15 @@ class AccountActivity : AppCompatActivity() {
     private lateinit var bindingAnalyticsConsent: DialogAnalyticsConsentBinding
 
     var reference: DatabaseReference? = null
+    var referenceForConsent: DatabaseReference? = null
     var numberRecordsListener: ValueEventListener? = null
+    var consentListener: ValueEventListener? = null
+
 
     override fun onDestroy() {
         super.onDestroy()
         reference!!.removeEventListener(numberRecordsListener!!)
+        referenceForConsent!!.removeEventListener(consentListener!!)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,6 +58,7 @@ class AccountActivity : AppCompatActivity() {
         database = Firebase.database.reference
 
         reference = database.ref.child("users").child(auth.currentUser!!.uid).child("records")
+        referenceForConsent = database.ref.child("users").child(auth.currentUser!!.uid).child("consent").child("analytics")
 
         bindingAccount.backToRecordsFromAccount.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
@@ -62,7 +67,6 @@ class AccountActivity : AppCompatActivity() {
         }
 
         bindingAccount.btnAnalyticsConsent.setOnClickListener {
-            val referenceForConsent = database.ref.child("users").child(auth.currentUser!!.uid).child("consent").child("analytics")
             val analyticsConsentDialog = Dialog(this, R.style.Theme_Dialog)
             analyticsConsentDialog.setCancelable(false)
             bindingAnalyticsConsent = DialogAnalyticsConsentBinding.inflate(layoutInflater)
@@ -70,12 +74,12 @@ class AccountActivity : AppCompatActivity() {
             analyticsConsentDialog.setContentView(viewAnalytics)
             analyticsConsentDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             bindingAnalyticsConsent.tvOptIn.setOnClickListener {
-                referenceForConsent.setValue("y")
+                referenceForConsent!!.setValue("y")
                 FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(true)
                 analyticsConsentDialog.dismiss()
             }
             bindingAnalyticsConsent.tvOptOut.setOnClickListener {
-                referenceForConsent.setValue("n")
+                referenceForConsent!!.setValue("n")
                 FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(false)
                 analyticsConsentDialog.dismiss()
             }
@@ -86,6 +90,24 @@ class AccountActivity : AppCompatActivity() {
     }
 
     private fun setAccountInfo() {
+
+        consentListener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.value == "y") {
+                    bindingAccount.optedInOutAnalytics.text = "Currently opted in for analytics"
+                } else {
+                    bindingAccount.optedInOutAnalytics.text = "Currently opted out for analytics"
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("test", "Error getting data", error.toException())
+            }
+
+        }
+
+        referenceForConsent!!.addValueEventListener(consentListener!!)
+
         bindingAccount.userName.text = "Hi, " + auth.currentUser?.displayName
         if (auth.currentUser!!.isEmailVerified) {
             bindingAccount.emailVerified.text = "Email is verified."
