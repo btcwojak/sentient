@@ -34,6 +34,7 @@
                 android:text="The email verification has been resent to your email address."
                 android:textColor="@android:color/black"
                 android:textSize="16sp" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -54,7 +55,6 @@
 
             </LinearLayout>
         </LinearLayout>
-
 
 
     </ScrollView>

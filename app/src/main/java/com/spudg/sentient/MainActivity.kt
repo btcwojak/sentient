@@ -7,7 +7,6 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
-import android.text.method.MovementMethod
 import android.util.Log
 import android.view.View
 import android.widget.PopupMenu
@@ -101,7 +100,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 analyticsConsentDialog.show()
             }
-        }.addOnFailureListener{
+        }.addOnFailureListener {
             Log.e("test", "Error getting data", it)
         }
 
@@ -211,10 +210,10 @@ class MainActivity : AppCompatActivity() {
                     alarmManager.cancel(displayIntent)
 
                     alarmManager.setRepeating(
-                        AlarmManager.RTC_WAKEUP,
-                        db.getReminderTime().toLong(),
-                        86400000,
-                        displayIntent
+                            AlarmManager.RTC_WAKEUP,
+                            db.getReminderTime().toLong(),
+                            86400000,
+                            displayIntent
                     )
 
                     setButtonsForExistingReminder(timeHour, timeMinute)
@@ -288,10 +287,10 @@ class MainActivity : AppCompatActivity() {
                     alarmManager.cancel(displayIntent)
 
                     alarmManager.setRepeating(
-                        AlarmManager.RTC_WAKEUP,
-                        db.getReminderTime().toLong(),
-                        86400000,
-                        displayIntent
+                            AlarmManager.RTC_WAKEUP,
+                            db.getReminderTime().toLong(),
+                            86400000,
+                            displayIntent
                     )
 
                     setButtonsForExistingReminder(timeHour, timeMinute)
@@ -329,9 +328,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun setButtonsForExistingReminder(timeHour: Int, timeMinute: Int) {
         bindingReminder.currentTime.text = getString(
-            R.string.current_reminder_time,
-            String.format("%02d", timeHour),
-            String.format("%02d", timeMinute)
+                R.string.current_reminder_time,
+                String.format("%02d", timeHour),
+                String.format("%02d", timeMinute)
         )
         bindingReminder.btnAddUpdateReminder.text = getString(R.string.update_your_reminder)
         bindingReminder.btnRemoveReminder.visibility = View.VISIBLE
@@ -388,9 +387,9 @@ class MainActivity : AppCompatActivity() {
                 val currentDate = currentMonth.toString() + currentYear.toString()
 
                 bindingMain.monthHeading.text = getString(
-                    R.string.average_month_score_heading,
-                    Globals.getLongMonth(currentMonth),
-                    currentYear.toString()
+                        R.string.average_month_score_heading,
+                        Globals.getLongMonth(currentMonth),
+                        currentYear.toString()
                 )
 
                 val cal = Calendar.getInstance()
@@ -523,10 +522,10 @@ class MainActivity : AppCompatActivity() {
 
         bindingAddRecord.dateRecordPost.text =
                 getString(
-                    R.string.day_month_year,
-                    dayPicked.toString(),
-                    Globals.getShortMonth(monthPicked),
-                    yearPicked.toString()
+                        R.string.day_month_year,
+                        dayPicked.toString(),
+                        Globals.getShortMonth(monthPicked),
+                        yearPicked.toString()
                 )
 
         bindingAddRecord.dateRecordPost.setOnClickListener {
@@ -597,10 +596,10 @@ class MainActivity : AppCompatActivity() {
             bindingDMYP.submitDmy.setOnClickListener {
                 bindingAddRecord.dateRecordPost.text =
                         getString(
-                            R.string.day_month_year,
-                            dayPicked.toString(),
-                            Globals.getShortMonth(monthPicked),
-                            yearPicked.toString()
+                                R.string.day_month_year,
+                                dayPicked.toString(),
+                                Globals.getShortMonth(monthPicked),
+                                yearPicked.toString()
                         )
                 changeDateDialog.dismiss()
             }
@@ -618,9 +617,9 @@ class MainActivity : AppCompatActivity() {
 
         bindingAddRecord.timeRecordPost.text =
                 getString(
-                    R.string.hour_minute,
-                    String.format("%02d", hourPicked),
-                    String.format("%02d", minutePicked)
+                        R.string.hour_minute,
+                        String.format("%02d", hourPicked),
+                        String.format("%02d", minutePicked)
                 )
 
         bindingAddRecord.timeRecordPost.setOnClickListener {
@@ -653,9 +652,9 @@ class MainActivity : AppCompatActivity() {
             bindingHMP.submitHm.setOnClickListener {
                 bindingAddRecord.timeRecordPost.text =
                         getString(
-                            R.string.hour_minute,
-                            String.format("%02d", hourPicked),
-                            String.format("%02d", minutePicked)
+                                R.string.hour_minute,
+                                String.format("%02d", hourPicked),
+                                String.format("%02d", minutePicked)
                         )
                 changeTimeDialog.dismiss()
             }
@@ -694,18 +693,18 @@ class MainActivity : AppCompatActivity() {
                 100F -> {
                     bindingAddRecord.currentScorePost.setTextColor(-6881025)
                     bindingAddRecord.viewKonfetti.build()
-                        .addColors(-6881025, -16711896)
-                        .setDirection(0.0, 360.0)
-                        .setSpeed(3f, 6f)
-                        .setFadeOutEnabled(true)
-                        .setTimeToLive(600L)
-                        .addShapes(Shape.Square, Shape.Circle)
-                        .addSizes(nl.dionsegijn.konfetti.models.Size(12))
-                        .setPosition(
-                            bindingAddRecord.viewKonfetti.x + bindingAddRecord.viewKonfetti.width / 2,
-                            bindingAddRecord.viewKonfetti.y + bindingAddRecord.viewKonfetti.height / 3
-                        )
-                        .burst(100)
+                            .addColors(-6881025, -16711896)
+                            .setDirection(0.0, 360.0)
+                            .setSpeed(3f, 6f)
+                            .setFadeOutEnabled(true)
+                            .setTimeToLive(600L)
+                            .addShapes(Shape.Square, Shape.Circle)
+                            .addSizes(nl.dionsegijn.konfetti.models.Size(12))
+                            .setPosition(
+                                    bindingAddRecord.viewKonfetti.x + bindingAddRecord.viewKonfetti.width / 2,
+                                    bindingAddRecord.viewKonfetti.y + bindingAddRecord.viewKonfetti.height / 3
+                            )
+                            .burst(100)
                 }
             }
         }
@@ -730,7 +729,7 @@ class MainActivity : AppCompatActivity() {
                 val recordValues = recordAdd.toMap()
 
                 val childUpdates = hashMapOf<String, Any>(
-                    "/users/${auth.currentUser!!.uid}/records/$key" to recordValues
+                        "/users/${auth.currentUser!!.uid}/records/$key" to recordValues
                 )
 
                 database.updateChildren(childUpdates)
@@ -775,10 +774,10 @@ class MainActivity : AppCompatActivity() {
 
         bindingUpdateRecord.dateRecordUpdate.text =
                 getString(
-                    R.string.day_month_year,
-                    dayPicked.toString(),
-                    Globals.getShortMonth(monthPicked),
-                    yearPicked.toString()
+                        R.string.day_month_year,
+                        dayPicked.toString(),
+                        Globals.getShortMonth(monthPicked),
+                        yearPicked.toString()
                 )
 
         bindingUpdateRecord.dateRecordUpdate.setOnClickListener {
@@ -849,10 +848,10 @@ class MainActivity : AppCompatActivity() {
             bindingDMYP.submitDmy.setOnClickListener {
                 bindingUpdateRecord.dateRecordUpdate.text =
                         getString(
-                            R.string.day_month_year,
-                            dayPicked.toString(),
-                            Globals.getShortMonth(monthPicked),
-                            yearPicked.toString()
+                                R.string.day_month_year,
+                                dayPicked.toString(),
+                                Globals.getShortMonth(monthPicked),
+                                yearPicked.toString()
                         )
                 changeDateDialog.dismiss()
             }
@@ -870,9 +869,9 @@ class MainActivity : AppCompatActivity() {
 
         bindingUpdateRecord.timeRecordUpdate.text =
                 getString(
-                    R.string.hour_minute,
-                    String.format("%02d", hourPicked),
-                    String.format("%02d", minutePicked)
+                        R.string.hour_minute,
+                        String.format("%02d", hourPicked),
+                        String.format("%02d", minutePicked)
                 )
 
         bindingUpdateRecord.timeRecordUpdate.setOnClickListener {
@@ -905,9 +904,9 @@ class MainActivity : AppCompatActivity() {
             bindingHMP.submitHm.setOnClickListener {
                 bindingUpdateRecord.timeRecordUpdate.text =
                         getString(
-                            R.string.hour_minute,
-                            String.format("%02d", hourPicked),
-                            String.format("%02d", minutePicked)
+                                R.string.hour_minute,
+                                String.format("%02d", hourPicked),
+                                String.format("%02d", minutePicked)
                         )
                 changeTimeDialog.dismiss()
             }
@@ -966,18 +965,18 @@ class MainActivity : AppCompatActivity() {
                 100F -> {
                     bindingUpdateRecord.currentScoreUpdate.setTextColor(-6881025)
                     bindingUpdateRecord.viewKonfetti.build()
-                        .addColors(-6881025, -16711896)
-                        .setDirection(0.0, 360.0)
-                        .setSpeed(3f, 6f)
-                        .setFadeOutEnabled(true)
-                        .setTimeToLive(600L)
-                        .addShapes(Shape.Square, Shape.Circle)
-                        .addSizes(nl.dionsegijn.konfetti.models.Size(12))
-                        .setPosition(
-                            bindingUpdateRecord.viewKonfetti.x + bindingUpdateRecord.viewKonfetti.width / 2,
-                            bindingUpdateRecord.viewKonfetti.y + bindingUpdateRecord.viewKonfetti.height / 3
-                        )
-                        .burst(100)
+                            .addColors(-6881025, -16711896)
+                            .setDirection(0.0, 360.0)
+                            .setSpeed(3f, 6f)
+                            .setFadeOutEnabled(true)
+                            .setTimeToLive(600L)
+                            .addShapes(Shape.Square, Shape.Circle)
+                            .addSizes(nl.dionsegijn.konfetti.models.Size(12))
+                            .setPosition(
+                                    bindingUpdateRecord.viewKonfetti.x + bindingUpdateRecord.viewKonfetti.width / 2,
+                                    bindingUpdateRecord.viewKonfetti.y + bindingUpdateRecord.viewKonfetti.height / 3
+                            )
+                            .burst(100)
                 }
             }
         }
@@ -999,7 +998,7 @@ class MainActivity : AppCompatActivity() {
                 val recordValues = recordUpdate.toMap()
 
                 val childUpdates = hashMapOf<String, Any>(
-                    "/users/${auth.currentUser!!.uid}/records/$key" to recordValues
+                        "/users/${auth.currentUser!!.uid}/records/$key" to recordValues
                 )
 
                 database.updateChildren(childUpdates)
@@ -1065,7 +1064,7 @@ class MainActivity : AppCompatActivity() {
         var noteBody: String
 
         referenceNote = database.ref.child("users").child(auth.currentUser!!.uid).child("records").child(
-            recordId
+                recordId
         )
 
         recordNoteListener = object : ValueEventListener {

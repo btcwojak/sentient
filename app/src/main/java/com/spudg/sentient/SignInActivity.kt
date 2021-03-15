@@ -13,7 +13,6 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.spudg.sentient.databinding.ActivitySignInBinding
 import com.spudg.sentient.databinding.DialogForgotPasswordBinding
-import com.spudg.sentient.databinding.DialogReminderBinding
 
 class SignInActivity : AppCompatActivity() {
 
@@ -65,7 +64,7 @@ class SignInActivity : AppCompatActivity() {
             auth.sendPasswordResetEmail(email).addOnSuccessListener {
                 Toast.makeText(this, "An email has been sent to reset your password.", Toast.LENGTH_SHORT).show()
                 forgotPasswordDialog.dismiss()
-            } .addOnFailureListener {
+            }.addOnFailureListener {
                 Toast.makeText(this, "That email is not recognised. Try signing up for a new account.", Toast.LENGTH_SHORT).show()
             }
         }

@@ -174,6 +174,7 @@ class VisualiserActivity : AppCompatActivity() {
                 bindingVisualiser.chartSplitAveScoreShimmer.stopShimmerAnimation()
                 bindingVisualiser.chartAverageMonthlyShimmer.stopShimmerAnimation()
             }
+
             override fun onCancelled(error: DatabaseError) {
                 Log.e("test", "Error getting data", error.toException())
             }

@@ -183,7 +183,7 @@ class AccountActivity : AppCompatActivity() {
                                         Toast.makeText(this, "Email changed successfully.", Toast.LENGTH_SHORT).show()
                                         changeEmailBinding.dismiss()
                                         reAuthenticateDialog.dismiss()
-                                    } .addOnFailureListener {
+                                    }.addOnFailureListener {
                                         Toast.makeText(this, "An error occurred.", Toast.LENGTH_SHORT).show()
                                         changeEmailBinding.dismiss()
                                         reAuthenticateDialog.dismiss()
@@ -197,7 +197,8 @@ class AccountActivity : AppCompatActivity() {
 
                             ?.addOnFailureListener {
                                 Toast.makeText(this, it.toString(), Toast.LENGTH_SHORT).show()
-                                Log.e("re-auth", "User not re-authenticated.")}
+                                Log.e("re-auth", "User not re-authenticated.")
+                            }
                 } else {
                     Toast.makeText(this, "Email or password can't be blank.", Toast.LENGTH_SHORT).show()
                 }
@@ -282,7 +283,6 @@ class AccountActivity : AppCompatActivity() {
         reference!!.addValueEventListener(numberRecordsListener as ValueEventListener)
 
     }
-
 
 
 }
