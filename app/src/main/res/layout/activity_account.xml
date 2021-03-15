@@ -194,7 +194,6 @@
                         android:textColor="@color/colorAccent"
                         android:textSize="16sp" />
 
-
                     <TextView
                         android:id="@+id/btnChangePassword"
                         android:layout_width="wrap_content"
@@ -205,6 +204,21 @@
                         android:paddingStart="10dp"
                         android:paddingEnd="10dp"
                         android:text="Change password"
+                        android:padding="5dp"
+                        android:layout_marginBottom="30dp"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/btnAnalyticsConsent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:fontFamily="@font/open_sans_light"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:text="Change data permissions"
                         android:padding="5dp"
                         android:layout_marginBottom="30dp"
                         android:textColor="@color/colorAccent"

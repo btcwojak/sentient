@@ -88,4 +88,6 @@
     <string name="sign_in">Sign in</string>
     <string name="mood_tracker_amp_visualiser"><![CDATA[Mood Tracker & Visualiser]]></string>
     <string name="forgot_password">Forgot password?</string>
+    <string name="firebase_pp_link"><a href="https://firebase.google.com/support/privacy">Firebase Privacy Policy</a></string>
+    <string name="sentient_pp_link"><a href="https://firebase.google.com/support/privacy">Sentient Privacy Policy</a></string>
 </resources>

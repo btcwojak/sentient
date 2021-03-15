@@ -1,42 +1,69 @@
 package com.spudg.sentient
 
+import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.spudg.sentient.databinding.ActivitySignUpBinding
-import java.lang.Exception
+import com.spudg.sentient.databinding.DialogAnalyticsConsentBinding
+import com.spudg.sentient.databinding.DialogDataConsentBinding
 
 
 class SignUpActivity : AppCompatActivity() {
 
-    private lateinit var signUpBinding: ActivitySignUpBinding
+    private lateinit var bindingSignUp: ActivitySignUpBinding
+    private lateinit var bindingDataConsent: DialogDataConsentBinding
 
     private lateinit var auth: FirebaseAuth
+    private lateinit var database: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        signUpBinding = ActivitySignUpBinding.inflate(layoutInflater)
-        val view = signUpBinding.root
+        bindingSignUp = ActivitySignUpBinding.inflate(layoutInflater)
+        val view = bindingSignUp.root
         setContentView(view)
 
         auth = Firebase.auth
+        database = Firebase.database.reference
 
-        signUpBinding.btnBack.setOnClickListener {
+        bindingSignUp.btnBack.setOnClickListener {
             val intent = Intent(this, LandingActivity::class.java)
             startActivity(intent)
             finish()
         }
 
-        signUpBinding.btnSignUp.setOnClickListener {
-            if (signUpBinding.email.text.toString().isNotEmpty() && signUpBinding.password.text.toString().isNotEmpty() && signUpBinding.name.text.toString().isNotEmpty()) {
-                if (signUpBinding.password.text.toString() == signUpBinding.passwordConfirm.text.toString()) {
-                    submitSignUpInfo(signUpBinding.email.text.toString(), signUpBinding.password.text.toString(), signUpBinding.name.text.toString())
+        bindingSignUp.btnSignUp.setOnClickListener {
+            if (bindingSignUp.email.text.toString().isNotEmpty() && bindingSignUp.password.text.toString().isNotEmpty() && bindingSignUp.name.text.toString().isNotEmpty()) {
+                if (bindingSignUp.password.text.toString() == bindingSignUp.passwordConfirm.text.toString()) {
+                    val dataConsentDialog = Dialog(this, R.style.Theme_Dialog)
+                    dataConsentDialog.setCancelable(false)
+                    bindingDataConsent = DialogDataConsentBinding.inflate(layoutInflater)
+                    val viewDataConsent = bindingDataConsent.root
+                    dataConsentDialog.setContentView(viewDataConsent)
+                    dataConsentDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                    bindingDataConsent.btnFirebasePP.movementMethod = LinkMovementMethod.getInstance()
+                    bindingDataConsent.btnSentientPP.movementMethod = LinkMovementMethod.getInstance()
+                    bindingDataConsent.tvAccept.setOnClickListener {
+                        submitSignUpInfo(bindingSignUp.email.text.toString(), bindingSignUp.password.text.toString(), bindingSignUp.name.text.toString())
+                        dataConsentDialog.dismiss()
+                    }
+                    bindingDataConsent.tvCancel.setOnClickListener {
+                        dataConsentDialog.dismiss()
+                    }
+                    dataConsentDialog.show()
+
                 } else {
                     Toast.makeText(this, "Passwords don't match", Toast.LENGTH_SHORT).show()
                 }

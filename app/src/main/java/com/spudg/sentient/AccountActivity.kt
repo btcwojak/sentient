@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -32,6 +33,7 @@ class AccountActivity : AppCompatActivity() {
     private lateinit var bindingChangeName: DialogChangeNameBinding
     private lateinit var bindingChangeEmail: DialogChangeEmailBinding
     private lateinit var bindingChangePassword: DialogChangePasswordBinding
+    private lateinit var bindingAnalyticsConsent: DialogAnalyticsConsentBinding
 
     var reference: DatabaseReference? = null
     var numberRecordsListener: ValueEventListener? = null
@@ -57,6 +59,27 @@ class AccountActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
+        }
+
+        bindingAccount.btnAnalyticsConsent.setOnClickListener {
+            val referenceForConsent = database.ref.child("users").child(auth.currentUser!!.uid).child("consent").child("analytics")
+            val analyticsConsentDialog = Dialog(this, R.style.Theme_Dialog)
+            analyticsConsentDialog.setCancelable(false)
+            bindingAnalyticsConsent = DialogAnalyticsConsentBinding.inflate(layoutInflater)
+            val viewAnalytics = bindingAnalyticsConsent.root
+            analyticsConsentDialog.setContentView(viewAnalytics)
+            analyticsConsentDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            bindingAnalyticsConsent.tvOptIn.setOnClickListener {
+                referenceForConsent.setValue("y")
+                FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(true)
+                analyticsConsentDialog.dismiss()
+            }
+            bindingAnalyticsConsent.tvOptOut.setOnClickListener {
+                referenceForConsent.setValue("n")
+                FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(false)
+                analyticsConsentDialog.dismiss()
+            }
+            analyticsConsentDialog.show()
         }
 
         setAccountInfo()
