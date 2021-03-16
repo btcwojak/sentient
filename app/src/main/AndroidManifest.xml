@@ -49,7 +49,6 @@
             android:name=".MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Sentient" />
-
         <receiver
             android:name=".RecordReminder"
             android:enabled="true">

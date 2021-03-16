@@ -12,17 +12,15 @@ public class RecordReminder extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "recordReminder")
-                    .setSmallIcon(R.drawable.notification_icon)
-                    .setContentTitle("Don't forget to record your mood!")
-                    .setContentText("This is your reminder, tap here to add a record")
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                    .setAutoCancel(true)
-                    .setContentIntent(PendingIntent.getActivity(context, 1, new Intent(context, MainActivity.class), 0));
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "recordReminder")
+                .setSmallIcon(R.drawable.notification_icon)
+                .setContentTitle("Don't forget to record your mood!")
+                .setContentText("This is your reminder, tap here to add a record")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true)
+                .setContentIntent(PendingIntent.getActivity(context, 1, new Intent(context, MainActivity.class), 0));
 
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-            notificationManager.notify(1, builder.build());
-        }
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        notificationManager.notify(1, builder.build());
     }
 }
