@@ -24,6 +24,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.spudg.sentient.databinding.*
 import nl.dionsegijn.konfetti.models.Shape
+import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
@@ -46,6 +47,7 @@ class MainActivity : AppCompatActivity() {
 
     var reference: DatabaseReference? = null
     var referenceNote: DatabaseReference? = null
+
     var allRecordsListener: ValueEventListener? = null
     var recordNoteListener: ValueEventListener? = null
     var averageScoreListener: ValueEventListener? = null
@@ -74,6 +76,8 @@ class MainActivity : AppCompatActivity() {
 
         auth = Firebase.auth
         database = Firebase.database.reference
+
+        checkForLocalData()
 
         reference = database.ref.child("users").child(auth.currentUser!!.uid).child("records")
 
@@ -151,6 +155,33 @@ class MainActivity : AppCompatActivity() {
         setUpRecordList()
         setUpAverageMonthScore()
 
+    }
+
+    private fun checkForLocalData() {
+        val db = RecordHandler(this, null)
+        try {
+            val allRecords = db.filterRecords()
+            if (allRecords.size > 0) {
+                for (record in allRecords) {
+                    val key = database.child("records").push().key
+                    if (key == null) {
+                        Log.w("AddRecord", "Couldn't get push key for record")
+                    }
+
+                    val recordAdd = RecordModel(key.toString(), record.score, record.time, record.note)
+                    val recordValues = recordAdd.toMap()
+
+                    val childUpdates = hashMapOf<String, Any>(
+                            "/users/${auth.currentUser!!.uid}/records/$key" to recordValues
+                    )
+
+                    database.updateChildren(childUpdates)
+                }
+            }
+            db.drop()
+        } catch (e: Exception) {
+            Log.e("checkForLocalData",e.toString())
+        }
     }
 
     private fun openReminderDialog() {

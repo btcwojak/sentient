@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.spudg.sentient.databinding.ActivityLandingBinding
 import com.spudg.sentient.databinding.DialogTermsOfUseBinding
+import java.util.*
 
 class LandingActivity : AppCompatActivity() {
 
