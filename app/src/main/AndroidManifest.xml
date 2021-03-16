@@ -14,6 +14,7 @@
         <meta-data
             android:name="firebase_analytics_collection_enabled"
             android:value="false" />
+
         <activity
             android:name=".AccountActivity"
             android:screenOrientation="portrait"
@@ -48,9 +49,10 @@
             android:name=".MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Sentient" />
+
         <receiver
-            android:enabled="true"
-            android:name=".RecordReminder">
+            android:name=".RecordReminder"
+            android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

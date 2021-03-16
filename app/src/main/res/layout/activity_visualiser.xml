@@ -36,12 +36,12 @@
                 <ImageView
                     android:id="@+id/backToRecordsFromVisualiser"
                     android:layout_width="wrap_content"
-                    android:contentDescription="@string/back"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="20dp"
                     android:background="@drawable/back_btn_padding"
+                    android:contentDescription="@string/back"
                     android:foreground="?attr/selectableItemBackground"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -304,8 +304,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
                     android:layout_marginTop="20dp"
-                    android:contentDescription="@string/divider_line"
-                    android:background="@drawable/record_row_line" />
+                    android:background="@drawable/record_row_line"
+                    android:contentDescription="@string/divider_line" />
 
                 <TextView
                     android:id="@+id/averageMonthlyScoresHeading"

@@ -116,14 +116,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="50dp"
                 android:layout_marginTop="15dp"
-                android:hint="@string/username"
-                android:textColorHint="@android:color/transparent"
                 android:layout_marginRight="50dp"
+                android:autofillHints="username"
+                android:hint="@string/username"
+                android:inputType="text"
                 android:maxLength="10"
                 android:maxLines="1"
                 android:padding="15dp"
-                android:autofillHints="username"
-                android:inputType="text" />
+                android:textColorHint="@android:color/transparent" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -140,12 +140,12 @@
                 android:layout_marginLeft="50dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="50dp"
+                android:autofillHints="Email"
+                android:hint="@string/email"
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
-                android:textColorHint="@android:color/transparent"
                 android:padding="15dp"
-                android:hint="@string/email"
-                android:autofillHints="Email" />
+                android:textColorHint="@android:color/transparent" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -162,12 +162,12 @@
                 android:layout_marginLeft="50dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="50dp"
+                android:autofillHints="Password"
+                android:hint="@string/password"
                 android:inputType="textPassword"
                 android:maxLines="1"
                 android:padding="15dp"
-                android:autofillHints="Password"
-                android:textColorHint="@android:color/transparent"
-                android:hint="@string/password"/>
+                android:textColorHint="@android:color/transparent" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -184,12 +184,12 @@
                 android:layout_marginLeft="50dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="50dp"
-                android:inputType="textPassword"
-                android:textColorHint="@android:color/transparent"
-                android:maxLines="1"
                 android:autofillHints="Password"
                 android:hint="@string/confirm_password"
-                android:padding="15dp" />
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:padding="15dp"
+                android:textColorHint="@android:color/transparent" />
 
             <TextView
                 android:id="@+id/btnSignUp"

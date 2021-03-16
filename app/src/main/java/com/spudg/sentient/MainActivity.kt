@@ -24,7 +24,6 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.spudg.sentient.databinding.*
 import nl.dionsegijn.konfetti.models.Shape
-import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
@@ -180,7 +179,7 @@ class MainActivity : AppCompatActivity() {
             }
             db.drop()
         } catch (e: Exception) {
-            Log.e("checkForLocalData",e.toString())
+            Log.e("checkForLocalData", e.toString())
         }
     }
 
