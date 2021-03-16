@@ -35,10 +35,10 @@ class AccountActivity : AppCompatActivity() {
     private lateinit var bindingChangePassword: DialogChangePasswordBinding
     private lateinit var bindingAnalyticsConsent: DialogAnalyticsConsentBinding
 
-    var reference: DatabaseReference? = null
-    var referenceForConsent: DatabaseReference? = null
-    var numberRecordsListener: ValueEventListener? = null
-    var consentListener: ValueEventListener? = null
+    private var reference: DatabaseReference? = null
+    private var referenceForConsent: DatabaseReference? = null
+    private var numberRecordsListener: ValueEventListener? = null
+    private var consentListener: ValueEventListener? = null
 
 
     override fun onDestroy() {
@@ -94,9 +94,10 @@ class AccountActivity : AppCompatActivity() {
         consentListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.value == "y") {
-                    bindingAccount.optedInOutAnalytics.text = "Currently opted in for analytics"
+                    bindingAccount.optedInOutAnalytics.text = getString(R.string.opted_in_for_analytics)
+
                 } else {
-                    bindingAccount.optedInOutAnalytics.text = "Currently opted out for analytics"
+                    bindingAccount.optedInOutAnalytics.text = getString(R.string.opted_out_for_analytics)
                 }
             }
 
@@ -108,12 +109,12 @@ class AccountActivity : AppCompatActivity() {
 
         referenceForConsent!!.addValueEventListener(consentListener!!)
 
-        bindingAccount.userName.text = "Hi, " + auth.currentUser?.displayName
+        bindingAccount.userName.text = getString(R.string.hi_comma_space, auth.currentUser?.displayName)
         if (auth.currentUser!!.isEmailVerified) {
-            bindingAccount.emailVerified.text = "Email is verified."
+            bindingAccount.emailVerified.text = getString(R.string.email_is_verified)
             bindingAccount.btnSendEmailVerification.visibility = View.GONE
         } else {
-            bindingAccount.emailVerified.text = "Email not verified."
+            bindingAccount.emailVerified.text = getString(R.string.email_not_verified)
             bindingAccount.btnSendEmailVerification.visibility = View.VISIBLE
             bindingAccount.btnSendEmailVerification.setOnClickListener {
 
@@ -267,11 +268,10 @@ class AccountActivity : AppCompatActivity() {
             reAuthenticateDialog.show()
         }
 
-        bindingAccount.userEmail.text = "Email: ${auth.currentUser?.email}"
-
+        bindingAccount.userEmail.text = getString(R.string.email_colon, auth.currentUser?.email)
         numberRecordsListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                bindingAccount.totalRecordsPosted.text = "Total records posted: " + snapshot.childrenCount.toString()
+                bindingAccount.totalRecordsPosted.text = getString(R.string.total_records_posted_number, snapshot.childrenCount.toString())
             }
 
             override fun onCancelled(error: DatabaseError) {

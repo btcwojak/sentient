@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
-import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
@@ -56,9 +55,9 @@ class VisualiserActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
 
-    var reference: DatabaseReference? = null
-    var chartDataListener: ValueEventListener? = null
-    var noteListListener: ValueEventListener? = null
+    private var reference: DatabaseReference? = null
+    private var chartDataListener: ValueEventListener? = null
+    private var noteListListener: ValueEventListener? = null
 
     override fun onDestroy() {
         super.onDestroy()
@@ -214,8 +213,8 @@ class VisualiserActivity : AppCompatActivity() {
 
         val cal = Calendar.getInstance()
 
-        var numberOfRatings = 0
-        var runningTotal = 0
+        var numberOfRatings: Int
+        var runningTotal: Int
 
         repeat(daysInMonth.size) {
             numberOfRatings = 0
@@ -435,12 +434,6 @@ class VisualiserActivity : AppCompatActivity() {
             l.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
             l.orientation = Legend.LegendOrientation.HORIZONTAL
             l.setDrawInside(false)
-            val l1 = LegendEntry("0 to 9", Legend.LegendForm.CIRCLE, 10f, 2f, null, -65527)
-            val l2 = LegendEntry("10 to 39", Legend.LegendForm.CIRCLE, 10f, 2f, null, -25088)
-            val l3 = LegendEntry("40 to 69", Legend.LegendForm.CIRCLE, 10f, 2f, null, -16728577)
-            val l4 = LegendEntry("70 to 89", Legend.LegendForm.CIRCLE, 10f, 2f, null, -16711896)
-            val l5 = LegendEntry("90 to 100", Legend.LegendForm.CIRCLE, 10f, 2f, null, -6881025)
-            //l.setCustom(arrayOf(l1, l2, l3, l4, l5))    causing crashes with Firebase
 
             dataSetPie.valueLinePart1OffsetPercentage = 80f
             dataSetPie.valueLinePart1Length = 0.4f
@@ -602,8 +595,8 @@ class VisualiserActivity : AppCompatActivity() {
 
         val cal = Calendar.getInstance()
 
-        var numberOfRatings = 0
-        var runningTotal = 0
+        var numberOfRatings: Int
+        var runningTotal: Int
 
         repeat(12) {
             numberOfRatings = 0

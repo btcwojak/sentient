@@ -45,12 +45,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
 
-    var reference: DatabaseReference? = null
-    var referenceNote: DatabaseReference? = null
+    private var reference: DatabaseReference? = null
+    private var referenceNote: DatabaseReference? = null
 
-    var allRecordsListener: ValueEventListener? = null
-    var recordNoteListener: ValueEventListener? = null
-    var averageScoreListener: ValueEventListener? = null
+    private var allRecordsListener: ValueEventListener? = null
+    private var recordNoteListener: ValueEventListener? = null
+    private var averageScoreListener: ValueEventListener? = null
 
     override fun onDestroy() {
         super.onDestroy()

@@ -35,7 +35,8 @@
                 android:foreground="?attr/selectableItemBackground"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/back" />
 
             <TextView
                 android:id="@+id/aboutSentientHeading"
@@ -43,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
                 android:fontFamily="@font/open_sans_light"
-                android:text="Your Account"
+                android:text="@string/your_account"
                 android:textColor="#000000"
                 android:textSize="24sp"
                 android:textStyle="bold"
@@ -90,7 +91,7 @@
                         android:layout_marginBottom="20dp"
                         android:fontFamily="@font/open_sans_light"
                         android:padding="6dp"
-                        android:text="Hi, Test User"
+                        android:text="@string/hi_test_user"
                         android:textColor="@android:color/black"
                         android:textSize="24sp" />
 
@@ -100,7 +101,7 @@
                         android:layout_gravity="start"
                         android:fontFamily="@font/open_sans_light"
                         android:padding="6dp"
-                        android:text="Account details"
+                        android:text="@string/account_details"
                         android:textColor="@android:color/black"
                         android:textSize="20sp" />
 
@@ -111,7 +112,7 @@
                         android:layout_gravity="start"
                         android:fontFamily="@font/open_sans_light"
                         android:padding="6dp"
-                        android:text="Email: example@test.com"
+                        android:text="@string/email_example_test_com"
                         android:textColor="@android:color/black"
                         android:textSize="16sp" />
 
@@ -124,7 +125,7 @@
                         android:padding="5dp"
                         android:paddingStart="20dp"
                         android:paddingEnd="10dp"
-                        android:text="Email not verified"
+                        android:text="@string/email_not_verified"
                         android:textColor="@android:color/black"
                         android:textSize="16sp" />
 
@@ -138,7 +139,7 @@
                         android:padding="5dp"
                         android:paddingStart="20dp"
                         android:paddingEnd="10dp"
-                        android:text="Re-send verification email"
+                        android:text="@string/re_send_verification_email"
                         android:textColor="@color/colorAccent"
                         android:textSize="16sp" />
 
@@ -152,7 +153,7 @@
                         android:fontFamily="@font/open_sans_light"
                         android:paddingStart="10dp"
                         android:paddingEnd="10dp"
-                        android:text="No records posted yet."
+                        android:text="@string/no_records_posted_yet"
                         android:textColor="@android:color/black"
                         android:textSize="16sp" />
 
@@ -163,7 +164,7 @@
                         android:layout_marginTop="80dp"
                         android:fontFamily="@font/open_sans_light"
                         android:padding="6dp"
-                        android:text="Edit account"
+                        android:text="@string/edit_account"
                         android:textColor="@android:color/black"
                         android:textSize="20sp" />
 
@@ -177,7 +178,7 @@
                         android:padding="5dp"
                         android:paddingStart="10dp"
                         android:paddingEnd="10dp"
-                        android:text="Change name"
+                        android:text="@string/change_name"
                         android:textColor="@color/colorAccent"
                         android:textSize="16sp" />
 
@@ -191,7 +192,7 @@
                         android:padding="5dp"
                         android:paddingStart="10dp"
                         android:paddingEnd="10dp"
-                        android:text="Change email"
+                        android:text="@string/change_email"
                         android:textColor="@color/colorAccent"
                         android:textSize="16sp" />
 
@@ -206,7 +207,7 @@
                         android:padding="5dp"
                         android:paddingStart="10dp"
                         android:paddingEnd="10dp"
-                        android:text="Change password"
+                        android:text="@string/change_password"
                         android:textColor="@color/colorAccent"
                         android:textSize="16sp" />
 
@@ -220,7 +221,7 @@
                         android:padding="5dp"
                         android:paddingStart="10dp"
                         android:paddingEnd="10dp"
-                        android:text="Current opted out of analytics"
+                        android:text="@string/current_opted_out_of_analytics"
                         android:textColor="@android:color/black"
                         android:textSize="14sp" />
 
@@ -235,7 +236,7 @@
                         android:padding="5dp"
                         android:paddingStart="10dp"
                         android:paddingEnd="10dp"
-                        android:text="Change data permissions"
+                        android:text="@string/change_data_permissions"
                         android:textColor="@color/colorAccent"
                         android:textSize="16sp" />
 

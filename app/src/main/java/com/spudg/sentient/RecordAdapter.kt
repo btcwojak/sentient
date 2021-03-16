@@ -5,17 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
 import com.spudg.sentient.databinding.RecordRowBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
 class RecordAdapter(private val context: Context, private val items: ArrayList<RecordModel>) :
         RecyclerView.Adapter<RecordAdapter.RecordViewHolder>() {
-
-    private lateinit var database: DatabaseReference
-    private lateinit var auth: FirebaseAuth
 
     inner class RecordViewHolder(val binding: RecordRowBinding) :
             RecyclerView.ViewHolder(binding.root)
