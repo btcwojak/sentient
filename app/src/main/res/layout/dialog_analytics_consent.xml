@@ -21,7 +21,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/open_sans_light"
-                android:text="Analytics"
+                android:text="@string/analytics"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
 
@@ -32,7 +32,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="8dp"
                 android:fontFamily="@font/open_sans_light"
-                android:text="This application makes use of Google Firebase for analytics. This helps us continue to make Sentient better for users. However, you can choose to opt in or opt out from this service. Please see below the privacy policy relating to Firebase Analytics."
+                android:text="@string/firebase_analytics_explanation"
                 android:textColor="@android:color/black"
                 android:textSize="16sp" />
 
@@ -67,7 +67,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="8dp"
                 android:fontFamily="@font/open_sans_light"
-                android:text="Please specify whether you want to opt-in or opt-out for Sentient collecting your usage data for these purposes. You can change this later through the Accounts page."
+                android:text="@string/specify_if_opt_in_out_analytics"
                 android:textColor="@android:color/black"
                 android:textSize="16sp" />
 
@@ -87,7 +87,7 @@
                     android:foreground="?attr/selectableItemBackground"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="Opt-out"
+                    android:text="@string/opt_out"
                     android:textColor="#673AB7" />
 
                 <TextView
@@ -99,7 +99,7 @@
                     android:foreground="?attr/selectableItemBackground"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="Opt-in"
+                    android:text="@string/opt_in"
                     android:textColor="#673AB7" />
 
             </LinearLayout>

@@ -17,7 +17,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="5dp"
             android:fontFamily="@font/open_sans_light"
-            android:text="Add or change reminder"
+            android:text="@string/add_or_change_reminder"
             android:textColor="@android:color/black"
             android:textSize="18sp" />
 
@@ -28,7 +28,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="10dp"
             android:fontFamily="@font/open_sans_light"
-            android:text="Current reminder: 20:00 daily"
+            android:text="@string/current_reminder_20_00_daily"
             android:textColor="@android:color/black"
             android:textSize="16sp" />
 
@@ -43,7 +43,7 @@
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
             android:padding="10dp"
-            android:text="Add a new reminder"
+            android:text="@string/add_a_new_reminder"
             android:textColor="#673AB7"
             android:textSize="16sp" />
 
@@ -58,7 +58,7 @@
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
             android:padding="10dp"
-            android:text="Remove your reminder"
+            android:text="@string/remove_your_reminder"
             android:textColor="#673AB7"
             android:textSize="16sp" />
 

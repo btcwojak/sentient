@@ -114,13 +114,16 @@
                 android:id="@+id/email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColorHint="@android:color/transparent"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="50dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="50dp"
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
-                android:padding="15dp" />
+                android:hint="@string/email"
+                android:padding="15dp"
+                android:autofillHints="Email" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -137,8 +140,11 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="50dp"
                 android:layout_marginTop="15dp"
+                android:hint="@string/password"
+                android:textColorHint="@android:color/transparent"
                 android:layout_marginRight="50dp"
                 android:inputType="textPassword"
+                android:autofillHints="Password"
                 android:maxLines="1"
                 android:padding="15dp"
                 app:layout_constraintBottom_toTopOf="@id/btnSignIn" />

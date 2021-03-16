@@ -17,7 +17,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="5dp"
             android:fontFamily="@font/open_sans_light"
-            android:text="Change account name"
+            android:text="@string/change_account_name"
             android:textColor="@android:color/black"
             android:textSize="24sp" />
 
@@ -35,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fontFamily="@font/open_sans_light"
-                android:hint="New name"
+                android:hint="@string/new_name"
                 android:inputType="text"
                 android:maxLength="16"
                 android:maxLines="1" />
@@ -57,7 +57,7 @@
                 android:foreground="?attr/selectableItemBackground"
                 android:gravity="center"
                 android:padding="10dp"
-                android:text="Change"
+                android:text="@string/change_capital"
                 android:textColor="@color/colorAccent" />
 
             <TextView

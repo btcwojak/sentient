@@ -20,6 +20,7 @@
     <string name="nov_2020">Nov 2020</string>
     <string name="left_bracket">(</string>
     <string name="change">change</string>
+    <string name="change_capital">Change</string>
     <string name="right_bracket">)</string>
     <string name="average_daily_scores">Average daily scores</string>
     <string name="split_of_average_scores">Split of average scores</string>
@@ -110,4 +111,25 @@
     <string name="current_opted_out_of_analytics">Current opted out of analytics</string>
     <string name="change_data_permissions">Change data permissions</string>
     <string name="more">More</string>
+    <string name="divider_line">Divider line</string>
+    <string name="new_email">New email</string>
+    <string name="analytics">Analytics</string>
+    <string name="firebase_analytics_explanation">This application makes use of Google Firebase for analytics. This helps us continue to make Sentient better for users. However, you can choose to opt in or opt out from this service. Please see below the privacy policy relating to Firebase Analytics.</string>
+    <string name="specify_if_opt_in_out_analytics">Please specify whether you want to opt-in or opt-out for Sentient collecting your usage data for these purposes. You can change this later through the Accounts page.</string>
+    <string name="opt_in">Opt-in</string>
+    <string name="opt_out">Opt-out</string>
+    <string name="change_account_name">Change account name</string>
+    <string name="new_name">New name</string>
+    <string name="new_password">New password</string>
+    <string name="data_privacy">Data privacy</string>
+    <string name="firebase_cloud_storage_auth_explanation">This application makes use of Google Firebase for analytics, cloud data storage and user authentication. Please tap on the links below for the respective privacy policies for each of these services.</string>
+    <string name="cloud_storage_auth_necessary">Cloud data storage and user authentication are required for Sentient to work properly. By using this application you are consenting for your data to be collected for these purposes.</string>
+    <string name="accept">Accept</string>
+    <string name="send_reset_email">Send reset email</string>
+    <string name="please_re_sign_in">Please re-sign in</string>
+    <string name="add_or_change_reminder">Add or change reminder</string>
+    <string name="current_reminder_20_00_daily">Current reminder: 20:00 daily</string>
+    <string name="remove_your_reminder">Remove your reminder</string>
+    <string name="email_verification">Email verification</string>
+    <string name="the_email_verification_has_been_resent_to_your_email_address">The email verification has been resent to your email address.</string>
 </resources>

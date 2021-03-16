@@ -21,7 +21,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/open_sans_light"
-                android:text="Data privacy"
+                android:text="@string/data_privacy"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
 
@@ -32,7 +32,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="8dp"
                 android:fontFamily="@font/open_sans_light"
-                android:text="This application makes use of Google Firebase for analytics, cloud data storage and user authentication. Please tap on the links below for the respective privacy policies for each of these services."
+                android:text="@string/firebase_cloud_storage_auth_explanation"
                 android:textColor="@android:color/black"
                 android:textSize="16sp" />
 
@@ -67,7 +67,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="8dp"
                 android:fontFamily="@font/open_sans_light"
-                android:text="Cloud data storage and user authentication are required for Sentient to work properly. By using this application you are consenting for your data to be collected for these purposes."
+                android:text="@string/cloud_storage_auth_necessary"
                 android:textColor="@android:color/black"
                 android:textSize="16sp" />
 
@@ -87,7 +87,7 @@
                     android:foreground="?attr/selectableItemBackground"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="Cancel"
+                    android:text="@string/cancel"
                     android:textColor="#673AB7" />
 
                 <TextView
@@ -99,7 +99,7 @@
                     android:foreground="?attr/selectableItemBackground"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="Accept"
+                    android:text="@string/accept"
                     android:textColor="#673AB7" />
 
             </LinearLayout>

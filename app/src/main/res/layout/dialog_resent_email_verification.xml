@@ -21,7 +21,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/open_sans_light"
-                android:text="Email verification"
+                android:text="@string/email_verification"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
 
@@ -31,7 +31,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="20dp"
                 android:fontFamily="@font/open_sans_light"
-                android:text="The email verification has been resent to your email address."
+                android:text="@string/the_email_verification_has_been_resent_to_your_email_address"
                 android:textColor="@android:color/black"
                 android:textSize="16sp" />
 
