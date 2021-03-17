@@ -24,3 +24,4 @@ public class RecordReminder extends BroadcastReceiver {
         notificationManager.notify(1, builder.build());
     }
 }
+á
