@@ -19,7 +19,7 @@ public class RecordReminder extends BroadcastReceiver {
                 .setContentText("This is your reminder, tap here to add a record")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(true)
-                .setContentIntent(PendingIntent.getActivity(context, 1, new Intent(context, MainActivity.class), 0));
+                .setContentIntent(PendingIntent.getActivity(context, 1, new Intent(context, MainActivity.class), PendingIntent.FLAG_IMMUTABLE));
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.notify(1, builder.build());

@@ -123,7 +123,7 @@ class MainActivity : AppCompatActivity() {
                     val alarmIntent = Intent(applicationContext, RecordReminder::class.java)
                     val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
                     val displayIntent =
-                        PendingIntent.getBroadcast(applicationContext, 1, alarmIntent, 0)
+                        PendingIntent.getBroadcast(applicationContext, 1, alarmIntent, PendingIntent.FLAG_IMMUTABLE)
                     alarmManager.cancel(displayIntent)
 
                     alarmManager.setRepeating(
@@ -148,7 +148,7 @@ class MainActivity : AppCompatActivity() {
                 val alarmIntent = Intent(applicationContext, RecordReminder::class.java)
                 val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
                 val displayIntent =
-                    PendingIntent.getBroadcast(applicationContext, 1, alarmIntent, 0)
+                    PendingIntent.getBroadcast(applicationContext, 1, alarmIntent, PendingIntent.FLAG_IMMUTABLE)
                 alarmManager.cancel(displayIntent)
 
                 db.removeReminder()
@@ -200,7 +200,7 @@ class MainActivity : AppCompatActivity() {
                     val alarmIntent = Intent(applicationContext, RecordReminder::class.java)
                     val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
                     val displayIntent =
-                        PendingIntent.getBroadcast(applicationContext, 1, alarmIntent, 0)
+                        PendingIntent.getBroadcast(applicationContext, 1, alarmIntent, PendingIntent.FLAG_IMMUTABLE)
                     alarmManager.cancel(displayIntent)
 
                     alarmManager.setRepeating(
@@ -225,7 +225,7 @@ class MainActivity : AppCompatActivity() {
                 val alarmIntent = Intent(applicationContext, RecordReminder::class.java)
                 val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
                 val displayIntent =
-                    PendingIntent.getBroadcast(applicationContext, 1, alarmIntent, 0)
+                    PendingIntent.getBroadcast(applicationContext, 1, alarmIntent, PendingIntent.FLAG_IMMUTABLE)
                 alarmManager.cancel(displayIntent)
 
                 db.removeReminder()
