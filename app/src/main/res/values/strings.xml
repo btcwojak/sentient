@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">Sentient</string>
-    <string name="copyright_ss">Copyright © Spudg Studios</string>
+    <string name="copyright_ss">Copyright © 2022 spudg</string>
     <string name="about_sentient">About Sentient</string>
     <string name="sentientlogo">sentientLogo</string>
-    <string name="v1_0_0_made_by_spudg_studios">v1.0.0, made by Spudg Studios</string>
+    <string name="v1_0_0_made_by_spudg">v1.0.0, made by spudg</string>
     <string name="sentient">Sentient</string>
-    <string name="sentient_description">Sentient is a simple mood tracker where you can post ratings and see a visualisation of how your mood changes over days and months. \n\nSpudg Studios is currently a one-man development studio and this is an early version of the application, so if you have any suggestions or you\'ve found a bug, please send an email below!</string>
+    <string name="sentient_description">Sentient is a simple mood tracker where you can post ratings and see a visualisation of how your mood changes over days and months. \n\nspudg is currently a one-man development studio and this is an early version of the application, so if you have any suggestions or you\'ve found a bug, please leave a review on Google Play!</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="terms_of_use">Terms of Use</string>
     <string name="rate_on_play_store">Rate on Play Store</string>
@@ -55,7 +55,7 @@
     <string name="thursday_14_january_2021">Thursday 14 January 2021</string>
     <string name="reminder">Reminder</string>
     <string name="support">Support</string>
-    <string name="made_by_ss">v%1$s, made by Spudg Studios</string>
+    <string name="made_by_ss">v%1$s, made by spudg</string>
     <string name="set_daily_reminder_time">Set daily reminder time</string>
     <string name="update_your_reminder">Update your reminder</string>
     <string name="add_a_new_reminder">Add a new reminder</string>
