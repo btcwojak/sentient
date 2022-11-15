@@ -4,7 +4,9 @@ import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
@@ -57,7 +59,11 @@ class VisualiserActivity : AppCompatActivity() {
         makePieData(monthFilter, yearFilter)
         makeBarDataMonthly(yearFilter)
         setUpBarChartDaily()
-        setUpPieChart()
+        if (Build.VERSION.SDK_INT < 31) {
+            setUpPieChart()
+            bindingVisualiser.splitAveScoreHeading.visibility = View.VISIBLE
+            bindingVisualiser.chartSplitAveScore.visibility = View.VISIBLE
+        }
         setUpBarChartMonthly()
         setUpNoteList()
 
@@ -96,7 +102,11 @@ class VisualiserActivity : AppCompatActivity() {
                 makePieData(monthFilter, yearFilter)
                 makeBarDataMonthly(yearFilter)
                 setUpBarChartDaily()
-                setUpPieChart()
+                if (Build.VERSION.SDK_INT < 31) {
+                    setUpPieChart()
+                    bindingVisualiser.splitAveScoreHeading.visibility = View.VISIBLE
+                    bindingVisualiser.chartSplitAveScore.visibility = View.VISIBLE
+                }
                 setUpBarChartMonthly()
                 setUpNoteList()
 
